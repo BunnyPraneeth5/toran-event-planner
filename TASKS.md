@@ -9,7 +9,7 @@ Work top to bottom. One task per session. Tick a task only when its proof test p
 - [x] T04 Reference data
 - [x] T05 Budget engine
 - [x] T06 Timeline engine
-- [ ] T07 Ledger engine
+- [x] T07 Ledger engine
 - [ ] T08 Parse and sanitize engines
 - [ ] T09 Adapt engine
 - [ ] T10 Gemini wrapper
@@ -117,13 +117,13 @@ Work top to bottom. One task per session. Tick a task only when its proof test p
 **Proof:** `pytest tests/unit/test_timeline.py`
 
 ## T07 Ledger engine
-**Files:** `app/engines/ledger.py`, `tests/unit/test_ledger.py`
+**Files:** `app/engines/ledger.py`, `app/models/ledger.py`, `tests/unit/test_ledger.py`
 
 **Acceptance**
-- [ ] Per person: pledged, assigned (payer share of planned), paid (payer share of actual), gap
-- [ ] Split shares allocate rupees exactly by largest remainder
-- [ ] Unassigned total reported
-- [ ] Sum of assigned plus unassigned equals sum of planned
+- [x] Per person: pledged, assigned (payer share of planned), paid (payer share of actual), gap
+- [x] Split shares allocate rupees exactly by largest remainder
+- [x] Unassigned total reported
+- [x] Sum of assigned plus unassigned equals sum of planned
 
 **Proof:** `pytest tests/unit/test_ledger.py`
 
