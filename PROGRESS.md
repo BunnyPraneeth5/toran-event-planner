@@ -4,6 +4,7 @@
 - Current task: T11
 - Last green commit: T10 Gemini wrapper
 - Last submission tag:
+- Repo: https://github.com/BunnyPraneeth5/toran-event-planner (public, CI on every push)
 - Live link:
 
 ## Session log
@@ -18,6 +19,13 @@ Copy the template below for each session, newest first.
 - Problems and gotchas (add repeats to CLAUDE.md):
 - Next:
 -->
+
+### Session 4
+- Task(s): publish repo, early CI, privacy scrub, checkpoint tasks
+- Done: removed Andhra Pradesh and nearby Telangana town names from every commit before publishing (tier-3 test city is now Jodhpur); created the public GitHub repo and pushed main; CI runs ruff, mypy, pytest with coverage floor and pip-audit on every push; added T14a (early Render deploy), T16a (try a sample event, user picks the city or the browser finds the nearest one) and T18a (video script, owner: you).
+- Checks: CI green on GitHub; 226 tests passing locally.
+- Decisions: the pre-scrub history is kept only in a local branch `backup/pre-scrub`, never pushed; delete it once you are happy.
+- Next: T11 Intake, after the Gemini key is in .env.
 
 ### Session 3
 - Task(s): T06 to T10
