@@ -26,3 +26,4 @@ htmlcov/
 .vscode/
 .idea/
 .claude/settings.local.json
+.claude/launch.json

@@ -17,10 +17,13 @@ Work top to bottom. One task per session. Tick a task only when its proof test p
 - [ ] T12 Generate
 - [ ] T13 Adapt options (AI)
 - [ ] T14 API routes
+- [ ] T14a Early Render deploy (checkpoint)
 - [ ] T15 UI base and intake page
 - [ ] T16 Dashboard page and state contract
+- [ ] T16a Try a sample event
 - [ ] T17 What-if slider
 - [ ] T18 Something changed UI
+- [ ] T18a Video script (checkpoint, owner: you)
 - [ ] T19 Calendar export
 - [ ] T20 Security middleware
 - [ ] T21 CI and Dockerfile
@@ -213,6 +216,18 @@ Work top to bottom. One task per session. Tick a task only when its proof test p
 
 **Proof:** `pytest tests/api/test_routes.py`
 
+## T14a Early Render deploy (checkpoint)
+Do this right after T14, so Docker, env var and cold start problems show up early, not on the last day.
+
+**Files:** `Dockerfile`, `.dockerignore`, `render.yaml`
+
+**Acceptance**
+- [ ] Dockerfile multi-stage on `python:3.12-slim`, non-root user, no dev dependencies, uvicorn with `--proxy-headers --forwarded-allow-ips`
+- [ ] Render service created from the GitHub repo; env vars set in the Render dashboard, never in the repo; health check on `/healthz`
+- [ ] Live `/healthz` returns ok; cold start time noted in PROGRESS.md
+
+**Proof:** `GET <live URL>/healthz` returns `{"status": "ok", ...}`
+
 ## T15 UI base and intake page
 **Files:** `app/api/pages.py`, `app/web/templates/base.html`, `app/web/templates/intake.html`, `app/web/templates/partials/brief.html`, `app/web/templates/partials/banner.html`, `app/web/static/css/app.css`, `app/web/static/js/app.js`, `app/web/static/vendor/htmx.min.js`, `app/web/static/vendor/json-enc.js`, `tests/api/test_pages.py`
 
@@ -238,6 +253,20 @@ Work top to bottom. One task per session. Tick a task only when its proof test p
 
 **Proof:** `pytest tests/api/test_pages.py::test_dashboard_partials_embed_plan_state` (browser round-trip covered in T22)
 
+## T16a Try a sample event
+A one-click demo so judges see the whole flow in seconds, even if Gemini is slow or rate limited.
+
+**Files:** `app/data/sample_plan.json`, `app/api/pages.py`, `app/web/templates/intake.html`, `app/web/static/js/sample.js`, `tests/api/test_sample.py`
+
+**Acceptance**
+- [ ] "Try a sample wedding" loads a prebuilt plan instantly, with no AI call
+- [ ] The user picks the city from a list (default: a neutral metro); the sample plan is rebuilt by the engines for that city
+- [ ] Optional "Use my location": the browser picks the nearest supported city from built-in coordinates; the location never leaves the browser
+- [ ] Sample data names no real people and no Andhra Pradesh cities
+- [ ] Sample plan passes every engine invariant and is clearly labelled as a sample
+
+**Proof:** `pytest tests/api/test_sample.py` (loads without an AI client, invariants hold, city change reprices catering ranges)
+
 ## T17 What-if slider
 **Files:** `app/web/templates/partials/whatif.html`, `app/web/static/js/whatif.js`, `app/api/budget.py`, `tests/api/test_whatif.py`
 
@@ -261,6 +290,9 @@ Work top to bottom. One task per session. Tick a task only when its proof test p
 - [ ] Whole flow works by keyboard alone
 
 **Proof:** `pytest tests/api/test_adapt_ui.py` (budget cut renders options; apply returns a plan that passes all invariants)
+
+## T18a Video script (checkpoint, owner: you)
+Once T18 works, write the 2 to 3 minute video script against the flow in PRD.md, and plan to record it on the deployed link, not localhost.
 
 ## T19 Calendar export
 **Files:** `app/engines/calendar.py`, `app/api/calendar.py`, `app/web/static/js/calendar.js`, `app/web/templates/partials/timeline.html`, `tests/unit/test_calendar.py`, `tests/api/test_calendar.py`
@@ -291,8 +323,8 @@ Work top to bottom. One task per session. Tick a task only when its proof test p
 **Files:** `.github/workflows/ci.yml`, `Dockerfile`, `.dockerignore`
 
 **Acceptance**
-- [ ] CI on push and pull request: ruff, mypy, pytest with 80% coverage floor, pip-audit, Docker build
-- [ ] Dockerfile multi-stage on `python:3.12-slim`, non-root user, no dev dependencies, uvicorn with `--proxy-headers --forwarded-allow-ips`
+- [x] CI on push and pull request: ruff, mypy, pytest with 80% coverage floor, pip-audit (added early, before T11)
+- [ ] Docker build step added to CI (Dockerfile comes from T14a)
 - [ ] Image contains no `.env`, tests or e2e files
 - [ ] Pipeline green on main
 
