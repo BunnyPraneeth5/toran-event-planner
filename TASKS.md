@@ -12,7 +12,7 @@ Work top to bottom. One task per session. Tick a task only when its proof test p
 - [x] T07 Ledger engine
 - [x] T08 Parse and sanitize engines
 - [x] T09 Adapt engine
-- [ ] T10 Gemini wrapper
+- [x] T10 Gemini wrapper
 - [ ] T11 Intake
 - [ ] T12 Generate
 - [ ] T13 Adapt options (AI)
@@ -153,16 +153,16 @@ Work top to bottom. One task per session. Tick a task only when its proof test p
 **Proof:** `pytest tests/unit/test_adapt.py`
 
 ## T10 Gemini wrapper
-**Files:** `app/ai/__init__.py`, `app/ai/client.py`, `tests/fakes.py`, `tests/unit/test_ai_client.py`
+**Files:** `app/ai/__init__.py`, `app/ai/client.py`, `requirements.txt`, `tests/fakes.py`, `tests/unit/test_ai_client.py`, `tests/unit/test_boundaries.py`
 
 **Acceptance**
-- [ ] Async client only; one overall deadline per call from settings
-- [ ] Retry once only on schema-invalid output and only if time remains; timeouts never retried
-- [ ] `finish_reason` checked before parsing
-- [ ] Failures mapped to `AIError`: timeout, rate_limited, unavailable, blocked, truncated, invalid
-- [ ] System instruction, response schema, safety settings and `max_output_tokens` set on every call
-- [ ] Logs endpoint, model, latency, token counts and outcome; never user text
-- [ ] Fake client lives in `tests/fakes.py`, injected by dependency override, never imported by app code
+- [x] Async client only; one overall deadline per call from settings
+- [x] Retry once only on schema-invalid output and only if time remains; timeouts never retried
+- [x] `finish_reason` checked before parsing
+- [x] Failures mapped to `AIError`: timeout, rate_limited, unavailable, blocked, truncated, invalid
+- [x] System instruction, response schema, safety settings and `max_output_tokens` set on every call
+- [x] Logs endpoint, model, latency, token counts and outcome; never user text
+- [x] Fake client lives in `tests/fakes.py`, injected by dependency override, never imported by app code
 
 **Proof:** `pytest tests/unit/test_ai_client.py` (one test per `AIError`, retry rule, no user text in captured logs)
 
