@@ -100,11 +100,13 @@ class GeminiClient:
         *,
         deadline_seconds: float,
         fallback_model: str | None = None,
+        min_retry_seconds: float = MIN_RETRY_SECONDS,
         clock: Callable[[], float] = time.monotonic,
     ) -> None:
         self._models = models
         self._deadline = deadline_seconds
         self._fallback_model = fallback_model
+        self._min_retry = min_retry_seconds
         self._clock = clock
 
     async def generate[SchemaT: BaseModel](
@@ -119,8 +121,10 @@ class GeminiClient:
     ) -> SchemaT:
         """One structured call. Returns a validated `schema` instance or raises AIError.
 
-        Within one overall deadline: invalid output is retried once, and an overloaded or
-        rate-limited model is swapped once for the fallback model. Timeouts never retry.
+        Within one overall deadline: invalid output is retried once, and an overloaded,
+        rate-limited or hung model is swapped once for the fallback model. While a fallback
+        is available, the first model gets at most half the deadline so a hang leaves time
+        to switch. The same model is never retried after a timeout.
         """
         config = types.GenerateContentConfig(
             system_instruction=system_instruction,
@@ -136,8 +140,11 @@ class GeminiClient:
             attempt += 1
             attempt_started = self._clock()
             response: types.GenerateContentResponse | None = None
+            budget = self._remaining(started)
+            if self._fallback_for(model, started) is not None:
+                budget = min(budget, self._deadline / 2)
             try:
-                async with asyncio.timeout(self._remaining(started)):
+                async with asyncio.timeout(budget):
                     response = await self._models.generate_content(
                         model=model, contents=prompt, config=config
                     )
@@ -147,7 +154,7 @@ class GeminiClient:
                 retry = (
                     exc.kind is AIErrorKind.INVALID
                     and not retried_invalid
-                    and self._remaining(started) >= MIN_RETRY_SECONDS
+                    and self._remaining(started) >= self._min_retry
                 )
                 if retry:
                     retried_invalid = True
@@ -155,18 +162,17 @@ class GeminiClient:
                 raise
             except TimeoutError:
                 self._log(endpoint, model, attempt, attempt_started, AIErrorKind.TIMEOUT, None)
+                fallback = self._fallback_for(model, started)
+                if fallback is not None:
+                    model = fallback
+                    continue
                 raise AIError(AIErrorKind.TIMEOUT) from None
             except errors.APIError as exc:
                 kind = AIErrorKind.RATE_LIMITED if exc.code == 429 else AIErrorKind.UNAVAILABLE
                 outcome = f"{kind} status={exc.code}"
                 self._log(endpoint, model, attempt, attempt_started, outcome, None)
-                fallback = self._fallback_model
-                if (
-                    fallback is not None
-                    and fallback != model
-                    and exc.code in FALLBACK_STATUS_CODES
-                    and self._remaining(started) >= MIN_RETRY_SECONDS
-                ):
+                fallback = self._fallback_for(model, started)
+                if fallback is not None and exc.code in FALLBACK_STATUS_CODES:
                     model = fallback
                     continue
                 raise AIError(kind) from None
@@ -179,6 +185,13 @@ class GeminiClient:
 
     def _remaining(self, started: float) -> float:
         return self._deadline - (self._clock() - started)
+
+    def _fallback_for(self, model: str, started: float) -> str | None:
+        """The fallback model, if it differs from `model` and enough time is left for it."""
+        fallback = self._fallback_model
+        if fallback is None or fallback == model or self._remaining(started) < self._min_retry:
+            return None
+        return fallback
 
     def _log(
         self,

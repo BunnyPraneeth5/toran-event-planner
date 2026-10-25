@@ -171,6 +171,32 @@ def test_no_fallback_when_deadline_nearly_spent() -> None:
     assert len(models.calls) == 1
 
 
+def test_hung_main_model_hands_over_to_fallback_at_half_deadline() -> None:
+    client, models = fake_client(
+        Delay(5.0, response(VALID)),
+        response(VALID),
+        deadline_seconds=0.2,
+        fallback_model="backup",
+        min_retry_seconds=0.01,
+    )
+
+    assert _call(client).count == 3
+    assert [c["model"] for c in models.calls] == ["gemini-test", "backup"]
+
+
+def test_fallback_model_timing_out_raises_timeout() -> None:
+    client, models = fake_client(
+        Delay(5.0, response(VALID)),
+        Delay(5.0, response(VALID)),
+        deadline_seconds=0.2,
+        fallback_model="backup",
+        min_retry_seconds=0.01,
+    )
+
+    assert _error(client) is AIErrorKind.TIMEOUT
+    assert len(models.calls) == 2
+
+
 def test_fallback_then_invalid_still_gets_one_retry() -> None:
     client, models = fake_client(
         api_error(503), response(INVALID), response(VALID), fallback_model="backup"
