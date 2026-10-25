@@ -5,7 +5,7 @@ Toran. Tagline: "An event planner". Repo: toran-event-planner. PromptWars Challe
 Core rule: Gemini proposes, engines verify. The LLM never computes money or dates.
 
 ## Stack
-Python 3.12, FastAPI, Pydantic v2, google-genai (async client). Jinja2 + HTMX + vanilla JS + plain CSS. Stateless server, plan in localStorage. Docker on Render.
+Python 3.12, FastAPI, Pydantic v2, google-genai (async client). Jinja2 + HTMX + vanilla JS + plain CSS. Stateless server, plan in localStorage. Hosted on Vercel (FastAPI preset, Mumbai region, deploys on push to main).
 
 ## Modules
 app/engines (pure, no I/O) | app/ai (Gemini wrapper, prompts, schemas) | app/planner.py (only place ai meets engines) | app/api (thin routers) | app/models | app/data (reference JSON) | app/web (templates, static)
