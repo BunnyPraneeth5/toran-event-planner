@@ -32,6 +32,7 @@ Copy the template below for each session, newest first.
   - Replacement line and task ids for a cancelled vendor are derived from the cancelled line ("<id>-r", "<id>-t") so apply recreates them.
   - No AI call when a change causes no overrun and no newly late tasks.
 - Suggestion for the user: set GEMINI_MODEL=gemini-3.6-flash in .env while 3.8-flash stays overloaded (it answered generate in about 10 seconds with richer ideas).
+- Follow-up: the single fallback became an ordered chain, GEMINI_FALLBACK_MODELS (default gemini-3.6-flash, then gemini-3.5-flash-lite), with gemini-3.8-flash kept as the main model. Live: 429 then 503 then lite answered in 3.9s; 429 then 3.6-flash answered in 7.6s.
 - Next: T14 API routes, then T14a early Render deploy.
 
 ### Session 6

@@ -10,7 +10,7 @@ ENV_VARS = (
     "GEMINI_API_KEY",
     "GEMINI_MODEL",
     "GEMINI_LITE_MODEL",
-    "GEMINI_FALLBACK_MODEL",
+    "GEMINI_FALLBACK_MODELS",
     "AI_DEADLINE_SECONDS",
     "RATE_LIMIT_LLM",
     "MAX_BODY_BYTES",
@@ -65,6 +65,16 @@ def test_secret_not_in_repr(
     assert "test-key-123" not in caplog.text
 
 
+def test_fallback_models_parsed_in_order(monkeypatch: pytest.MonkeyPatch) -> None:
+    assert Settings(_env_file=None).fallback_models == ("gemini-3.6-flash", "gemini-3.5-flash-lite")
+
+    monkeypatch.setenv("GEMINI_FALLBACK_MODELS", "")
+    assert Settings(_env_file=None).fallback_models == ()
+
+    monkeypatch.setenv("GEMINI_FALLBACK_MODELS", "model-a")
+    assert Settings(_env_file=None).fallback_models == ("model-a",)
+
+
 @pytest.mark.parametrize(
     ("name", "value"),
     [
@@ -73,6 +83,7 @@ def test_secret_not_in_repr(
         ("MAX_BODY_BYTES", "10"),
         ("RATE_LIMIT_LLM", "lots"),
         ("ENVIRONMENT", "staging"),
+        ("GEMINI_FALLBACK_MODELS", "model a, model b"),
     ],
 )
 def test_invalid_values_rejected(monkeypatch: pytest.MonkeyPatch, name: str, value: str) -> None:

@@ -97,6 +97,7 @@ def fake_client(
     *steps: Any,
     deadline_seconds: float = 25.0,
     fallback_model: str | None = None,
+    fallback_models: tuple[str, ...] = (),
     min_retry_seconds: float = 3.0,
     daily_counter: DailyCallCounter | None = None,
     clock: Callable[[], float] | None = None,
@@ -105,7 +106,7 @@ def fake_client(
     client = GeminiClient(
         models,
         deadline_seconds=deadline_seconds,
-        fallback_model=fallback_model,
+        fallback_models=fallback_models or ((fallback_model,) if fallback_model else ()),
         min_retry_seconds=min_retry_seconds,
         daily_counter=daily_counter,
         clock=clock if clock is not None else FakeClock(),

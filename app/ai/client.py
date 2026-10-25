@@ -9,7 +9,7 @@ with no user text.
 import asyncio
 import logging
 import time
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from enum import StrEnum
 from functools import lru_cache
 from typing import Annotated, Protocol
@@ -105,14 +105,14 @@ class GeminiClient:
         models: ContentGenerator,
         *,
         deadline_seconds: float,
-        fallback_model: str | None = None,
+        fallback_models: Sequence[str] = (),
         min_retry_seconds: float = MIN_RETRY_SECONDS,
         daily_counter: DailyCallCounter | None = None,
         clock: Callable[[], float] = time.monotonic,
     ) -> None:
         self._models = models
         self._deadline = deadline_seconds
-        self._fallback_model = fallback_model
+        self._fallback_models = tuple(fallback_models)
         self._min_retry = min_retry_seconds
         self._daily_counter = daily_counter
         self._clock = clock
@@ -130,9 +130,10 @@ class GeminiClient:
         """One structured call. Returns a validated `schema` instance or raises AIError.
 
         Within one overall deadline: invalid output is retried once, and an overloaded,
-        rate-limited or hung model is swapped once for the fallback model. While a fallback
-        is available, the first model gets at most half the deadline so a hang leaves time
-        to switch. The same model is never retried after a timeout.
+        rate-limited or hung model hands over to the next untried model in the fallback
+        chain. While another model is left to try, each attempt gets at most half of the
+        remaining time, so a hang still leaves time to switch. The same model is never
+        retried after a timeout.
         """
         config = types.GenerateContentConfig(
             system_instruction=system_instruction,
@@ -144,6 +145,7 @@ class GeminiClient:
         started = self._clock()
         attempt = 0
         retried_invalid = False
+        tried = {model}
         while True:
             attempt += 1
             attempt_started = self._clock()
@@ -153,8 +155,8 @@ class GeminiClient:
                 self._log(endpoint, model, attempt, attempt_started, kind, None)
                 raise AIError(kind)
             budget = self._remaining(started)
-            if self._fallback_for(model, started) is not None:
-                budget = min(budget, self._deadline / 2)
+            if self._next_model(tried, started) is not None:
+                budget /= 2
             try:
                 async with asyncio.timeout(budget):
                     response = await self._models.generate_content(
@@ -174,18 +176,20 @@ class GeminiClient:
                 raise
             except TimeoutError:
                 self._log(endpoint, model, attempt, attempt_started, AIErrorKind.TIMEOUT, None)
-                fallback = self._fallback_for(model, started)
+                fallback = self._next_model(tried, started)
                 if fallback is not None:
                     model = fallback
+                    tried.add(model)
                     continue
                 raise AIError(AIErrorKind.TIMEOUT) from None
             except errors.APIError as exc:
                 kind = AIErrorKind.RATE_LIMITED if exc.code == 429 else AIErrorKind.UNAVAILABLE
                 outcome = f"{kind} status={exc.code}"
                 self._log(endpoint, model, attempt, attempt_started, outcome, None)
-                fallback = self._fallback_for(model, started)
+                fallback = self._next_model(tried, started)
                 if fallback is not None and exc.code in FALLBACK_STATUS_CODES:
                     model = fallback
+                    tried.add(model)
                     continue
                 raise AIError(kind) from None
             except (httpx.HTTPError, OSError):
@@ -198,12 +202,11 @@ class GeminiClient:
     def _remaining(self, started: float) -> float:
         return self._deadline - (self._clock() - started)
 
-    def _fallback_for(self, model: str, started: float) -> str | None:
-        """The fallback model, if it differs from `model` and enough time is left for it."""
-        fallback = self._fallback_model
-        if fallback is None or fallback == model or self._remaining(started) < self._min_retry:
+    def _next_model(self, tried: set[str], started: float) -> str | None:
+        """The first untried model in the fallback chain, if enough time is left for it."""
+        if self._remaining(started) < self._min_retry:
             return None
-        return fallback
+        return next((m for m in self._fallback_models if m not in tried), None)
 
     def _log(
         self,
@@ -260,20 +263,20 @@ def build_client(settings: Settings) -> GeminiClient | None:
     return _cached_client(
         settings.gemini_api_key.get_secret_value(),
         settings.ai_deadline_seconds,
-        settings.gemini_fallback_model,
+        settings.fallback_models,
         settings.ai_daily_call_limit,
     )
 
 
 @lru_cache(maxsize=2)
 def _cached_client(
-    api_key: str, deadline_seconds: float, fallback_model: str | None, daily_limit: int
+    api_key: str, deadline_seconds: float, fallback_models: tuple[str, ...], daily_limit: int
 ) -> GeminiClient:
     """One client per configuration, so the daily counter is shared by every request."""
     return GeminiClient(
         _sdk_client(api_key, int(deadline_seconds * 1000)).aio.models,
         deadline_seconds=deadline_seconds,
-        fallback_model=fallback_model,
+        fallback_models=fallback_models,
         daily_counter=DailyCallCounter(daily_limit),
     )
 

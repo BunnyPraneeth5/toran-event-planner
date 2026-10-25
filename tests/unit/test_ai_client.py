@@ -142,6 +142,33 @@ def test_overloaded_model_falls_back_once(code: int) -> None:
     assert [c["model"] for c in models.calls] == ["gemini-test", "backup"]
 
 
+def test_fallback_chain_is_tried_in_order() -> None:
+    client, models = fake_client(
+        api_error(503), api_error(429), response(VALID), fallback_models=("middle", "last")
+    )
+
+    assert _call(client).count == 3
+    assert [c["model"] for c in models.calls] == ["gemini-test", "middle", "last"]
+
+
+def test_fallback_chain_skips_the_model_already_in_use() -> None:
+    client, models = fake_client(
+        api_error(503), response(VALID), fallback_models=("gemini-test", "other")
+    )
+
+    assert _call(client).count == 3
+    assert [c["model"] for c in models.calls] == ["gemini-test", "other"]
+
+
+def test_whole_chain_failing_raises_after_each_model_once() -> None:
+    client, models = fake_client(
+        api_error(503), api_error(503), api_error(503), fallback_models=("middle", "last")
+    )
+
+    assert _error(client) is AIErrorKind.UNAVAILABLE
+    assert len(models.calls) == 3
+
+
 def test_fallback_model_failing_too_raises() -> None:
     client, models = fake_client(api_error(503), api_error(503), fallback_model="backup")
 

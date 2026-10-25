@@ -5,7 +5,7 @@
 |---|---|---|
 | Backend | Python 3.12, FastAPI, Pydantic v2 | Fast, typed, you already know it. Pydantic validates every request and every Gemini response. |
 | AI | google-genai SDK (async client), Gemini API (AI Studio key) | Structured output with response schemas. Maps grounding for the stretch vendor discovery. |
-| Models | `gemini-3.8-flash` (generate, adapt), `gemini-3.5-flash-lite` (intake and cheap stretch tasks, and the fallback model) | Set via env, verified against the key's model list. Pin stable, never "latest". Intake is pure extraction, and the lite model answered it correctly in about 2 seconds while the newest flash models were often overloaded. |
+| Models | `gemini-3.8-flash` (generate, adapt), `gemini-3.5-flash-lite` (intake and cheap stretch tasks); fallback chain `gemini-3.6-flash`, then `gemini-3.5-flash-lite` | Set via env, verified against the key's model list. Pin stable, never "latest". Intake is pure extraction, and the lite model answered it correctly in about 2 seconds while the newest flash models were often overloaded. |
 | Frontend | Jinja2 templates + HTMX (vendored, with json-enc) + small vanilla JS + hand-written CSS | No build step, tiny bundle, easy accessibility, one deploy. HTMX swaps partials for the what-if slider and adapt options. |
 | State | Stateless server. Plan lives in browser localStorage with `schema_version`, export/import as JSON | No DB to secure, no PII stored server-side, nothing lost on Render redeploys. |
 | Calendar | .ics file + "Add to Google Calendar" link | Free, no OAuth. |
@@ -97,7 +97,7 @@ All money is `int` rupees (strict, never float), formatted as lakh/crore only at
 
 ## AI guardrails
 - Every call sets a system instruction, a response schema from `ai/schemas.py`, explicit safety settings and `max_output_tokens`. Output parsed into Pydantic.
-- Async client only, so a slow call never blocks other requests. One overall deadline per request (default 25s, env). Retry once only on schema-invalid output and only if time remains. On overload, rate limit (429, 5xx) or a hang, switch once to `GEMINI_FALLBACK_MODEL`; while a fallback exists the first model gets at most half the deadline. The same model is never retried after a timeout. SDK-level retries are off so this logic owns the deadline.
+- Async client only, so a slow call never blocks other requests. One overall deadline per request (default 25s, env). Retry once only on schema-invalid output and only if time remains. On overload, rate limit (429, 5xx) or a hang, hand over to the next untried model in `GEMINI_FALLBACK_MODELS` (default `gemini-3.6-flash,gemini-3.5-flash-lite`); while another model is left to try, each attempt gets at most half of the remaining time. The same model is never retried after a timeout. SDK-level retries are off so this logic owns the deadline.
 - `finish_reason` checked before parsing. Failures map to `AIError`: timeout, rate_limited, unavailable, blocked, truncated, invalid. Each has its own banner text; rate_limited says "busy, try again" instead of falling back.
 - Schema-valid output still passes through `engines.sanitize` before any engine uses it.
 - Intake returns `is_event`; non-event input gets a friendly prompt, not a plan.

@@ -16,8 +16,10 @@ class Settings(BaseSettings):
     gemini_api_key: SecretStr | None = None
     gemini_model: str = Field(default="gemini-3.8-flash", min_length=1, max_length=80)
     gemini_lite_model: str = Field(default="gemini-3.5-flash-lite", min_length=1, max_length=80)
-    gemini_fallback_model: str | None = Field(
-        default="gemini-3.5-flash-lite", min_length=1, max_length=80
+    gemini_fallback_models: str = Field(
+        default="gemini-3.6-flash,gemini-3.5-flash-lite",
+        max_length=400,
+        pattern=r"^[a-z0-9.\-]*(,[a-z0-9.\-]+)*$",
     )
     ai_deadline_seconds: float = Field(default=25.0, gt=0, le=60)
     rate_limit_llm: str = Field(default="10/minute", pattern=r"^\d{1,4}/(second|minute|hour|day)$")
@@ -30,6 +32,11 @@ class Settings(BaseSettings):
         if self.gemini_api_key is None:
             return False
         return bool(self.gemini_api_key.get_secret_value().strip())
+
+    @property
+    def fallback_models(self) -> tuple[str, ...]:
+        """Models tried in order when the main one is overloaded, rate limited or hung."""
+        return tuple(m for m in self.gemini_fallback_models.split(",") if m)
 
     @property
     def is_production(self) -> bool:
