@@ -1,0 +1,16 @@
+{
+  "note": "Rough defaults. Multipliers are percent of tier-2 costs. Unknown cities use default_tier.",
+  "default_tier": "tier2",
+  "tiers": {"metro": 140, "tier2": 100, "tier3": 80},
+  "cities": {
+    "mumbai": "metro", "delhi": "metro", "new delhi": "metro", "bengaluru": "metro",
+    "bangalore": "metro", "hyderabad": "metro", "chennai": "metro", "kolkata": "metro",
+    "pune": "metro", "gurugram": "metro", "noida": "metro",
+    "ahmedabad": "tier2", "jaipur": "tier2", "lucknow": "tier2", "mysuru": "tier2",
+    "nashik": "tier2", "coimbatore": "tier2", "kochi": "tier2", "indore": "tier2",
+    "nagpur": "tier2", "chandigarh": "tier2", "bhopal": "tier2", "surat": "tier2",
+    "jodhpur": "tier3", "udaipur": "tier3", "ajmer": "tier3", "kolhapur": "tier3",
+    "hubballi": "tier3", "belagavi": "tier3", "salem": "tier3", "dehradun": "tier3",
+    "siliguri": "tier3", "jhansi": "tier3"
+  }
+}

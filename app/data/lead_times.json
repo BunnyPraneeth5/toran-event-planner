@@ -1,0 +1,17 @@
+{
+  "note": "Rough defaults, not vendor quotes. Days before the function by which the task should be done.",
+  "lead_times": [
+    {"category": "venue", "lead_days": 180, "task": "Book the venue"},
+    {"category": "catering", "lead_days": 120, "task": "Finalise the caterer and menu"},
+    {"category": "decor", "lead_days": 60, "task": "Book the decorator"},
+    {"category": "music_entertainment", "lead_days": 60, "task": "Book DJ, band or performers"},
+    {"category": "photo_video", "lead_days": 120, "task": "Book photographer and videographer"},
+    {"category": "attire", "lead_days": 150, "task": "Order outfits and jewellery"},
+    {"category": "mehendi_makeup", "lead_days": 90, "task": "Book mehendi artist and makeup"},
+    {"category": "priest_rituals", "lead_days": 60, "task": "Confirm priest and puja items"},
+    {"category": "invitations_gifts", "lead_days": 45, "task": "Print and send invitations"},
+    {"category": "travel_stay", "lead_days": 60, "task": "Block rooms for outstation guests"},
+    {"category": "cake", "lead_days": 7, "task": "Order the cake"},
+    {"category": "other", "lead_days": 14, "task": "Buy small items and set aside contingency"}
+  ]
+}

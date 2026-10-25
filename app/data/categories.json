@@ -1,0 +1,33 @@
+{
+  "note": "Rough defaults, not vendor quotes. Weights are percent of total budget. per_guest_floor is a typical minimum per guest in a tier-2 city, in rupees.",
+  "categories": [
+    {"key": "venue", "label": "Venue", "scope": "function", "tier_sensitive": true},
+    {"key": "catering", "label": "Catering", "scope": "function", "per_plate": true, "tier_sensitive": true, "per_guest_floor": 350},
+    {"key": "decor", "label": "Decor and flowers", "scope": "function", "tier_sensitive": true},
+    {"key": "music_entertainment", "label": "Music and entertainment", "scope": "function"},
+    {"key": "photo_video", "label": "Photography and video", "scope": "event"},
+    {"key": "attire", "label": "Clothes and jewellery", "scope": "event"},
+    {"key": "mehendi_makeup", "label": "Mehendi and makeup", "scope": "event"},
+    {"key": "priest_rituals", "label": "Priest and puja items", "scope": "event"},
+    {"key": "invitations_gifts", "label": "Invitations and return gifts", "scope": "event", "per_plate": true, "per_guest_floor": 40},
+    {"key": "travel_stay", "label": "Guest travel and stay", "scope": "event"},
+    {"key": "cake", "label": "Cake", "scope": "event"},
+    {"key": "other", "label": "Other and contingency", "scope": "event"}
+  ],
+  "default_weights": {
+    "wedding": {
+      "venue": 18, "catering": 30, "decor": 10, "music_entertainment": 4, "photo_video": 8,
+      "attire": 12, "mehendi_makeup": 3, "priest_rituals": 2, "invitations_gifts": 5,
+      "travel_stay": 3, "other": 5
+    },
+    "birthday": {
+      "venue": 25, "catering": 40, "decor": 12, "music_entertainment": 5, "photo_video": 5,
+      "invitations_gifts": 5, "cake": 5, "other": 3
+    },
+    "community": {
+      "venue": 15, "catering": 30, "decor": 20, "music_entertainment": 12, "photo_video": 3,
+      "priest_rituals": 10, "invitations_gifts": 3, "other": 7
+    }
+  },
+  "tier_multipliers": {"budget": 70, "standard": 100, "premium": 160}
+}
