@@ -212,6 +212,8 @@ class _Draft:
     def _set_event_guests(self, guests: int) -> None:
         previous = self.event_guests
         self.event_guests = guests
+        if guests != previous:
+            self._scale(self._items(None, per_plate=True), guests, previous)
         for function in list(self.functions.values()):
             if not function.guests_override:
                 scaled = _round_div(function.guests * guests, previous)
@@ -252,9 +254,9 @@ class _Draft:
         return self.functions[function_id]
 
     def _items(
-        self, function_id: str, *, per_plate: bool = False, tier_sensitive: bool = False
+        self, function_id: str | None, *, per_plate: bool = False, tier_sensitive: bool = False
     ) -> list[str]:
-        """Adjustable lines of one function whose category matches the given flags."""
+        """Adjustable lines of one function (None: event-wide) matching the given flags."""
         ids: list[str] = []
         for item in self.adjustable:
             info = self.info.get(item.category)

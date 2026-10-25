@@ -199,6 +199,18 @@ def test_more_guests_scale_per_plate_lines(ref: ReferenceData) -> None:
     assert _committed(result.plan) == 2_500_000
 
 
+def test_more_guests_scale_event_wide_per_plate_lines(ref: ReferenceData) -> None:
+    plan = _plan(ref)
+    gifts_before = _item(plan, "invitations_gifts").planned
+    attire_before = _item(plan, "attire").planned
+
+    result = _run(plan, ref, SetGuests(guests=500))
+
+    assert _item(result.plan, "invitations_gifts").planned == (gifts_before * 500 + 200) // 400
+    assert _item(result.plan, "attire").planned < attire_before
+    assert _committed(result.plan) == 2_500_000
+
+
 def test_function_guest_override_survives_event_guest_change(ref: ReferenceData) -> None:
     result = _run(
         _plan(ref),
