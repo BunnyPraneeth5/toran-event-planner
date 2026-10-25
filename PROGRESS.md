@@ -19,6 +19,13 @@ Copy the template below for each session, newest first.
 - Next:
 -->
 
+### Session 2
+- Task(s): per-plate price choices (follow-up to T04 and T05)
+- Done: catering and invitations get per-plate ranges by city type and tier; warnings now carry typical low and high; city_tiers.json maps cities to a type only.
+- Checks: ruff clean, mypy strict clean, 105 tests passing.
+- Decisions: event-wide per-plate lines use the standard tier and event guests.
+- Next: T06 Timeline engine.
+
 ### Session 1
 - Task(s): T01 to T05
 - Done: git repo, scaffold and tooling, env settings, domain models, reference data with validated loader, budget engine (allocate, what-if, realism warnings), engine boundary tests.
@@ -35,11 +42,4 @@ Copy the template below for each session, newest first.
 - Problems and gotchas:
   - Starlette's TestClient warns that httpx is deprecated in favour of httpx2. Harmless for now; revisit before CI.
   - `model_copy(update=...)` skips validation, so engines must rebuild the Plan (which re-runs its validators) after changes.
-- Next: T06 Timeline engine.
-
-### Session 2
-- Task(s): per-plate price choices (follow-up to T04 and T05)
-- Done: catering and invitations get per-plate ranges by city type and tier; warnings now carry typical low and high; city_tiers.json maps cities to a type only.
-- Checks: ruff clean, mypy strict clean, 105 tests passing.
-- Decisions: event-wide per-plate lines use the standard tier and event guests.
 - Next: T06 Timeline engine.
