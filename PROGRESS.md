@@ -1,8 +1,8 @@
 # PROGRESS: Toran
 
 ## Status
-- Current task: T15 (T14a open only for hiding /docs on the live site)
-- Last green commit: Declare runtime dependencies in pyproject.toml
+- Current task: T16 (T14a open only for hiding /docs on the live site)
+- Last green commit: T15 UI base and intake page
 - Last submission tag:
 - Repo: https://github.com/BunnyPraneeth5/toran-event-planner (public, CI on every push)
 - Live link: https://toran-event-planner.vercel.app (Vercel Hobby, Mumbai region; pages arrive with T15, `/healthz` works now)
@@ -19,6 +19,19 @@ Copy the template below for each session, newest first.
 - Problems and gotchas (add repeats to CLAUDE.md):
 - Next:
 -->
+
+### Session 10
+- Task(s): CLAUDE.md hosting line, T15 UI base and intake page
+- Done: base layout (landmarks, skip link, lang, one aria-live region, htmx config with eval and inline scripts off), hand-written CSS (mobile first, light and dark, visible focus, reduced motion), vendored htmx 2.0.11, app.js with the toran-json extension, error messages in the live region and focus moved to new headings, intake page, brief form with Needed fields and follow-up questions, fallback banners.
+- Checks: ruff clean, mypy strict clean, 366 tests passing. Browser at 390px with the live key: intake filled Wedding, Pune, 300 guests and 20 lakh and asked only for the day; generate produced an AI plan of exactly 20 lakh with 4 functions and 22 tasks; no horizontal scroll; focus landed on each new heading.
+- Problems and gotchas:
+  - htmx with allowScriptTags false strips every script tag from swapped HTML, including JSON data blocks. The plan now travels in a hidden div's data-plan attribute; tests and docs updated.
+  - A `.wrap` class rule overrode `main`'s padding (class beats element); fixed with `main.wrap`.
+  - Shell heredocs keep mangling backslashes in Python and regex strings; use the editor for those edits.
+- Decisions:
+  - Our own toran-json htmx extension instead of json-enc: json-enc sends every value as a string (strict integers reject "400") and cannot nest `brief.*` fields.
+  - Static paths are root-relative (`/static/...`), never url_for, so they stay correct behind Vercel's proxy.
+- Next: T16 Dashboard page and state contract.
 
 ### Session 9
 - Task(s): T14a early deploy (moved from Render to Vercel)

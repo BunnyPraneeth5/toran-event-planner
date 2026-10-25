@@ -19,7 +19,7 @@ async def intake(
 ) -> Response:
     """Free text to a brief, with questions for whatever is missing. Uses the lite model."""
     result = await planner.intake(body, ai, model=settings.gemini_lite_model, today=today)
-    return respond(request, result, "partials/brief.html")
+    return respond(request, result, "partials/brief.html", text=body.text)
 
 
 @router.post("/generate", response_model=PlanResponse)

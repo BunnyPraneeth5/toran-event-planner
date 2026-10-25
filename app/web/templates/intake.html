@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="card" aria-labelledby="intake-heading">
+  <h1 id="intake-heading">Plan your celebration</h1>
+  <p>Describe the event in one line. Toran asks about anything missing, then builds the budget, timeline and checklist.</p>
+  <form hx-post="/api/plan/intake" hx-target="#brief" hx-disabled-elt="find button" data-shape="intake">
+    <label for="intake-text">Your event</label>
+    <textarea id="intake-text" name="text" rows="3" required minlength="3" maxlength="1000"
+              aria-describedby="intake-hint"></textarea>
+    <p id="intake-hint" class="hint">For example: Sister's wedding in Jaipur, February 2027, about 400 guests, 25 lakh budget.</p>
+    <button type="submit">Read my event <span class="htmx-indicator">Working on it</span></button>
+  </form>
+</section>
+<div id="brief"></div>
+<div id="result"></div>
+{% endblock %}

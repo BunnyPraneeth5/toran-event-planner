@@ -18,7 +18,7 @@ Work top to bottom. One task per session. Tick a task only when its proof test p
 - [x] T13 Adapt options (AI)
 - [x] T14 API routes
 - [ ] T14a Early Vercel deploy (checkpoint)
-- [ ] T15 UI base and intake page
+- [x] T15 UI base and intake page
 - [ ] T16 Dashboard page and state contract
 - [ ] T16a Try a sample event
 - [ ] T17 What-if slider
@@ -238,24 +238,24 @@ Done right after T14, so hosting, env var and cold start problems show up early,
 **Proof:** `GET https://toran-event-planner.vercel.app/healthz` returns ok; `GET /docs` returns 404
 
 ## T15 UI base and intake page
-**Files:** `app/api/pages.py`, `app/web/templates/base.html`, `app/web/templates/intake.html`, `app/web/templates/partials/brief.html`, `app/web/templates/partials/banner.html`, `app/web/static/css/app.css`, `app/web/static/js/app.js`, `app/web/static/vendor/htmx.min.js`, `app/web/static/vendor/json-enc.js`, `tests/api/test_pages.py`
+**Files:** `app/api/pages.py`, `app/web/templates/base.html`, `app/web/templates/intake.html`, `app/web/templates/partials/brief.html`, `app/web/templates/partials/banner.html`, `app/web/static/css/app.css`, `app/web/static/js/app.js`, `app/web/static/vendor/htmx.min.js` (2.0.11, with licence), `app/web/templates/partials/plan_state.html`, `app/main.py` (static mount), `tests/api/test_pages.py`, `tests/api/test_routes.py`
 
 **Acceptance**
-- [ ] Base layout: landmarks, skip link, `lang` attribute, `htmx-config` meta (`includeIndicatorStyles: false`, `allowEval: false`, `allowScriptTags: false`), one aria-live region
-- [ ] No inline scripts, no inline `style` attributes, no `hx-on`, no CDN scripts
-- [ ] Intake: one text field, then the brief as a form with questions as fields and missing fields highlighted
-- [ ] Fallback banner partial shown whenever `sources` marks fallback
-- [ ] `htmx:responseError` writes the message into the live region
-- [ ] Layout works at 390px
+- [x] Base layout: landmarks, skip link, `lang` attribute, `htmx-config` meta (`includeIndicatorStyles: false`, `allowEval: false`, `allowScriptTags: false`), one aria-live region
+- [x] No inline scripts, no inline `style` attributes, no `hx-on`, no CDN scripts
+- [x] Intake: one text field, then the brief as a form with questions as fields and missing fields highlighted
+- [x] Fallback banner partial shown whenever `sources` marks fallback
+- [x] `htmx:responseError` writes the message into the live region
+- [x] Layout works at 390px
 
-**Proof:** `pytest tests/api/test_pages.py` (pages render; no `<script>` without `src` except `application/json`; no `style=` attributes; banner present on fallback)
+**Proof:** `pytest tests/api/test_pages.py` (pages render; every `<script>` has a local `src`; no `style=` attributes; banner present on fallback)
 
 ## T16 Dashboard page and state contract
 **Files:** `app/web/templates/dashboard.html`, `app/web/templates/partials/functions.html`, `app/web/templates/partials/budget.html`, `app/web/templates/partials/timeline.html`, `app/web/templates/partials/ledger.html`, `app/web/templates/partials/plan_state.html`, `app/web/static/js/state.js`, `app/web/static/css/app.css`, `tests/api/test_pages.py`
 
 **Acceptance**
 - [ ] Dashboard shows functions, budget table, timeline with late and at-risk text labels, ledger
-- [ ] Every plan-changing partial embeds `<script type="application/json" id="plan-state">`
+- [ ] Every plan-changing partial embeds `<div id="plan-state" hidden data-plan="...">` (htmx strips script tags from swaps)
 - [ ] `state.js` adds the plan to requests, saves on `htmx:afterSwap`, checks `schema_version`, warns on changes from another tab, calls `navigator.storage.persist()`
 - [ ] Export and import JSON; imports validated server-side through `/api/plan/recompute`
 - [ ] Budget bars via `<meter>` or SVG; every chart also a table; rupees in lakh/crore

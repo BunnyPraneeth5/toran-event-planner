@@ -1,3 +1,4 @@
-{# The plan travels back to the browser here; static JS saves it to localStorage.
-   JSON data blocks are not executed, and tojson escapes anything that could close the tag. #}
-<script type="application/json" id="plan-state">{{ plan.model_dump(mode="json") | tojson }}</script>
+{# The plan travels back to the browser here; static JS saves it to localStorage. It is an
+   attribute, not a <script> block, because htmx (allowScriptTags: false) strips every script
+   tag from swapped content. Jinja autoescape makes the JSON safe inside the attribute. #}
+<div id="plan-state" hidden data-plan="{{ plan.model_dump_json() }}"></div>

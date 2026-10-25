@@ -1,12 +1,13 @@
 {% set view = data.view %}{% set plan = view.plan %}
-{% set banner = data.banner %}{% include "partials/banner.html" %}
-<section aria-labelledby="plan-heading">
-  <h2 id="plan-heading">{{ plan.event.title }}</h2>
+{% set banner = data.banner or ("Parts of this plan use rule-based defaults because the AI was unavailable." if plan.sources.plan == "fallback" else none) %}{% include "partials/banner.html" %}
+<section class="card" aria-labelledby="plan-heading">
+  <h2 id="plan-heading" tabindex="-1" data-focus>{{ plan.event.title }}</h2>
   <p>{{ plan.event.city }}, {{ plan.event.start_date }} to {{ plan.event.end_date }}, {{ plan.event.guests }} guests</p>
   {% for notice in data.notices %}<p class="notice">{{ notice }}</p>{% endfor %}
 
   <h3>Budget</h3>
   <p>{{ view.budget.committed | inr }} of {{ plan.event.total_budget | inr }} planned{% if view.budget.over_by %}, over by {{ view.budget.over_by | inr }}{% endif %}.</p>
+  <div class="table-wrap">
   <table>
     <caption>Budget by category</caption>
     <thead><tr><th scope="col">Category</th><th scope="col">Planned</th><th scope="col">Booked or paid</th></tr></thead>
@@ -16,6 +17,7 @@
       {% endfor %}
     </tbody>
   </table>
+  </div>
 
   <h3>Functions</h3>
   <ul>

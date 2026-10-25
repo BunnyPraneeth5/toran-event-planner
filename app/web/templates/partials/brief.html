@@ -1,22 +1,93 @@
 {% set banner = data.banner %}{% include "partials/banner.html" %}
-<section aria-labelledby="brief-heading">
-  <h2 id="brief-heading">Your event</h2>
+{% set brief = data.brief %}
+{% set asked = {} %}{% for q in data.questions if q.field != "other" %}{% set _ = asked.update({q.field: q.text}) %}{% endfor %}
+{% macro field_note(name) -%}
+  {%- if name in data.missing -%}
+  <p id="{{ name }}-note" class="needed">Needed{% if asked.get(name) %}: {{ asked[name] }}{% endif %}</p>
+  {%- endif -%}
+{%- endmacro %}
+{% macro invalid(name) -%}
+  {%- if name in data.missing %} aria-invalid="true" aria-describedby="{{ name }}-note"{% endif -%}
+{%- endmacro %}
+<section class="card" aria-labelledby="brief-heading">
+  <h2 id="brief-heading" tabindex="-1" data-focus>Check your event</h2>
   {% if data.status == "not_event" %}
   <p>{{ data.message }}</p>
   {% else %}
-  <dl>
-    <dt>Type</dt><dd>{{ data.brief.event_type or "Not given yet" }}</dd>
-    <dt>City</dt><dd>{{ data.brief.city or "Not given yet" }}</dd>
-    <dt>Starts</dt><dd>{{ data.brief.start_date or "Not given yet" }}</dd>
-    <dt>Guests</dt><dd>{{ data.brief.guests or "Not given yet" }}</dd>
-    <dt>Budget</dt><dd>{{ data.brief.total_budget | inr if data.brief.total_budget else "Not given yet" }}</dd>
-  </dl>
-  {% if data.questions %}
-  <h3>A few questions</h3>
-  <ul>
-    {% for question in data.questions %}<li>{{ question.text }}</li>{% endfor %}
-  </ul>
-  {% endif %}
+  <p>{% if data.missing %}Fill in the fields marked Needed, then make your plan.{% else %}Everything needed is here. Adjust anything, then make your plan.{% endif %}</p>
   {% for notice in data.notices %}<p class="notice">{{ notice }}</p>{% endfor %}
+  <form class="brief-form" hx-post="/api/plan/generate" hx-target="#result" hx-disabled-elt="find button" data-shape="generate">
+    <input type="hidden" name="text" value="{{ text }}">
+    <input type="hidden" name="brief_source" value="{{ data.source }}">
+
+    <div class="field{% if 'event_type' in data.missing %} missing{% endif %}">
+      <label for="f-event-type">Type of event</label>
+      <select id="f-event-type" name="brief.event_type" required{{ invalid("event_type") }}>
+        <option value="">Choose one</option>
+        {% for value, label in [("wedding", "Wedding"), ("birthday", "Birthday"), ("community", "Community event")] %}
+        <option value="{{ value }}"{% if brief.event_type == value %} selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+      {{ field_note("event_type") }}
+    </div>
+
+    <div class="field{% if 'city' in data.missing %} missing{% endif %}">
+      <label for="f-city">City</label>
+      <input id="f-city" name="brief.city" type="text" maxlength="120" required value="{{ brief.city or '' }}"{{ invalid("city") }}>
+      {{ field_note("city") }}
+    </div>
+
+    <div class="field{% if 'start_date' in data.missing %} missing{% endif %}">
+      <label for="f-start-date">First day</label>
+      <input id="f-start-date" name="brief.start_date" type="date" required value="{{ brief.start_date or '' }}"{{ invalid("start_date") }}>
+      {{ field_note("start_date") }}
+    </div>
+
+    <div class="field{% if 'guests' in data.missing %} missing{% endif %}">
+      <label for="f-guests">Guests</label>
+      <input id="f-guests" name="brief.guests" type="number" inputmode="numeric" min="1" max="5000" step="1"
+             data-type="int" required value="{{ brief.guests or '' }}"{{ invalid("guests") }}>
+      {{ field_note("guests") }}
+    </div>
+
+    <div class="field{% if 'total_budget' in data.missing %} missing{% endif %}">
+      <label for="f-budget">Total budget in rupees</label>
+      <input id="f-budget" name="brief.total_budget" type="number" inputmode="numeric" min="1000" step="1"
+             data-type="int" required value="{{ brief.total_budget or '' }}"
+             {%- if 'total_budget' in data.missing %} aria-invalid="true" aria-describedby="total_budget-note budget-hint"{% else %} aria-describedby="budget-hint"{% endif %}>
+      <p id="budget-hint" class="hint">{% if brief.total_budget %}That is {{ brief.total_budget | short_inr }}.{% else %}For example 2500000 for 25 lakh.{% endif %}</p>
+      {{ field_note("total_budget") }}
+    </div>
+
+    <div class="field">
+      <label for="f-title">Name for the plan <span class="optional">(optional)</span></label>
+      <input id="f-title" name="brief.title" type="text" maxlength="120" value="{{ brief.title or '' }}">
+    </div>
+
+    <div class="field">
+      <label for="f-notes">Preferences <span class="optional">(optional)</span></label>
+      <textarea id="f-notes" name="brief.style_notes" rows="2" maxlength="500">{{ brief.style_notes }}</textarea>
+    </div>
+
+    {% set extra = data.questions | selectattr("field", "equalto", "other") | list %}
+    {% if extra %}
+    <fieldset class="questions">
+      <legend>A few more questions <span class="optional">(optional)</span></legend>
+      {% for q in extra %}
+      <div class="field">
+        <label for="q-{{ loop.index }}">{{ q.text }}</label>
+        <input id="q-{{ loop.index }}" name="answer-{{ loop.index }}" type="text" maxlength="300" data-answer-for="{{ q.text }}">
+      </div>
+      {% endfor %}
+    </fieldset>
+    {% endif %}
+
+    <div class="actions">
+      <button type="submit">Make my plan <span class="htmx-indicator">Working on it</span></button>
+      {% if extra and text %}
+      <button type="button" class="secondary" hx-post="/api/plan/intake" hx-target="#brief" data-shape="intake">Update with my answers</button>
+      {% endif %}
+    </div>
+  </form>
   {% endif %}
 </section>

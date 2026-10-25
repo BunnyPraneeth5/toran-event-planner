@@ -6,7 +6,7 @@
 | Backend | Python 3.12, FastAPI, Pydantic v2 | Fast, typed, you already know it. Pydantic validates every request and every Gemini response. |
 | AI | google-genai SDK (async client), Gemini API (AI Studio key) | Structured output with response schemas. Maps grounding for the stretch vendor discovery. |
 | Models | `gemini-3.8-flash` (generate, adapt), `gemini-3.5-flash-lite` (intake and cheap stretch tasks); fallback chain `gemini-3.6-flash`, then `gemini-3.5-flash-lite` | Set via env, verified against the key's model list. Pin stable, never "latest". Intake is pure extraction, and the lite model answered it correctly in about 2 seconds while the newest flash models were often overloaded. |
-| Frontend | Jinja2 templates + HTMX (vendored, with json-enc) + small vanilla JS + hand-written CSS | No build step, tiny bundle, easy accessibility, one deploy. HTMX swaps partials for the what-if slider and adapt options. |
+| Frontend | Jinja2 templates + HTMX 2.0.11 (vendored) + small vanilla JS (including a `toran-json` htmx extension that sends typed, nested JSON) + hand-written CSS | No build step, tiny bundle, easy accessibility, one deploy. HTMX swaps partials for the what-if slider and adapt options. |
 | State | Stateless server. Plan lives in browser localStorage with `schema_version`, export/import as JSON | No DB to secure, no PII stored server-side, nothing lost on redeploys. |
 | Calendar | .ics file + "Add to Google Calendar" link | Free, no OAuth. |
 | Fonts | Google Fonts: Noto Sans (`display=swap`). Noto Sans Telugu and Devanagari load only with the translation stretch. | Small payload by default. |
@@ -73,8 +73,8 @@ All money is `int` rupees (strict, never float), formatted as lakh/crore only at
 7. **Export.** .ics download and Google Calendar links per task.
 
 ## State contract (HTMX + localStorage + strict CSP)
-- Static JS adds the plan from localStorage to each request in `htmx:configRequest`; json-enc sends JSON bodies, so no form parsing dependency is needed.
-- Every partial that changes the plan embeds `<script type="application/json" id="plan-state">`. JS reads it on `htmx:afterSwap`, checks `schema_version` and writes localStorage. JSON data blocks are not executed, so CSP is unaffected.
+- Static JS adds the plan from localStorage to each request; the `toran-json` extension in `app.js` sends JSON bodies (numbers stay numbers, dotted field names nest, only the keys each route accepts), so no form parsing dependency is needed.
+- Every partial that changes the plan embeds `<div id="plan-state" hidden data-plan="...">` with the plan as escaped JSON. JS reads it on `htmx:afterSwap`, checks `schema_version` and writes localStorage. An attribute rather than a `<script type="application/json">` block, because htmx with `allowScriptTags: false` strips every script tag from swapped content.
 - `<meta name="htmx-config">` sets `includeIndicatorStyles: false`, `allowEval: false`, `allowScriptTags: false`. No `hx-on` attributes; listeners live in static JS. No inline `style` attributes; bars use `<meter>`, `<progress>` or SVG attributes.
 - `htmx:responseError` writes the error message into an aria-live region.
 - Unknown `schema_version`: offer export of the raw data, then reset. Call `navigator.storage.persist()`. Listen for the `storage` event to warn when another tab changed the plan.

@@ -1,6 +1,7 @@
 import json
 import re
 from datetime import timedelta
+from html import unescape
 from pathlib import Path
 from typing import Any
 
@@ -271,12 +272,12 @@ def test_htmx_request_gets_html_with_plan_state(make_app: Any) -> None:
 
     assert response_.headers["content-type"].startswith("text/html")
     html = response_.text
-    state = re.search(r'<script type="application/json" id="plan-state">(.*?)</script>', html, re.S)
+    state = re.search(r'<div id="plan-state" hidden data-plan="([^"]*)"></div>', html)
     assert state is not None
-    assert Plan.model_validate(json.loads(state.group(1))) == make_allocated_plan()
+    assert Plan.model_validate_json(unescape(state.group(1))) == make_allocated_plan()
     assert "₹25,00,000" in html
     assert "style=" not in html
-    assert len(re.findall(r"<script", html)) == 1
+    assert "<script" not in html
 
 
 def test_htmx_partials_escape_user_text(make_app: Any) -> None:
@@ -289,7 +290,10 @@ def test_htmx_partials_escape_user_text(make_app: Any) -> None:
 
     assert "<img" not in html
     assert "&lt;img" in html
-    assert html.count("</script>") == 1
+    assert "</script>" not in html
+    state = re.search(r'data-plan="([^"]*)"', html)
+    assert state is not None
+    assert Plan.model_validate_json(unescape(state.group(1))).event.title == plan["event"]["title"]
 
 
 def test_htmx_fallback_shows_banner(make_app: Any) -> None:
