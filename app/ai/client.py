@@ -27,6 +27,9 @@ logger = logging.getLogger("toran.ai")
 MIN_RETRY_SECONDS = 3.0
 """A retry is only attempted if at least this much of the deadline is left."""
 
+FALLBACK_STATUS_CODES = frozenset({429, 500, 502, 503, 504})
+"""Statuses where the backup model may succeed: overload, quota or a server error."""
+
 
 class AIErrorKind(StrEnum):
     TIMEOUT = "timeout"
@@ -96,10 +99,12 @@ class GeminiClient:
         models: ContentGenerator,
         *,
         deadline_seconds: float,
+        fallback_model: str | None = None,
         clock: Callable[[], float] = time.monotonic,
     ) -> None:
         self._models = models
         self._deadline = deadline_seconds
+        self._fallback_model = fallback_model
         self._clock = clock
 
     async def generate[SchemaT: BaseModel](
@@ -112,7 +117,11 @@ class GeminiClient:
         schema: type[SchemaT],
         max_output_tokens: int,
     ) -> SchemaT:
-        """One structured call. Returns a validated `schema` instance or raises AIError."""
+        """One structured call. Returns a validated `schema` instance or raises AIError.
+
+        Within one overall deadline: invalid output is retried once, and an overloaded or
+        rate-limited model is swapped once for the fallback model. Timeouts never retry.
+        """
         config = types.GenerateContentConfig(
             system_instruction=system_instruction,
             response_mime_type="application/json",
@@ -122,6 +131,7 @@ class GeminiClient:
         )
         started = self._clock()
         attempt = 0
+        retried_invalid = False
         while True:
             attempt += 1
             attempt_started = self._clock()
@@ -136,10 +146,11 @@ class GeminiClient:
                 self._log(endpoint, model, attempt, attempt_started, exc.kind, response)
                 retry = (
                     exc.kind is AIErrorKind.INVALID
-                    and attempt == 1
+                    and not retried_invalid
                     and self._remaining(started) >= MIN_RETRY_SECONDS
                 )
                 if retry:
+                    retried_invalid = True
                     continue
                 raise
             except TimeoutError:
@@ -147,7 +158,17 @@ class GeminiClient:
                 raise AIError(AIErrorKind.TIMEOUT) from None
             except errors.APIError as exc:
                 kind = AIErrorKind.RATE_LIMITED if exc.code == 429 else AIErrorKind.UNAVAILABLE
-                self._log(endpoint, model, attempt, attempt_started, kind, None)
+                outcome = f"{kind} status={exc.code}"
+                self._log(endpoint, model, attempt, attempt_started, outcome, None)
+                fallback = self._fallback_model
+                if (
+                    fallback is not None
+                    and fallback != model
+                    and exc.code in FALLBACK_STATUS_CODES
+                    and self._remaining(started) >= MIN_RETRY_SECONDS
+                ):
+                    model = fallback
+                    continue
                 raise AIError(kind) from None
             except (httpx.HTTPError, OSError):
                 kind = AIErrorKind.UNAVAILABLE
@@ -211,14 +232,33 @@ def build_client(settings: Settings) -> GeminiClient | None:
     """A client when a key is configured, otherwise None (callers use fallbacks)."""
     if settings.gemini_api_key is None or not settings.ai_configured:
         return None
-    return _cached_client(settings.gemini_api_key.get_secret_value(), settings.ai_deadline_seconds)
+    return _cached_client(
+        settings.gemini_api_key.get_secret_value(),
+        settings.ai_deadline_seconds,
+        settings.gemini_fallback_model,
+    )
 
 
 @lru_cache(maxsize=2)
-def _cached_client(api_key: str, deadline_seconds: float) -> GeminiClient:
-    http_options = types.HttpOptions(timeout=int(deadline_seconds * 1000))
-    sdk = genai.Client(api_key=api_key, http_options=http_options)
-    return GeminiClient(sdk.aio.models, deadline_seconds=deadline_seconds)
+def _cached_client(
+    api_key: str, deadline_seconds: float, fallback_model: str | None
+) -> GeminiClient:
+    return GeminiClient(
+        _sdk_client(api_key, int(deadline_seconds * 1000)).aio.models,
+        deadline_seconds=deadline_seconds,
+        fallback_model=fallback_model,
+    )
+
+
+@lru_cache(maxsize=2)
+def _sdk_client(api_key: str, timeout_ms: int) -> genai.Client:
+    """Cached so the SDK client stays alive: when it is garbage collected it closes
+    the HTTP connection that its `aio.models` still uses. SDK retries are off so the
+    overall deadline and the fallback model stay under this module's control."""
+    http_options = types.HttpOptions(
+        timeout=timeout_ms, retry_options=types.HttpRetryOptions(attempts=1)
+    )
+    return genai.Client(api_key=api_key, http_options=http_options)
 
 
 def get_ai_client(settings: Annotated[Settings, Depends(get_settings)]) -> GeminiClient | None:

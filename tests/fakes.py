@@ -93,9 +93,16 @@ def api_error(code: int) -> errors.APIError:
 
 
 def fake_client(
-    *steps: Any, deadline_seconds: float = 25.0, clock: Callable[[], float] | None = None
+    *steps: Any,
+    deadline_seconds: float = 25.0,
+    fallback_model: str | None = None,
+    clock: Callable[[], float] | None = None,
 ) -> tuple[GeminiClient, FakeModels]:
     models = FakeModels(list(steps))
-    if clock is None:
-        return GeminiClient(models, deadline_seconds=deadline_seconds), models
-    return GeminiClient(models, deadline_seconds=deadline_seconds, clock=clock), models
+    client = GeminiClient(
+        models,
+        deadline_seconds=deadline_seconds,
+        fallback_model=fallback_model,
+        clock=clock if clock is not None else FakeClock(),
+    )
+    return client, models

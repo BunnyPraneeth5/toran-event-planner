@@ -134,6 +134,61 @@ def test_failures_map_to_ai_error(step: Any, kind: AIErrorKind) -> None:
     assert len(models.calls) == 1
 
 
+@pytest.mark.parametrize("code", [429, 503, 500])
+def test_overloaded_model_falls_back_once(code: int) -> None:
+    client, models = fake_client(api_error(code), response(VALID), fallback_model="backup")
+
+    assert _call(client).count == 3
+    assert [c["model"] for c in models.calls] == ["gemini-test", "backup"]
+
+
+def test_fallback_model_failing_too_raises() -> None:
+    client, models = fake_client(api_error(503), api_error(503), fallback_model="backup")
+
+    assert _error(client) is AIErrorKind.UNAVAILABLE
+    assert len(models.calls) == 2
+
+
+def test_no_fallback_for_bad_requests() -> None:
+    client, models = fake_client(api_error(400), response(VALID), fallback_model="backup")
+
+    assert _error(client) is AIErrorKind.UNAVAILABLE
+    assert len(models.calls) == 1
+
+
+def test_no_fallback_when_deadline_nearly_spent() -> None:
+    clock = FakeClock()
+
+    def slow_overload() -> types.GenerateContentResponse:
+        clock.advance(23.0)
+        raise api_error(503)
+
+    client, models = fake_client(
+        slow_overload, response(VALID), fallback_model="backup", clock=clock
+    )
+
+    assert _error(client) is AIErrorKind.UNAVAILABLE
+    assert len(models.calls) == 1
+
+
+def test_fallback_then_invalid_still_gets_one_retry() -> None:
+    client, models = fake_client(
+        api_error(503), response(INVALID), response(VALID), fallback_model="backup"
+    )
+
+    assert _call(client).count == 3
+    assert [c["model"] for c in models.calls] == ["gemini-test", "backup", "backup"]
+
+
+def test_status_code_logged(caplog: pytest.LogCaptureFixture) -> None:
+    client, _ = fake_client(api_error(503))
+
+    with caplog.at_level(logging.INFO, logger="toran.ai"):
+        _error(client)
+
+    assert "outcome=unavailable status=503" in caplog.text
+
+
 def test_unexpected_finish_reason_counts_as_invalid_and_is_retried() -> None:
     other = types.FinishReason.OTHER
     client, models = fake_client(response(VALID, finish=other), response(VALID, finish=other))
