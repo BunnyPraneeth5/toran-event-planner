@@ -376,3 +376,16 @@ def test_locked_lines_never_change(make_change: Any) -> None:
     assert {
         k: v.model_dump(exclude={"function_id"}) for k, v in _locked(changed).items()
     } == locked_before
+
+
+def test_vendor_cancelled_ids_are_stable_across_runs() -> None:
+    plan = _plan()
+    caterer = _line(plan, "catering", "reception")
+    change = VendorCancelled(line_item_id=caterer.id)
+
+    first = apply_change(plan, change, _ctx(THREE_WEEKS_OUT))
+    second = apply_change(plan, change, _ctx(THREE_WEEKS_OUT))
+
+    assert first == second
+    assert f"{caterer.id}-r" in {i.id for i in first.line_items}
+    assert f"{caterer.id}-t" in {t.id for t in first.tasks}

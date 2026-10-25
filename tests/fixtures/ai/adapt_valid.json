@@ -1,0 +1,64 @@
+{
+  "options": [
+    {
+      "rationale": "Keep the guest list and make the reception simpler.",
+      "ops": [
+        {
+          "op": "change_tier",
+          "function_id": "reception",
+          "tier": "standard",
+          "guests": null,
+          "category": null,
+          "percent": null,
+          "line_item_id": null
+        },
+        {
+          "op": "scale_category",
+          "category": "attire",
+          "percent": -50,
+          "function_id": null,
+          "guests": null,
+          "tier": null,
+          "line_item_id": null
+        }
+      ]
+    },
+    {
+      "rationale": "Invite fewer people to the reception.",
+      "ops": [
+        {
+          "op": "reduce_guests",
+          "function_id": "reception",
+          "guests": 200,
+          "tier": null,
+          "category": null,
+          "percent": null,
+          "line_item_id": null
+        },
+        {
+          "op": "scale_category",
+          "category": "decor",
+          "percent": -40,
+          "function_id": null,
+          "guests": null,
+          "tier": null,
+          "line_item_id": null
+        }
+      ]
+    },
+    {
+      "rationale": "Trim catering a little everywhere.",
+      "ops": [
+        {
+          "op": "scale_category",
+          "category": "catering",
+          "percent": -30,
+          "function_id": null,
+          "guests": null,
+          "tier": null,
+          "line_item_id": null
+        }
+      ]
+    }
+  ]
+}

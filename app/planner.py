@@ -10,10 +10,21 @@ from collections.abc import Callable, Sequence
 from datetime import date, datetime
 from typing import cast
 
+from pydantic import TypeAdapter, ValidationError
+
 from app.ai.client import BANNER_TEXT, AIError, AIErrorKind, GeminiClient
-from app.ai.schemas import BriefDraft, PlanDraft
-from app.ai.service import extract_brief, propose_plan
+from app.ai.schemas import BriefDraft, OpOut, OptionsDraft, PlanDraft
+from app.ai.service import extract_brief, propose_options, propose_plan
 from app.data.loader import FunctionTemplate, ReferenceData
+from app.engines.adapt import (
+    AdaptContext,
+    apply_change,
+    apply_ops,
+    complete_option,
+    impact,
+    rule_based_options,
+    verify_option,
+)
 from app.engines.budget import allocate
 from app.engines.parse import parse_amount, parse_date
 from app.engines.sanitize import (
@@ -24,6 +35,8 @@ from app.engines.sanitize import (
     sanitize_weights,
 )
 from app.engines.timeline import build_tasks
+from app.models.adapt import MAX_OPTIONS, AdaptRequest, AdaptResult, ApplyRequest
+from app.models.change import ChangeTier, DropItem, Op, Option, ReduceGuests, ScaleCategory
 from app.models.common import IST, MAX_RUPEES, MIN_BUDGET, Tier, new_id
 from app.models.event import Event, Function, Idea
 from app.models.generate import CompleteBrief, GenerateRequest, GenerateResult
@@ -47,6 +60,15 @@ NOT_EVENT_MESSAGE = (
     "Sister's wedding in Jaipur, February 2027, about 400 guests, 25 lakh budget."
 )
 NO_AI_BANNER = BANNER_TEXT[AIErrorKind.UNAVAILABLE]
+NO_WORKING_OPTIONS_BANNER = (
+    "The AI's suggestions did not fix the problem safely, so these are rule-based options."
+)
+NOTHING_TO_FIX = "Nothing else needs to change: the plan still fits the budget and the timeline."
+TOPPED_UP_NOTE = "The rest of the gap is trimmed evenly from the largest categories."
+NO_SAFE_FIX = (
+    "No safe fix was found without touching booked or paid items. "
+    "Consider raising the budget or changing a booking."
+)
 
 MAX_IDEA = 300
 PRICE_PATTERN = re.compile(r"₹|\brs\.?\s*\d|\brupees?\b|\binr\b|\blakh|\bcrore", re.IGNORECASE)
@@ -353,3 +375,161 @@ def _clean(text: str | None, limit: int) -> str | None:
         return None
     collapsed = " ".join(text.split())[:limit]
     return collapsed or None
+
+
+async def adapt_options(
+    request: AdaptRequest,
+    ai: GeminiClient | None,
+    *,
+    model: str,
+    ref: ReferenceData,
+    today: date,
+    id_factory: Callable[[], str] = new_id,
+) -> AdaptResult:
+    """Apply a reported change, measure it, and offer verified fixes.
+
+    Gemini proposes options as ops; the adapt engine applies each to a copy and keeps only
+    those that solve the problem without touching locked lines. If none survive, or the
+    call fails, rule-based options are offered with a banner. Raises ValueError for a
+    change that refers to unknown ids.
+    """
+    ctx = _adapt_context(ref, today, id_factory)
+    plan, change = request.plan, request.change
+    changed = apply_change(plan, change, ctx)
+    measured = impact(plan, changed, today)
+    if not measured.over_by and not measured.newly_flagged_task_ids:
+        return AdaptResult(impact=measured, message=NOTHING_TO_FIX)
+
+    notices: list[str] = []
+    banner: str | None = None
+    options: list[Option] = []
+    if ai is None:
+        banner = NO_AI_BANNER
+    else:
+        titles = {t.id: t.title for t in changed.tasks}
+        try:
+            draft = await propose_options(
+                ai,
+                model=model,
+                plan=changed,
+                change=change,
+                impact=measured,
+                flagged_titles=[titles[i] for i in measured.newly_flagged_task_ids],
+            )
+        except AIError as exc:
+            banner = exc.banner
+        else:
+            options = _verified_ai_options(draft, plan, changed, ctx, notices)
+
+    rule_based = rule_based_options(plan, changed, change, ctx)
+    if options:
+        extra = [r for r in rule_based if r.ops not in [o.ops for o in options]]
+        options = (options + extra)[:MAX_OPTIONS]
+        return AdaptResult(impact=measured, options=options, notices=notices)
+    fallback = rule_based[:MAX_OPTIONS]
+    return AdaptResult(
+        impact=measured,
+        options=fallback,
+        source="fallback",
+        banner=banner or NO_WORKING_OPTIONS_BANNER,
+        message=None if fallback else NO_SAFE_FIX,
+        notices=notices,
+    )
+
+
+def apply_option(request: ApplyRequest, *, ref: ReferenceData, today: date) -> Plan:
+    """The plan after the change and the chosen option, recomputed on the server.
+
+    The option is verified again from scratch, so a tampered or stale option is refused
+    with a ValueError instead of being applied.
+    """
+    ctx = _adapt_context(ref, today, new_id)
+    changed = apply_change(request.plan, request.change, ctx)
+    if verify_option(request.plan, changed, request.option, ctx) is None:
+        raise ValueError("this option no longer fixes the problem")
+    return apply_ops(changed, request.option.ops, ctx)
+
+
+def _adapt_context(
+    ref: ReferenceData, today: date, id_factory: Callable[[], str]
+) -> AdaptContext:
+    return AdaptContext(
+        categories=ref.categories.categories,
+        tier_multipliers=ref.categories.tier_multipliers,
+        lead_times=ref.lead_times.lead_times,
+        today=today,
+        id_factory=id_factory,
+    )
+
+
+def _verified_ai_options(
+    draft: OptionsDraft, plan: Plan, changed: Plan, ctx: AdaptContext, notices: list[str]
+) -> list[Option]:
+    """Gemini's options that parse, apply cleanly and solve the problem, at most three."""
+    labels = {c.key: c.label for c in ctx.categories}
+    kept: list[Option] = []
+    dropped = 0
+    for proposal in draft.options:
+        try:
+            ops = [_OP_ADAPTER.validate_python(_op_fields(o)) for o in proposal.ops]
+            rationale = _rationale(proposal.rationale, ops, changed, labels)
+            option = Option(id=ctx.id_factory(), rationale=rationale, ops=ops)
+        except ValidationError:
+            dropped += 1
+            continue
+        verified = complete_option(plan, changed, option, ctx)
+        if verified is None or verified.ops in [o.ops for o in kept]:
+            dropped += 1
+            continue
+        if len(verified.ops) > len(option.ops):
+            note = f"{verified.rationale.rstrip('.')}. {TOPPED_UP_NOTE}"[:MAX_QUESTION]
+            verified = verified.model_copy(update={"rationale": note})
+        kept.append(verified)
+        if len(kept) == MAX_OPTIONS:
+            break
+    if dropped:
+        notices.append(f"Left out {dropped} suggestion(s) that did not fix the problem safely.")
+    return kept
+
+
+def _op_fields(op: OpOut) -> dict[str, object]:
+    """Only the fields each op kind takes, so stray values cannot sneak through."""
+    wanted = {
+        "reduce_guests": ("function_id", "guests"),
+        "change_tier": ("function_id", "tier"),
+        "scale_category": ("category", "percent"),
+        "drop_item": ("line_item_id",),
+    }[op.op]
+    return {"op": op.op, **{name: getattr(op, name) for name in wanted}}
+
+
+def _rationale(text: str, ops: Sequence[Op], plan: Plan, labels: dict[str, str]) -> str:
+    """Gemini's sentence if it has no numbers, else a plain description of the ops."""
+    cleaned = _clean(text, MAX_QUESTION)
+    if cleaned and not any(ch.isdigit() for ch in cleaned):
+        return cleaned
+    names = {f.id: _no_digits(f.name) for f in plan.functions}
+    items = {i.id: i for i in plan.line_items}
+    parts: list[str] = []
+    for op in ops:
+        match op:
+            case ReduceGuests(function_id=function_id):
+                parts.append(f"fewer guests at {names.get(function_id) or 'a function'}")
+            case ChangeTier(function_id=function_id, tier=tier):
+                parts.append(f"a {tier} setup for {names.get(function_id) or 'a function'}")
+            case ScaleCategory(category=category, percent=percent):
+                label = labels.get(category, category.replace("_", " ")).lower()
+                parts.append(f"trim {label}" if percent < 0 else f"spend more on {label}")
+            case DropItem(line_item_id=line_item_id):
+                item = items.get(line_item_id)
+                label = labels.get(item.category, "one line").lower() if item else "one line"
+                parts.append(f"skip {label}")
+    sentence = " and ".join(parts) or "adjust the plan"
+    return (sentence[0].upper() + sentence[1:] + ".")[:MAX_QUESTION]
+
+
+def _no_digits(text: str) -> str:
+    return " ".join(re.sub(r"\d", "", text).split())
+
+
+_OP_ADAPTER: TypeAdapter[Op] = TypeAdapter(Op)

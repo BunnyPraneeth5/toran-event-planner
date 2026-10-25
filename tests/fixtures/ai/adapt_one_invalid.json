@@ -1,0 +1,41 @@
+{
+  "options": [
+    {
+      "rationale": "Make the reception simpler.",
+      "ops": [
+        {
+          "op": "change_tier",
+          "function_id": "reception",
+          "tier": "standard",
+          "guests": null,
+          "category": null,
+          "percent": null,
+          "line_item_id": null
+        },
+        {
+          "op": "scale_category",
+          "category": "attire",
+          "percent": -50,
+          "function_id": null,
+          "guests": null,
+          "tier": null,
+          "line_item_id": null
+        }
+      ]
+    },
+    {
+      "rationale": "Cancel the engagement party.",
+      "ops": [
+        {
+          "op": "drop_item",
+          "line_item_id": "ghost-line",
+          "function_id": null,
+          "guests": null,
+          "tier": null,
+          "category": null,
+          "percent": null
+        }
+      ]
+    }
+  ]
+}

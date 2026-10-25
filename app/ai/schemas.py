@@ -69,3 +69,36 @@ class PlanDraft(BaseModel):
     functions: list[FunctionDraftOut]
     weights: list[CategoryWeightOut]
     ideas: list[IdeaOut]
+
+
+class OpOut(BaseModel):
+    """One step of a fix. Fill only the fields its `op` needs; leave the rest null."""
+
+    model_config = ConfigDict(extra="ignore")
+
+    op: Literal["reduce_guests", "change_tier", "scale_category", "drop_item"]
+    function_id: str | None = Field(description="For reduce_guests and change_tier.")
+    guests: int | None = Field(description="New, lower guest count for reduce_guests.")
+    tier: Literal["budget", "standard", "premium"] | None = Field(
+        description="New tier for change_tier."
+    )
+    category: str | None = Field(description="Category key for scale_category.")
+    percent: int | None = Field(
+        description="For scale_category: negative to trim, for example -15."
+    )
+    line_item_id: str | None = Field(description="For drop_item.")
+
+
+class OptionOut(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+
+    rationale: str = Field(description="One short sentence. No numbers or amounts.")
+    ops: list[OpOut]
+
+
+class OptionsDraft(BaseModel):
+    """Two or three alternative fixes. The engines check each one."""
+
+    model_config = ConfigDict(extra="ignore")
+
+    options: list[OptionOut]

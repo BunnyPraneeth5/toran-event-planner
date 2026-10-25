@@ -15,7 +15,7 @@ Work top to bottom. One task per session. Tick a task only when its proof test p
 - [x] T10 Gemini wrapper
 - [x] T11 Intake
 - [x] T12 Generate
-- [ ] T13 Adapt options (AI)
+- [x] T13 Adapt options (AI)
 - [ ] T14 API routes
 - [ ] T14a Early Render deploy (checkpoint)
 - [ ] T15 UI base and intake page
@@ -190,19 +190,23 @@ Work top to bottom. One task per session. Tick a task only when its proof test p
 - [x] Output passes sanitize, budget, timeline and ledger; server assigns ids
 - [x] Fallback plan from `function_templates.json` passes every engine invariant and is marked in `plan.sources`
 - [x] `max_output_tokens` sized for the largest template
-- [ ] Live check against Gemini (blocked: the key's project reports prepayment credits depleted, HTTP 402 on every model)
+- [x] Live check against Gemini: wedding and birthday plans came back with exact budgets, correct dates and fitting ideas; a hung main model and a 429 both handed over to the lite model
 
 **Proof:** `pytest tests/unit/test_generate.py` (valid, truncated, invalid weights, fallback invariants)
 
 ## T13 Adapt options (AI)
-**Files:** `app/ai/schemas.py`, `app/ai/prompts.py`, `app/ai/service.py`, `app/planner.py`, `tests/unit/test_adapt_ai.py`, `tests/fixtures/ai/adapt_*.json`
+**Files:** `app/models/adapt.py`, `app/engines/adapt.py` (`complete_option`, stable replacement ids), `app/ai/schemas.py`, `app/ai/prompts.py`, `app/ai/service.py`, `app/planner.py` (`adapt_options`, `apply_option`), `tests/unit/test_adapt_ai.py`, `tests/unit/test_adapt.py`, `tests/fixtures/ai/adapt_*.json`
 
 **Acceptance**
-- [ ] Gemini receives the impact summary and the fenced plan, returns 2 to 3 options using only the Op vocabulary
-- [ ] Each option verified by `engines.adapt`; failing options dropped
-- [ ] If none survive or the call fails, rule-based options are returned with the fallback flag
-- [ ] A rationale containing digits is replaced by template text
-- [ ] Every figure on an option comes from the engine
+- [x] Gemini receives the impact summary and the fenced plan, returns 2 to 3 options using only the Op vocabulary
+- [x] Each option verified by `engines.adapt`; failing options dropped
+- [x] If none survive or the call fails, rule-based options are returned with the fallback flag
+- [x] A rationale containing digits is replaced by template text
+- [x] Every figure on an option comes from the engine
+- [x] A short option (right direction, sum too small) is completed by the engine with an even trim, then verified
+- [x] Fewer than three AI options are topped up with rule-based ones
+- [x] `apply_option` re-verifies from scratch and refuses a tampered or stale option
+- [x] Live check: a cut from 25 to 20 lakh produced three distinct Gemini options, each completed and verified below the new total
 
 **Proof:** `pytest tests/unit/test_adapt_ai.py` (valid options, one invalid op dropped, all invalid falls back, digits in rationale)
 

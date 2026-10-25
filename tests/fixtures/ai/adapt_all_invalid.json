@@ -1,0 +1,46 @@
+{
+  "options": [
+    {
+      "rationale": "Skip the venue entirely.",
+      "ops": [
+        {
+          "op": "scale_category",
+          "category": "venue",
+          "percent": -100,
+          "function_id": null,
+          "guests": null,
+          "tier": null,
+          "line_item_id": null
+        }
+      ]
+    },
+    {
+      "rationale": "Raise the reception tier.",
+      "ops": [
+        {
+          "op": "change_tier",
+          "function_id": "reception",
+          "tier": "premium",
+          "guests": null,
+          "category": null,
+          "percent": null,
+          "line_item_id": null
+        }
+      ]
+    },
+    {
+      "rationale": "Fewer guests at a party that does not exist.",
+      "ops": [
+        {
+          "op": "reduce_guests",
+          "function_id": "nope",
+          "guests": 10,
+          "tier": null,
+          "category": null,
+          "percent": null,
+          "line_item_id": null
+        }
+      ]
+    }
+  ]
+}

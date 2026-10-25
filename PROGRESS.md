@@ -1,8 +1,8 @@
 # PROGRESS: Toran
 
 ## Status
-- Current task: T13
-- Last green commit: T12 Generate
+- Current task: T14
+- Last green commit: T13 Adapt options
 - Last submission tag:
 - Repo: https://github.com/BunnyPraneeth5/toran-event-planner (public, CI on every push)
 - Live link:
@@ -19,6 +19,20 @@ Copy the template below for each session, newest first.
 - Problems and gotchas (add repeats to CLAUDE.md):
 - Next:
 -->
+
+### Session 7
+- Task(s): free-tier key check, T12 live check, T13 Adapt options
+- Done: key works again on the free tier (billing removed from the project); T12 live check passed; built adapt_options and apply_option with verified, engine-completed Gemini options and rule-based fallback.
+- Checks: ruff clean, mypy strict clean, 307 tests passing.
+- Live findings:
+  - gemini-3.8-flash is still overloaded (503, 429, or a hang); the lite fallback answered every time.
+  - The lite model chooses sensible fixes but under-sizes them (for example a 45 percent catering trim for a 5 lakh gap). The engine now completes such options instead of rejecting them. After that change, a cut from 25 to 20 lakh got three distinct Gemini options, all verified.
+- Decisions:
+  - complete_option: Gemini picks the direction, the engine appends an even trim (within five ops) to close the gap, then verifies.
+  - Replacement line and task ids for a cancelled vendor are derived from the cancelled line ("<id>-r", "<id>-t") so apply recreates them.
+  - No AI call when a change causes no overrun and no newly late tasks.
+- Suggestion for the user: set GEMINI_MODEL=gemini-3.6-flash in .env while 3.8-flash stays overloaded (it answered generate in about 10 seconds with richer ideas).
+- Next: T14 API routes, then T14a early Render deploy.
 
 ### Session 6
 - Task(s): daily AI cap, T12 Generate

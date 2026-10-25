@@ -1,0 +1,27 @@
+{
+  "options": [
+    {
+      "rationale": "Save 2 lakh by making Puja 2 and the reception simpler.",
+      "ops": [
+        {
+          "op": "change_tier",
+          "function_id": "reception",
+          "tier": "standard",
+          "guests": null,
+          "category": null,
+          "percent": null,
+          "line_item_id": null
+        },
+        {
+          "op": "scale_category",
+          "category": "attire",
+          "percent": -50,
+          "function_id": null,
+          "guests": null,
+          "tier": null,
+          "line_item_id": null
+        }
+      ]
+    }
+  ]
+}

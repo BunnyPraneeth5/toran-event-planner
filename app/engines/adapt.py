@@ -43,6 +43,7 @@ from app.models.plan import Plan
 MAX_TITLE = 120
 MAX_TRIM_PERCENT = 90
 TRIM_CATEGORIES = 5
+MAX_OPS = 5
 LOWER_TIER: dict[Tier, Tier] = {"premium": "standard", "standard": "budget"}
 
 
@@ -125,6 +126,30 @@ def verify_option(
     return option.model_copy(update={"result": figures})
 
 
+def complete_option(
+    original: Plan, changed: Plan, option: Option, ctx: AdaptContext
+) -> Option | None:
+    """Like verify_option, but closes a remaining shortfall with engine arithmetic.
+
+    When the option's ops apply cleanly and only an overrun is left, an even trim of the
+    largest remaining open categories is appended (within MAX_OPS) and the result is
+    verified again. The proposer chooses the direction; the engine makes the sum work.
+    """
+    verified = verify_option(original, changed, option, ctx)
+    if verified is not None:
+        return verified
+    partial = _try_ops(changed, option.ops, ctx)
+    room = MAX_OPS - len(option.ops)
+    if partial is None or room <= 0:
+        return None
+    already_scaled = {op.category for op in option.ops if isinstance(op, ScaleCategory)}
+    extra = _trim_ops(partial, exclude=already_scaled, limit=min(room, TRIM_CATEGORIES))
+    if not extra:
+        return None
+    topped_up = option.model_copy(update={"ops": [*option.ops, *extra]})
+    return verify_option(original, changed, topped_up, ctx)
+
+
 def rule_based_options(
     original: Plan, changed: Plan, change: Change, ctx: AdaptContext
 ) -> list[Option]:
@@ -175,11 +200,20 @@ def _raw_what_if(plan: Plan, ctx: AdaptContext, *changes: WhatIf) -> Plan:
 
 
 def _cancel_vendor(plan: Plan, line_item_id: str, ctx: AdaptContext) -> Plan:
+    """Cancel a line and add its replacement line and task.
+
+    The new ids are derived from the cancelled line's id, so applying the same change
+    again (as the apply step does) recreates the same ids that options refer to.
+    """
     original = next((i for i in plan.line_items if i.id == line_item_id), None)
     if original is None or not original.active:
         raise ValueError(f"no active line item {line_item_id}")
+    replacement_id, task_id = _derived_id(line_item_id, "r"), _derived_id(line_item_id, "t")
+    taken = {i.id for i in plan.line_items} | {t.id for t in plan.tasks}
+    if replacement_id in taken or task_id in taken:
+        raise ValueError(f"line item {line_item_id} was already replaced")
     replacement = LineItem(
-        id=ctx.id_factory(),
+        id=replacement_id,
         function_id=original.function_id,
         category=original.category,
         planned=original.planned,
@@ -194,7 +228,7 @@ def _cancel_vendor(plan: Plan, line_item_id: str, ctx: AdaptContext) -> Plan:
     function_name = next((f.name for f in plan.functions if f.id == original.function_id), None)
     title = f"Find a replacement: {label}" + (f" for {function_name}" if function_name else "")
     task = Task(
-        id=ctx.id_factory(),
+        id=task_id,
         title=title[:MAX_TITLE],
         function_id=original.function_id,
         category=original.category,
@@ -347,6 +381,11 @@ def _try_ops(plan: Plan, ops: Sequence[Op], ctx: AdaptContext) -> Plan | None:
 
 
 # Plan helpers
+
+
+def _derived_id(base: str, suffix: str) -> str:
+    """A stable id built from another id, kept within the 36 character id limit."""
+    return f"{base[: 36 - len(suffix) - 1]}-{suffix}"
 
 
 def _function(plan: Plan, function_id: str) -> Function:
