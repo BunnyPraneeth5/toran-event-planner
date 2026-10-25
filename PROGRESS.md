@@ -1,8 +1,8 @@
 # PROGRESS: Toran
 
 ## Status
-- Current task: T12
-- Last green commit: T11 Intake
+- Current task: T13
+- Last green commit: T12 Generate
 - Last submission tag:
 - Repo: https://github.com/BunnyPraneeth5/toran-event-planner (public, CI on every push)
 - Live link:
@@ -19,6 +19,19 @@ Copy the template below for each session, newest first.
 - Problems and gotchas (add repeats to CLAUDE.md):
 - Next:
 -->
+
+### Session 6
+- Task(s): daily AI cap, T12 Generate
+- Done: AI_DAILY_CALL_LIMIT (default 500) counts every Gemini request per IST day and falls back with a "resets at midnight IST" banner; generate turns Gemini's proposal (functions with day offsets and guest shares, category weights, ideas) into a full plan through place_functions, sanitize_weights, allocate and build_tasks; template plan as fallback.
+- Checks: ruff clean, mypy strict clean, 290 tests passing, CI green.
+- Decisions:
+  - Generate gets a CompleteBrief (every required field non-optional), so validation, not asserts, guarantees completeness.
+  - Gemini proposes day offsets and guest percentages; the engine computes dates and guest counts.
+  - Ideas that mention prices are dropped with a notice; ideas for an unknown function become event-wide.
+  - Template choice: the event type's template whose first label word appears in the title or notes, else the first one. The North Indian wedding template is now first as the neutral default.
+  - GENERATE_MAX_TOKENS is 8192 because thinking tokens count against it.
+- Blocked: live generate check. Every model returns HTTP 402 "prepayment credits are depleted" for the key's AI Studio project. The fallback plan works and was checked live (sums exact, dates right, 23 tasks).
+- Next: T13 Adapt options (AI).
 
 ### Session 5
 - Task(s): verify Gemini access, T11 Intake
