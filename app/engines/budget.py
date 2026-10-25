@@ -86,6 +86,8 @@ def what_if(
     changes: Sequence[WhatIf],
     categories: Sequence[CategoryInfo],
     tier_multipliers: TierMultipliers,
+    *,
+    rebalance: bool = True,
 ) -> BudgetResult:
     """Apply what-if changes, then rebalance the remaining lines to fit the total.
 
@@ -93,11 +95,26 @@ def what_if(
     Locked lines never move. Every other active line absorbs the difference in proportion
     to its current amount. If locked and changed lines alone exceed the total, nothing
     else moves and the overrun is reported.
+
+    With `rebalance=False` only the changed lines move, so the result shows the raw
+    effect of a change (used by the adapt engine to measure a problem before fixing it).
     """
     draft = _Draft(plan, categories, tier_multipliers)
     for change in changes:
         draft.apply(change)
-    return draft.finish()
+    return draft.finish(rebalance=rebalance)
+
+
+def committed_total(plan: Plan) -> int:
+    """Money the active lines commit: actual spend for locked lines, plan for the rest."""
+    return sum(i.spend if i.locked else i.planned for i in plan.line_items if i.active)
+
+
+def budget_status(plan: Plan) -> tuple[int, int, int]:
+    """(committed, over_by, unallocated) for a plan against its total budget."""
+    committed = committed_total(plan)
+    total = plan.event.total_budget
+    return committed, max(0, committed - total), max(0, total - committed)
 
 
 def realism_warnings(
@@ -178,11 +195,11 @@ class _Draft:
             case SetCategory(category=category, amount=amount):
                 self._set_category(category, amount)
 
-    def finish(self) -> BudgetResult:
+    def finish(self, *, rebalance: bool) -> BudgetResult:
         active = [i for i in self.plan.line_items if i.active]
         flexible = [i for i in active if not self._fixed(i)]
         remaining = self.total - sum(self._committed(i) for i in active if self._fixed(i))
-        if flexible and remaining >= 0:
+        if rebalance and flexible and remaining >= 0:
             shares = split(remaining, [self.planned[i.id] for i in flexible])
             for item, share in zip(flexible, shares, strict=True):
                 self.planned[item.id] = share

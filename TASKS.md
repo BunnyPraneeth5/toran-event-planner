@@ -11,7 +11,7 @@ Work top to bottom. One task per session. Tick a task only when its proof test p
 - [x] T06 Timeline engine
 - [x] T07 Ledger engine
 - [x] T08 Parse and sanitize engines
-- [ ] T09 Adapt engine
+- [x] T09 Adapt engine
 - [ ] T10 Gemini wrapper
 - [ ] T11 Intake
 - [ ] T12 Generate
@@ -139,16 +139,16 @@ Work top to bottom. One task per session. Tick a task only when its proof test p
 **Proof:** `pytest tests/unit/test_parse.py tests/unit/test_sanitize.py`
 
 ## T09 Adapt engine
-**Files:** `app/engines/adapt.py`, `tests/unit/test_adapt.py`
+**Files:** `app/engines/adapt.py`, `app/engines/budget.py` (`rebalance` flag, `budget_status`), `app/models/change.py` (`Impact`), `tests/unit/test_adapt.py`
 
 **Acceptance**
-- [ ] `apply_change(plan, change)` for budget_cut, vendor_cancelled, guests_changed, date_moved, function_dropped
-- [ ] `impact(before, after)` reports amount over budget, newly late or at-risk tasks, affected lines
-- [ ] vendor_cancelled frees the line item and adds a "book replacement" task checked against lead time
-- [ ] `apply_ops(plan, ops)` works on a copy and rejects unknown ids and invalid params
-- [ ] `verify_option` keeps an option only if all invariants hold and the problem is resolved
-- [ ] `rule_based_options(plan, change)` returns at least one valid option for budget_cut and vendor_cancelled
-- [ ] Locked items never change
+- [x] `apply_change(plan, change)` for budget_cut, vendor_cancelled, guests_changed, date_moved, function_dropped
+- [x] `impact(before, after)` reports amount over budget, newly late or at-risk tasks, affected lines
+- [x] vendor_cancelled frees the line item and adds a "book replacement" task checked against lead time
+- [x] `apply_ops(plan, ops)` works on a copy and rejects unknown ids and invalid params
+- [x] `verify_option` keeps an option only if all invariants hold and the problem is resolved
+- [x] `rule_based_options(plan, change)` returns at least one valid option for budget_cut and vendor_cancelled
+- [x] Locked items never change
 
 **Proof:** `pytest tests/unit/test_adapt.py`
 

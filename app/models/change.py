@@ -88,6 +88,16 @@ Op = Annotated[
 ]
 
 
+class Impact(DomainModel):
+    """What a change did to the plan, measured by the engines before any fix."""
+
+    total_committed: Rupees
+    over_by: Rupees
+    unallocated: Rupees
+    newly_flagged_task_ids: list[Id] = Field(default_factory=list, max_length=500)
+    affected_line_ids: list[Id] = Field(default_factory=list, max_length=300)
+
+
 class OptionResult(DomainModel):
     """Figures computed by the engine after applying an option. Never from Gemini."""
 
