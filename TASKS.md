@@ -8,7 +8,7 @@ Work top to bottom. One task per session. Tick a task only when its proof test p
 - [x] T03 Domain models
 - [x] T04 Reference data
 - [x] T05 Budget engine
-- [ ] T06 Timeline engine
+- [x] T06 Timeline engine
 - [ ] T07 Ledger engine
 - [ ] T08 Parse and sanitize engines
 - [ ] T09 Adapt engine
@@ -105,14 +105,14 @@ Work top to bottom. One task per session. Tick a task only when its proof test p
 **Proof:** `pytest tests/unit/test_budget.py` (sum exact, locked unchanged, overrun amount)
 
 ## T06 Timeline engine
-**Files:** `app/engines/timeline.py`, `tests/unit/test_timeline.py`
+**Files:** `app/engines/timeline.py`, `app/models/timeline.py`, `tests/unit/test_timeline.py`
 
 **Acceptance**
-- [ ] `build_tasks(plan, lead_times)` schedules backward from each function date
-- [ ] No task due after the event date
-- [ ] Late and at-risk computed with an injected `today` in IST; at-risk tasks get the earliest feasible date
-- [ ] Event three weeks away: long-lead tasks marked at risk, not given past due dates
-- [ ] Overnight function (starts 22:00, runs 5 hours) stays within event dates
+- [x] `build_tasks(plan, lead_times)` schedules backward from each function date
+- [x] No task due after the event date
+- [x] Late and at-risk computed with an injected `today` in IST; at-risk tasks get the earliest feasible date
+- [x] Event three weeks away: long-lead tasks marked at risk, not given past due dates
+- [x] Overnight function (starts 22:00, runs 5 hours) stays within event dates
 
 **Proof:** `pytest tests/unit/test_timeline.py`
 
