@@ -7,14 +7,14 @@
 | AI | google-genai SDK (async client), Gemini API (AI Studio key) | Structured output with response schemas. Maps grounding for the stretch vendor discovery. |
 | Models | `gemini-3.8-flash` (generate, adapt), `gemini-3.5-flash-lite` (intake and cheap stretch tasks); fallback chain `gemini-3.6-flash`, then `gemini-3.5-flash-lite` | Set via env, verified against the key's model list. Pin stable, never "latest". Intake is pure extraction, and the lite model answered it correctly in about 2 seconds while the newest flash models were often overloaded. |
 | Frontend | Jinja2 templates + HTMX (vendored, with json-enc) + small vanilla JS + hand-written CSS | No build step, tiny bundle, easy accessibility, one deploy. HTMX swaps partials for the what-if slider and adapt options. |
-| State | Stateless server. Plan lives in browser localStorage with `schema_version`, export/import as JSON | No DB to secure, no PII stored server-side, nothing lost on Render redeploys. |
+| State | Stateless server. Plan lives in browser localStorage with `schema_version`, export/import as JSON | No DB to secure, no PII stored server-side, nothing lost on redeploys. |
 | Calendar | .ics file + "Add to Google Calendar" link | Free, no OAuth. |
 | Fonts | Google Fonts: Noto Sans (`display=swap`). Noto Sans Telugu and Devanagari load only with the translation stretch. | Small payload by default. |
-| Hosting | Render, Docker | Zero billing risk. Free tier sleeps when idle: scheduled ping during the judging window, or the starter plan. Deploy from tagged commits only. |
+| Hosting | Vercel (Hobby plan), FastAPI preset, Mumbai region (`bom1`) | Free with no card, wakes in well under a second, deploys from GitHub on every push to `main`. A request may run up to 300 seconds; our AI deadline is 25. Serverless, so several instances may run at once. |
 | Quality | ruff (incl. bandit S rules), mypy, pytest, pytest-cov, httpx, pip-audit, Playwright + axe-core | Covers code quality, security, testing, accessibility signals. |
-| CI | GitHub Actions: lint, type check, tests with coverage floor, pip-audit, Docker build, e2e smoke | Visible proof for the grader. |
+| CI | GitHub Actions: lint, type check, tests with coverage floor, pip-audit, e2e smoke | Visible proof for the grader. |
 
-Note: Render scores nothing on Google services. The signal comes from Gemini (response schemas, system instructions, explicit safety settings, usage metadata, grounding in stretch), Google Calendar links and Google Fonts. Cloud Run stays a documented upgrade path.
+Note: the host scores nothing on Google services. The signal comes from Gemini (response schemas, system instructions, explicit safety settings, usage metadata, grounding in stretch), Google Calendar links and Google Fonts. Cloud Run stays a documented upgrade path.
 
 ## Modules
 ```
@@ -107,15 +107,15 @@ All money is `int` rupees (strict, never float), formatted as lakh/crore only at
 - Model output rendered through Jinja autoescape. No raw HTML from the model.
 - Log per call: endpoint, model, latency, tokens from `usage_metadata`, outcome. No user text in logs.
 - No response caching, except stretch vendor lookups (place URIs only, short TTL, per Maps terms).
-- Daily cap: `AI_DAILY_CALL_LIMIT` (default 500) counts every Gemini request per IST day, retries and fallbacks included. Once reached, every AI feature uses its rule-based fallback with a banner saying the limit resets at midnight IST. The count is in memory, so the hard cap is a requests-per-day quota in Google Cloud; this guards against loops and abuse between restarts.
+- Daily cap: `AI_DAILY_CALL_LIMIT` (default 500) counts every Gemini request per IST day, retries and fallbacks included. Once reached, every AI feature uses its rule-based fallback with a banner saying the limit resets at midnight IST. The count is in memory and per serverless instance, so the hard cap is the key's own quota (free tier today); this guards against loops and abuse.
 
 ## Security
 - Pydantic limits on everything: text length, guests 1 to 5000, budget range, max functions, items, tasks, people, string lengths inside imported plans.
-- Request body size cap (413). Rate limit on LLM endpoints per client IP (slowapi). uvicorn runs with `--proxy-headers --forwarded-allow-ips` so the real client IP is used behind Render's proxy.
+- Request body size cap (413). Rate limit on LLM endpoints per client IP (slowapi), with the IP taken from the first entry of Vercel's `x-forwarded-for` header. Limits are kept in memory, so they apply per serverless instance.
 - Headers: CSP `default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'`, HSTS, X-Content-Type-Options, Referrer-Policy, Permissions-Policy.
 - No cookies, no sessions, same-origin only, no CORS middleware, so CSRF and CORS do not apply (documented in SECURITY.md).
 - Global exception handler returns a generic message with a request id. No stack traces. Debug off in production.
-- Secrets only in env (`SecretStr`). `.env.example` committed, `.env` in both .gitignore and .dockerignore. Non-root Docker user. Pinned dependencies. pip-audit in CI.
+- Secrets only in env (`SecretStr`), set in the Vercel dashboard for production. `.env.example` committed, `.env` gitignored. Pinned dependencies in both `pyproject.toml` (read by Vercel) and `requirements.txt` (read by CI), kept identical by a test. pip-audit in CI.
 - No server-side storage means no PII at rest. AI Studio data handling noted in SECURITY.md.
 
 ## Efficiency
@@ -123,7 +123,7 @@ All money is `int` rupees (strict, never float), formatted as lakh/crore only at
 - Checklist from templates instead of the LLM keeps generate output small and fast.
 - Lite model for intake and cheap stretch tasks. Flash for generate and adapt.
 - Slider debounced (`hx-trigger="input changed delay:250ms"`, `hx-sync="this:replace"`).
-- Gzip, cache headers on static assets, no JS framework, HTMX partials instead of full reloads, slim multi-stage Docker image.
+- Gzip, cache headers on static assets, no JS framework, HTMX partials instead of full reloads, small serverless bundle (runtime dependencies only).
 
 ## Testing
 - **Unit:** engines. Invariants: line items sum exactly to budget (to the rupee), no task after event date, late and at-risk flags correct relative to an injected "today" in IST, ledger totals balance, locked items never change, every surviving option passes all invariants. parse and sanitize: one fixture per bad-output case.
@@ -137,7 +137,14 @@ All money is `int` rupees (strict, never float), formatted as lakh/crore only at
 Semantic landmarks, skip link, labelled inputs, keyboard path for everything, visible focus, one aria-live region for results and errors (announced once after the debounce settles, not on every slider tick), slider `aria-valuetext` in Indian format ("₹25 lakh"), overruns and at-risk tasks shown with text, not color alone, AA contrast, reduced motion respected, `lang` attribute set per output language, every chart also shown as a table. Rupees in Indian format (lakh, crore).
 
 ## External services
-Gemini API, Google Calendar links, Google Fonts, Render. STRETCH: Google Maps grounding.
+Gemini API, Google Calendar links, Google Fonts, Vercel (hosting). STRETCH: Google Maps grounding.
+
+## Deployment
+- Vercel project imported from GitHub `BunnyPraneeth5/toran-event-planner`, FastAPI preset, root `./`, Hobby plan, region Mumbai (`bom1`). Live at https://toran-event-planner.vercel.app
+- Vercel finds the FastAPI `app` in `app/main.py` and installs the dependencies listed in `pyproject.toml`.
+- Every push to `main` deploys to production. A submission is a tagged commit whose production deployment is green and checked live.
+- Environment variables live in the Vercel dashboard, scoped to Production: `GEMINI_API_KEY` (secret) and `ENVIRONMENT=production` (hides `/docs`). Everything else uses the defaults in `app/config.py`. Changing a variable needs a redeploy.
+- Cloud Run (Docker) stays a documented upgrade path if a long-running container is ever needed.
 
 ## Boundaries
 - Engines never import ai/, api/ or planner.
@@ -149,4 +156,4 @@ Gemini API, Google Calendar links, Google Fonts, Render. STRETCH: Google Maps gr
 - Lead time and cost reference values: need a quick sanity pass from someone who has run a wedding.
 - Exact Gemini model names, structured output schema limits, free-tier quota. Check before building the AI layer.
 - STRETCH Maps grounding: pricing, free quota, and whether it combines with a response schema in one call.
-- Render free tier vs starter plan for the judging window.
+- The in-memory daily cap and rate limits count per serverless instance on Vercel. Acceptable while the Gemini key is on the free tier with no billing (nothing to overspend); revisit if paid billing is turned on.

@@ -17,7 +17,7 @@ Work top to bottom. One task per session. Tick a task only when its proof test p
 - [x] T12 Generate
 - [x] T13 Adapt options (AI)
 - [x] T14 API routes
-- [ ] T14a Early Render deploy (checkpoint)
+- [ ] T14a Early Vercel deploy (checkpoint)
 - [ ] T15 UI base and intake page
 - [ ] T16 Dashboard page and state contract
 - [ ] T16a Try a sample event
@@ -26,13 +26,13 @@ Work top to bottom. One task per session. Tick a task only when its proof test p
 - [ ] T18a Video script (checkpoint, owner: you)
 - [ ] T19 Calendar export
 - [ ] T20 Security middleware
-- [ ] T21 CI and Dockerfile
+- [x] T21 CI
 - [ ] T22 E2E and accessibility tests
 - [ ] T23 Live evals
 - [ ] T24 README
 - [ ] T25 PROBLEM_ALIGNMENT.md
 - [ ] T26 SECURITY.md
-- [ ] T27 Render deploy
+- [ ] T27 Production release on Vercel
 - [ ] S01 STRETCH: Replacement vendor discovery (Maps grounding)
 - [ ] S02 STRETCH: Day-of run sheet
 - [ ] S03 STRETCH: Telugu and Hindi output
@@ -223,17 +223,19 @@ Work top to bottom. One task per session. Tick a task only when its proof test p
 
 **Proof:** `pytest tests/api/test_routes.py`
 
-## T14a Early Render deploy (checkpoint)
-Do this right after T14, so Docker, env var and cold start problems show up early, not on the last day.
+## T14a Early Vercel deploy (checkpoint)
+Done right after T14, so hosting, env var and cold start problems show up early, not on the last day. Render was dropped: every existing service on that account was suspended for billing, and its free plan sleeps for about a minute.
 
-**Files:** `Dockerfile`, `.dockerignore`, `render.yaml`
+**Files:** `pyproject.toml` (runtime dependencies), `tests/unit/test_dependencies.py`
 
 **Acceptance**
-- [ ] Dockerfile multi-stage on `python:3.12-slim`, non-root user, no dev dependencies, uvicorn with `--proxy-headers --forwarded-allow-ips`
-- [ ] Render service created from the GitHub repo; env vars set in the Render dashboard, never in the repo; health check on `/healthz`
-- [ ] Live `/healthz` returns ok; cold start time noted in PROGRESS.md
+- [x] Vercel project imported from GitHub: FastAPI preset, root `./`, Hobby plan, Mumbai region (`bom1`), deploys on every push to `main`
+- [x] `GEMINI_API_KEY` and `ENVIRONMENT` set in the Vercel dashboard, never in the repo
+- [x] Runtime dependencies declared in `pyproject.toml` (Vercel installs from it); a test keeps them identical to `requirements.txt`
+- [x] Live `/healthz` returns `{"status": "ok", "ai_configured": true}`; recompute and the HTMX partial work live; responses in about 0.4 seconds
+- [ ] `/docs` hidden on the live site (`ENVIRONMENT=production` must apply to the Production environment, then redeploy)
 
-**Proof:** `GET <live URL>/healthz` returns `{"status": "ok", ...}`
+**Proof:** `GET https://toran-event-planner.vercel.app/healthz` returns ok; `GET /docs` returns 404
 
 ## T15 UI base and intake page
 **Files:** `app/api/pages.py`, `app/web/templates/base.html`, `app/web/templates/intake.html`, `app/web/templates/partials/brief.html`, `app/web/templates/partials/banner.html`, `app/web/static/css/app.css`, `app/web/static/js/app.js`, `app/web/static/vendor/htmx.min.js`, `app/web/static/vendor/json-enc.js`, `tests/api/test_pages.py`
@@ -319,23 +321,24 @@ Once T18 works, write the 2 to 3 minute video script against the flow in PRD.md,
 **Acceptance**
 - [ ] CSP (as in ARCHITECTURE.md), HSTS, nosniff, Referrer-Policy, Permissions-Policy on every response
 - [ ] Body size cap returns 413
-- [ ] slowapi limit on LLM routes returns 429, keyed on the real client IP
+- [ ] slowapi limit on LLM routes returns 429, keyed on the real client IP (first entry of Vercel's `x-forwarded-for`)
 - [ ] Gzip enabled; static assets sent with cache headers
 - [ ] Global exception handler returns a generic message with a request id, no stack trace
 - [ ] Every rendered page still works under the CSP
 
 **Proof:** `pytest tests/api/test_security.py`
 
-## T21 CI and Dockerfile
-**Files:** `.github/workflows/ci.yml`, `Dockerfile`, `.dockerignore`
+## T21 CI
+**Files:** `.github/workflows/ci.yml`
+
+No Docker image is needed on Vercel, so the Docker build step was dropped.
 
 **Acceptance**
 - [x] CI on push and pull request: ruff, mypy, pytest with 80% coverage floor, pip-audit (added early, before T11)
-- [ ] Docker build step added to CI (Dockerfile comes from T14a)
-- [ ] Image contains no `.env`, tests or e2e files
-- [ ] Pipeline green on main
+- [x] CI fails if `pyproject.toml` and `requirements.txt` list different runtime dependencies
+- [x] Pipeline green on main
 
-**Proof:** green CI run; `docker run` the image, then `GET /healthz` returns ok
+**Proof:** green CI run on main
 
 ## T22 E2E and accessibility tests
 **Files:** `e2e/conftest.py`, `e2e/test_smoke.py`, `e2e/axe.min.js`, `.github/workflows/ci.yml`
@@ -393,13 +396,12 @@ Once T18 works, write the 2 to 3 minute video script against the flow in PRD.md,
 
 **Proof (manual):** every control listed points to a test in `tests/api/test_security.py` or a named file
 
-## T27 Render deploy
-**Files:** `render.yaml`, `.github/workflows/keep-warm.yml`, `README.md`
+## T27 Production release on Vercel
+**Files:** `README.md`
 
 **Acceptance**
-- [ ] Render service built from the Dockerfile; env vars set in the Render dashboard, not in the repo; health check on `/healthz`
-- [ ] Deploys only from tagged commits
-- [ ] Keep-warm scheduled ping workflow ready for the judging window
+- [ ] Production deployment on Vercel matches the commit being submitted; env vars set in the Vercel dashboard, not in the repo
+- [ ] Submission is a tagged commit whose production deployment is green and checked live
 - [ ] Live link added to README
 - [ ] Release checklist below completed
 
@@ -466,6 +468,6 @@ Once T18 works, write the 2 to 3 minute video script against the flow in PRD.md,
 - [ ] `ruff check . && mypy app && pytest` green; CI green
 - [ ] Live evals pass
 - [ ] e2e smoke passes against the live URL
-- [ ] Commit tagged and deployed from the tag
+- [ ] Commit tagged; Vercel's production deployment is that commit
 - [ ] Live link checked on a phone
 - [ ] Only submit if better than the last submission

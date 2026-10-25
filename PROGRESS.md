@@ -1,11 +1,11 @@
 # PROGRESS: Toran
 
 ## Status
-- Current task: T14a (early Render deploy)
-- Last green commit: T14 API routes
+- Current task: T15 (T14a open only for hiding /docs on the live site)
+- Last green commit: Declare runtime dependencies in pyproject.toml
 - Last submission tag:
 - Repo: https://github.com/BunnyPraneeth5/toran-event-planner (public, CI on every push)
-- Live link:
+- Live link: https://toran-event-planner.vercel.app (Vercel Hobby, Mumbai region; pages arrive with T15, `/healthz` works now)
 
 ## Session log
 Copy the template below for each session, newest first.
@@ -19,6 +19,20 @@ Copy the template below for each session, newest first.
 - Problems and gotchas (add repeats to CLAUDE.md):
 - Next:
 -->
+
+### Session 9
+- Task(s): T14a early deploy (moved from Render to Vercel)
+- Done: checked Render read-only and found every existing service on the account suspended for billing, so a new free service would likely be blocked too; compared hosts and chose Vercel (free, no card, fast wake-up, 300 second request limit, Mumbai region); you imported the repo with the FastAPI preset and set GEMINI_API_KEY and ENVIRONMENT in the dashboard; fixed the first live failure; updated ARCHITECTURE.md (hosting, deployment section, security notes) and TASKS.md (T14a rewritten for Vercel, T21 done without Docker, T27 now a Vercel release).
+- Checks: ruff clean, mypy strict clean, 352 tests passing, CI green. Live: `/healthz` 200 with ai_configured true; recompute 200; HTMX partial renders with plan-state and Indian rupee formatting; about 0.4 seconds per request.
+- Problems and gotchas:
+  - First deploy failed on every route with FUNCTION_INVOCATION_FAILED: pyproject.toml had a [project] table with no dependencies, so Vercel installed nothing. Runtime dependencies are now listed there too, and a test keeps pyproject.toml and requirements.txt identical. Vercel redeployed in about 20 seconds after the push.
+  - A wrong ENVIRONMENT value (for example "Production") crashes the app at startup, because the setting only accepts lowercase values.
+- Open for you: `/docs` still loads on the live site, so the running app does not see ENVIRONMENT=production. Make sure the variable is scoped to Production, then redeploy.
+- Decisions:
+  - No Docker image; Cloud Run stays the documented upgrade path.
+  - Daily AI cap and rate limits are in memory per serverless instance; acceptable while the key is on the free tier.
+  - Every push to main deploys to production; submissions are tagged commits checked live.
+- Next: T15 UI base and intake page.
 
 ### Session 8
 - Task(s): T14 API routes
