@@ -1,8 +1,8 @@
 # PROGRESS: Toran
 
 ## Status
-- Current task: T11
-- Last green commit: T10 Gemini wrapper
+- Current task: T12
+- Last green commit: T11 Intake
 - Last submission tag:
 - Repo: https://github.com/BunnyPraneeth5/toran-event-planner (public, CI on every push)
 - Live link:
@@ -19,6 +19,23 @@ Copy the template below for each session, newest first.
 - Problems and gotchas (add repeats to CLAUDE.md):
 - Next:
 -->
+
+### Session 5
+- Task(s): verify Gemini access, T11 Intake
+- Done: confirmed the key can use gemini-3.8-flash and gemini-3.5-flash-lite (both stable); built intake (flat BriefDraft schema, fenced prompt, planner.intake with engine conversion, questions for missing fields, fallback form); live-checked four messages against Gemini.
+- Checks: ruff clean, mypy strict clean, 259 tests passing, 97.5% coverage, CI green.
+- Live findings:
+  - gemini-3.8-flash, 3.7-flash and flash-latest often returned 503 (high demand) or a 504 after about 24 seconds; gemini-3.5-flash-lite answered every time in 1.3 to 2.3 seconds.
+  - Real outputs: "25 lakh" came back as 25 + "lakh" and the engine made 2,500,000; a missing day became "Which day in March 2027?"; a poem request was rejected politely; an injection with a fake closing tag was ignored.
+- Decisions:
+  - Intake runs on the lite model; generate and adapt stay on the main model.
+  - GEMINI_FALLBACK_MODEL (default gemini-3.5-flash-lite) is tried once on 429, 5xx or a hang; the main model gets at most half the deadline while a fallback exists. SDK retries are off.
+  - Gemini never asks about type, city, date, guests or budget; the planner asks those itself, in a fixed order, then adds Gemini's own questions up to three.
+- Problems and gotchas:
+  - T10 bug found live: the SDK client was garbage collected and closed its HTTP connection. Now cached so it stays alive.
+  - The fence regex first swallowed text after an unclosed lookalike tag; it now strips only the tag token.
+  - Writing regex strings through a shell heredoc into Python corrupted `` into a backspace. Edit regex code with the editor, not heredocs.
+- Next: T12 Generate.
 
 ### Session 4
 - Task(s): publish repo, early CI, privacy scrub, checkpoint tasks
