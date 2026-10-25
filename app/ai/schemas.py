@@ -33,3 +33,39 @@ class BriefDraft(BaseModel):
     day: int | None = Field(description="Day of month if stated, else null.")
     style_notes: str | None = Field(description="Preferences mentioned, such as theme or food.")
     questions: list[str] = Field(description="At most 3 short follow-up questions.")
+
+
+class FunctionDraftOut(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+
+    name: str = Field(description="Function name, such as Haldi or Reception.")
+    day_offset: int = Field(description="Days after the event start date, 0 to 6.")
+    start_time: str = Field(description="24-hour start time, HH:MM.")
+    duration_minutes: int = Field(description="Length in minutes.")
+    guest_percent: int = Field(description="Share of the total guests attending, 1 to 100.")
+    tier: Literal["budget", "standard", "premium"]
+
+
+class CategoryWeightOut(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+
+    category: str = Field(description="A category key from the given list.")
+    weight: float = Field(description="Relative share of the budget, as a percent.")
+
+
+class IdeaOut(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+
+    function_name: str = Field(description="Name of the function this idea is for.")
+    text: str = Field(description="One short, practical idea. No prices.")
+    cost_band: Literal["low", "mid", "high"]
+
+
+class PlanDraft(BaseModel):
+    """Structure only: functions, how to weight the budget, and ideas. No money."""
+
+    model_config = ConfigDict(extra="ignore")
+
+    functions: list[FunctionDraftOut]
+    weights: list[CategoryWeightOut]
+    ideas: list[IdeaOut]

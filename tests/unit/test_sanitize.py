@@ -1,12 +1,19 @@
 import json
-from datetime import date, time
+from datetime import date, time, timedelta
 from pathlib import Path
 from typing import Any
 
 import pytest
 
 from app.data.loader import load_reference_data
-from app.engines.sanitize import FunctionDraft, clamp_guests, sanitize_functions, sanitize_weights
+from app.engines.sanitize import (
+    FunctionDraft,
+    FunctionProposal,
+    clamp_guests,
+    place_functions,
+    sanitize_functions,
+    sanitize_weights,
+)
 
 CASES = json.loads(
     (Path(__file__).parents[1] / "fixtures" / "sanitize_cases.json").read_text(encoding="utf-8")
@@ -82,3 +89,33 @@ def test_function_count_capped() -> None:
 
 def test_clamp_guests() -> None:
     assert (clamp_guests(-3), clamp_guests(250), clamp_guests(10**6)) == (1, 250, 5000)
+
+
+def test_place_functions_turns_offsets_and_shares_into_dates_and_guests() -> None:
+    proposals = [
+        FunctionProposal("Haldi", 0, "10:00", 150, 25, "budget"),
+        FunctionProposal("Wedding", 2, "20:30", 300, 100, "premium"),
+    ]
+
+    kept, notices = place_functions(proposals, START, event_guests=401)
+
+    assert [(d.day, d.start_time, d.guests) for d in kept] == [
+        (START, time(10, 0), 100),
+        (START + timedelta(days=2), time(20, 30), 401),
+    ]
+    assert notices == []
+
+
+def test_place_functions_handles_bad_values() -> None:
+    proposals = [
+        FunctionProposal("Late", 7, "10:00", 60, 50),
+        FunctionProposal("Early", -1, "10:00", 60, 50),
+        FunctionProposal("Odd time", 0, "evening", 60, 0),
+        FunctionProposal("Huge offset", 10**9, "10:00", 60, 50),
+    ]
+
+    kept, notices = place_functions(proposals, START, event_guests=200)
+
+    assert [(d.name, d.start_time, d.guests) for d in kept] == [("Odd time", time(10, 0), 2)]
+    assert "Set Odd time to start at 10:00." in notices
+    assert sum("outside the event dates" in n for n in notices) == 3

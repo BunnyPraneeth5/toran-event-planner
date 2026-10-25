@@ -6,7 +6,7 @@ Every fix comes back as a plain-language notice, so nothing changes silently.
 import math
 from collections.abc import Collection, Mapping, Sequence
 from dataclasses import dataclass, replace
-from datetime import date, time
+from datetime import date, time, timedelta
 
 from app.engines.budget import split
 from app.models.common import MAX_GUESTS
@@ -16,6 +16,8 @@ TIERS = ("budget", "standard", "premium")
 MIN_DURATION, MAX_DURATION = 15, 1440
 MAX_NAME = 120
 WEIGHT_RESOLUTION = 1_000_000
+MAX_DAY_OFFSET = 6
+DEFAULT_START = time(10, 0)
 
 
 @dataclass(frozen=True)
@@ -30,8 +32,53 @@ class FunctionDraft:
     tier: str = "standard"
 
 
+@dataclass(frozen=True)
+class FunctionProposal:
+    """A function as proposed by Gemini or a template: relative day and guest share."""
+
+    name: str
+    day_offset: int
+    start_time: str
+    duration_minutes: int
+    guest_percent: int
+    tier: str = "standard"
+
+
 def clamp_guests(guests: int) -> int:
     return min(MAX_GUESTS, max(1, guests))
+
+
+def place_functions(
+    proposals: Sequence[FunctionProposal], start: date, event_guests: int
+) -> tuple[list[FunctionDraft], list[str]]:
+    """Turn day offsets into dates and guest shares into guest counts, then sanitize.
+
+    Offsets outside 0 to MAX_DAY_OFFSET fall outside the event window and are dropped.
+    An unreadable start time becomes 10:00, with a notice.
+    """
+    notices: list[str] = []
+    drafts: list[FunctionDraft] = []
+    for proposal in proposals:
+        try:
+            start_time = time.fromisoformat(proposal.start_time.strip())
+        except ValueError:
+            start_time = DEFAULT_START
+            label = " ".join(proposal.name.split())[:40] or "a function"
+            notices.append(f"Set {label} to start at 10:00.")
+        percent = min(100, max(1, proposal.guest_percent))
+        offset = min(366, max(-366, proposal.day_offset))
+        drafts.append(
+            FunctionDraft(
+                name=proposal.name,
+                day=start + timedelta(days=offset),
+                start_time=start_time.replace(second=0, microsecond=0, tzinfo=None),
+                duration_minutes=proposal.duration_minutes,
+                guests=max(1, (event_guests * percent + 50) // 100),
+                tier=proposal.tier,
+            )
+        )
+    kept, more = sanitize_functions(drafts, start, start + timedelta(days=MAX_DAY_OFFSET))
+    return kept, notices + more
 
 
 def sanitize_weights(

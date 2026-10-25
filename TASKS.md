@@ -14,7 +14,7 @@ Work top to bottom. One task per session. Tick a task only when its proof test p
 - [x] T09 Adapt engine
 - [x] T10 Gemini wrapper
 - [x] T11 Intake
-- [ ] T12 Generate
+- [x] T12 Generate
 - [ ] T13 Adapt options (AI)
 - [ ] T14 API routes
 - [ ] T14a Early Render deploy (checkpoint)
@@ -183,13 +183,14 @@ Work top to bottom. One task per session. Tick a task only when its proof test p
 **Proof:** `pytest tests/unit/test_intake.py` (fixtures: valid, Hinglish, non-event, injection attempt, timeout)
 
 ## T12 Generate
-**Files:** `app/ai/schemas.py`, `app/ai/prompts.py`, `app/ai/service.py`, `app/planner.py`, `tests/unit/test_generate.py`, `tests/fixtures/ai/generate_*.json`
+**Files:** `app/models/generate.py`, `app/engines/sanitize.py` (`place_functions`), `app/data/function_templates.json` (neutral default first), `app/ai/schemas.py`, `app/ai/prompts.py`, `app/ai/service.py`, `app/planner.py`, `tests/unit/test_generate.py`, `tests/unit/test_sanitize.py`, `tests/fixtures/ai/generate_*.json`
 
 **Acceptance**
-- [ ] Gemini returns functions, category weights and ideas only; checklist built from `lead_times.json`
-- [ ] Output passes sanitize, budget, timeline and ledger; server assigns ids
-- [ ] Fallback plan from `function_templates.json` passes every engine invariant and is marked in `plan.sources`
-- [ ] `max_output_tokens` sized for the largest template
+- [x] Gemini returns functions, category weights and ideas only; checklist built from `lead_times.json`
+- [x] Output passes sanitize, budget, timeline and ledger; server assigns ids
+- [x] Fallback plan from `function_templates.json` passes every engine invariant and is marked in `plan.sources`
+- [x] `max_output_tokens` sized for the largest template
+- [ ] Live check against Gemini (blocked: the key's project reports prepayment credits depleted, HTTP 402 on every model)
 
 **Proof:** `pytest tests/unit/test_generate.py` (valid, truncated, invalid weights, fallback invariants)
 

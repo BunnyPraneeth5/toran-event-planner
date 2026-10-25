@@ -1,0 +1,125 @@
+{
+  "brief": {
+    "event_type": "wedding",
+    "title": "Sister's wedding",
+    "city": "Jaipur",
+    "start_date": "2027-02-14",
+    "guests": 400,
+    "total_budget": 2500000,
+    "style_notes": "Traditional feel and mostly veg food"
+  },
+  "response": {
+    "functions": [
+      {
+        "name": "Haldi",
+        "day_offset": 0,
+        "start_time": "10:00",
+        "duration_minutes": 150,
+        "guest_percent": 25,
+        "tier": "budget"
+      },
+      {
+        "name": "Mehendi",
+        "day_offset": 0,
+        "start_time": "16:00",
+        "duration_minutes": 240,
+        "guest_percent": 40,
+        "tier": "standard"
+      },
+      {
+        "name": "Sangeet",
+        "day_offset": 1,
+        "start_time": "19:00",
+        "duration_minutes": 240,
+        "guest_percent": 60,
+        "tier": "standard"
+      },
+      {
+        "name": "Wedding",
+        "day_offset": 2,
+        "start_time": "20:00",
+        "duration_minutes": 300,
+        "guest_percent": 100,
+        "tier": "premium"
+      }
+    ],
+    "weights": [
+      {
+        "category": "venue",
+        "weight": 18
+      },
+      {
+        "category": "catering",
+        "weight": 32
+      },
+      {
+        "category": "decor",
+        "weight": 10
+      },
+      {
+        "category": "music_entertainment",
+        "weight": 4
+      },
+      {
+        "category": "photo_video",
+        "weight": 8
+      },
+      {
+        "category": "attire",
+        "weight": 12
+      },
+      {
+        "category": "mehendi_makeup",
+        "weight": 3
+      },
+      {
+        "category": "priest_rituals",
+        "weight": 2
+      },
+      {
+        "category": "invitations_gifts",
+        "weight": 4
+      },
+      {
+        "category": "travel_stay",
+        "weight": 2
+      },
+      {
+        "category": "other",
+        "weight": 5
+      }
+    ],
+    "ideas": [
+      {
+        "function_name": "Haldi",
+        "text": "Marigold backdrop with brass urlis",
+        "cost_band": "low"
+      },
+      {
+        "function_name": "Mehendi",
+        "text": "Live chaat counter with seating on floor cushions",
+        "cost_band": "mid"
+      },
+      {
+        "function_name": "Sangeet",
+        "text": "Family dance rehearsals a week before",
+        "cost_band": "low"
+      },
+      {
+        "function_name": "Wedding",
+        "text": "Phoolon ki chadar for the bride's entry",
+        "cost_band": "mid"
+      },
+      {
+        "function_name": "Wedding",
+        "text": "A satvik thali counter costing about 450 rupees a plate",
+        "cost_band": "mid"
+      },
+      {
+        "function_name": "Reception",
+        "text": "Welcome drinks in kulhads",
+        "cost_band": "low"
+      }
+    ]
+  }
+}

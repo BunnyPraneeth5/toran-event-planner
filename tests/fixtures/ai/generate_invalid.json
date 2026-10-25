@@ -1,0 +1,58 @@
+{
+  "brief": {
+    "event_type": "wedding",
+    "title": "Sister's wedding",
+    "city": "Jaipur",
+    "start_date": "2027-02-14",
+    "guests": 400,
+    "total_budget": 2500000,
+    "style_notes": "Traditional feel and mostly veg food"
+  },
+  "response": {
+    "functions": [
+      {
+        "name": "Haldi",
+        "day_offset": 0,
+        "start_time": "10:00",
+        "duration_minutes": 150,
+        "guest_percent": 25,
+        "tier": "budget"
+      },
+      {
+        "name": "Wedding",
+        "day_offset": 9,
+        "start_time": "20:00",
+        "duration_minutes": 300,
+        "guest_percent": 100,
+        "tier": "premium"
+      },
+      {
+        "name": "Wedding",
+        "day_offset": 1,
+        "start_time": "late evening",
+        "duration_minutes": 9999,
+        "guest_percent": 250,
+        "tier": "premium"
+      }
+    ],
+    "weights": [
+      {
+        "category": "venue",
+        "weight": -10
+      },
+      {
+        "category": "catering",
+        "weight": 0.5
+      },
+      {
+        "category": "fireworks",
+        "weight": 0.3
+      },
+      {
+        "category": "decor",
+        "weight": 0.2
+      }
+    ],
+    "ideas": []
+  }
+}
