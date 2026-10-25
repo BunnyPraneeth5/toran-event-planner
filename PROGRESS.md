@@ -1,8 +1,8 @@
 # PROGRESS: Toran
 
 ## Status
-- Current task: T06
-- Last green commit: T05 budget engine
+- Current task: T11
+- Last green commit: T10 Gemini wrapper
 - Last submission tag:
 - Live link:
 
@@ -18,6 +18,27 @@ Copy the template below for each session, newest first.
 - Problems and gotchas (add repeats to CLAUDE.md):
 - Next:
 -->
+
+### Session 3
+- Task(s): T06 to T10
+- Done: timeline engine (backward schedule, late and at-risk), ledger engine (exact payer splits), parse and sanitize engines (fixture driven), adapt engine (apply change, impact, apply ops, verify option, rule-based options), Gemini wrapper with fakes.
+- Checks: ruff clean, mypy strict clean, 226 tests passing, 97.3% coverage, pip-audit clean on runtime deps.
+- Decisions:
+  - Late means the due date has passed; at risk means the work can no longer be ready before its function. When the ideal due date is already past, the task is due today and shows as at risk.
+  - Ledger gap is assigned minus pledged (positive means assigned more than pledged).
+  - Sanitize renames a reused function name on another day or time ("Puja 2") and drops exact repeats.
+  - A change is measured without rebalancing (`what_if(..., rebalance=False)`), so the problem is visible before any fix. Options are verified: ops apply, locked lines untouched, nothing over budget, no new late or at-risk tasks.
+  - A cancelled vendor gets a replacement line at the same planned amount plus a "Find a replacement" task. No rush surcharge is modelled.
+  - Dropping a function frees its open lines; booked or paid lines stay as event-wide costs.
+  - Rule-based options trim the largest open categories (at most five, at most 90 percent), protect catering, or move the costliest function down a tier.
+  - Gemini wrapper: async SDK, one overall deadline, one retry only on invalid output with at least 3 seconds left, unexpected finish reasons count as invalid.
+  - Runtime deps added: google-genai 2.33.0 and httpx 0.28.1 (httpx was already a transitive dependency, now pinned because app code catches its errors).
+- Problems and gotchas:
+  - Fixed a T05 gap found while testing T09: event-wide per-plate lines (invitations and return gifts) now scale with the event guest count.
+  - Writing files from Python on Windows adds CRLF; .gitattributes normalizes on commit, but never stage a raw blob with `git hash-object` without `--path`.
+- Open items for later tasks:
+  - ARCHITECTURE says model names are checked at startup. Not built yet; fits T14 (health) or T20.
+- Next: T11 Intake.
 
 ### Session 2
 - Task(s): per-plate price choices (follow-up to T04 and T05)

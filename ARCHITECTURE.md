@@ -59,6 +59,8 @@ All money is `int` rupees (strict, never float), formatted as lakh/crore only at
 - **Change**: kind (budget_cut | vendor_cancelled | guests_changed | date_moved | function_dropped) + typed params
 - **Option**: id, rationale (plain text, no digits), ops (list of Op), plus engine-computed result figures
 - **Op**: reduce_guests(function_id, guests) | change_tier(function_id, tier) | scale_category(category, percent) | drop_item(line_item_id). No rupee amounts come from Gemini.
+- **Impact** (engine output): total_committed, over_by, unallocated, newly_flagged_task_ids, affected_line_ids
+- **TaskAssessment** (engine output, never stored): task_id, late, at_risk, days_until_due, ready_by
 - **Vendor** (stretch): name, category, maps_uri, source = "maps_grounding"
 
 ## Flow
