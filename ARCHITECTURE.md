@@ -51,7 +51,7 @@ All money is `int` rupees (strict, never float), formatted as lakh/crore only at
 
 - **Plan** (root, the single body for storage, import and API): schema_version, event, functions, line_items, tasks, people, ideas, sources (brief, plan, options: "ai" or "fallback"). A model validator checks every reference resolves.
 - **Event**: id, type (wedding | birthday | community), title, city, start_date, end_date, guests, total_budget, language, style_notes
-- **Function**: id, name, start (datetime), duration_minutes, guests, guests_override
+- **Function**: id, name, start (datetime), duration_minutes, guests, guests_override, tier (budget | standard | premium)
 - **LineItem**: id, function_id (nullable = event-wide), category, planned, actual (nullable), payers [{person_id, share_pct}] (shares sum to 100 when present), status (planned | booked | paid | cancelled), locked (true when booked or paid)
 - **Task**: id, title, function_id, category, due_date, lead_days, status, owner_id. Late and at-risk are computed per request, never stored.
 - **Person**: id, name, side_or_role, pledge. Used as payer and task owner.

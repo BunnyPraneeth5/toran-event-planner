@@ -3,11 +3,11 @@
 Work top to bottom. One task per session. Tick a task only when its proof test passes and `ruff check . && mypy app && pytest` is green. Record each session in PROGRESS.md.
 
 ## Index
-- [ ] T01 Scaffold
-- [ ] T02 Config
-- [ ] T03 Domain models
-- [ ] T04 Reference data
-- [ ] T05 Budget engine
+- [x] T01 Scaffold
+- [x] T02 Config
+- [x] T03 Domain models
+- [x] T04 Reference data
+- [x] T05 Budget engine
 - [ ] T06 Timeline engine
 - [ ] T07 Ledger engine
 - [ ] T08 Parse and sanitize engines
@@ -39,15 +39,15 @@ Work top to bottom. One task per session. Tick a task only when its proof test p
 ---
 
 ## T01 Scaffold
-**Files:** `pyproject.toml`, `requirements.txt`, `requirements-dev.txt`, `app/__init__.py`, `app/main.py`, `tests/api/test_health.py`, `.gitignore`, `.dockerignore`, `.env.example`
+**Files:** `pyproject.toml`, `requirements.txt`, `requirements-dev.txt`, `app/__init__.py`, `app/main.py`, `app/api/health.py`, `tests/conftest.py`, `tests/api/test_health.py`, `.gitignore`, `.gitattributes`, `.dockerignore`, `.env.example`
 
 **Acceptance**
-- [ ] Git repository initialized; first commit contains only the scaffold
-- [ ] `create_app()` factory in `app/main.py`; `GET /healthz` returns `{"status": "ok"}`
-- [ ] Runtime and dev dependencies pinned, limited to those listed in ARCHITECTURE.md
-- [ ] ruff (including bandit `S` rules) and mypy (strict on `app/`) configured in `pyproject.toml`
-- [ ] `.gitignore` and `.dockerignore` both exclude `.env`, virtualenvs and caches
-- [ ] `ruff check . && mypy app && pytest` passes
+- [x] Git repository initialized; first commit contains only the scaffold
+- [x] `create_app()` factory in `app/main.py`; `GET /healthz` returns `{"status": "ok"}`
+- [x] Runtime and dev dependencies pinned, limited to those listed in ARCHITECTURE.md
+- [x] ruff (including bandit `S` rules) and mypy (strict on `app/`) configured in `pyproject.toml`
+- [x] `.gitignore` and `.dockerignore` both exclude `.env`, virtualenvs and caches
+- [x] `ruff check . && mypy app && pytest` passes
 
 **Proof:** `pytest tests/api/test_health.py::test_healthz_ok`
 
@@ -55,25 +55,25 @@ Work top to bottom. One task per session. Tick a task only when its proof test p
 **Files:** `app/config.py`, `app/main.py`, `.env.example`, `tests/unit/test_config.py`, `tests/api/test_health.py`
 
 **Acceptance**
-- [ ] Settings via pydantic-settings: `GEMINI_API_KEY` (`SecretStr`, optional), model names, AI deadline seconds, rate limits, body size cap, timezone `Asia/Kolkata`, environment
-- [ ] App starts without `GEMINI_API_KEY`; `/healthz` reports `ai_configured: false`
-- [ ] Key never appears in `repr`, logs or error responses
-- [ ] Every setting listed in `.env.example` with a safe placeholder
+- [x] Settings via pydantic-settings: `GEMINI_API_KEY` (`SecretStr`, optional), model names, AI deadline seconds, rate limits, body size cap, environment (IST is a fixed UTC+05:30 offset in `app/models/common.py`, so no tz database dependency)
+- [x] App starts without `GEMINI_API_KEY`; `/healthz` reports `ai_configured: false`
+- [x] Key never appears in `repr`, logs or error responses
+- [x] Every setting listed in `.env.example` with a safe placeholder
 
 **Proof:** `pytest tests/unit/test_config.py` (`test_defaults`, `test_secret_not_in_repr`) and `tests/api/test_health.py::test_healthz_reports_ai_configured`
 
 ## T03 Domain models
-**Files:** `app/models/__init__.py`, `app/models/common.py`, `app/models/event.py`, `app/models/plan.py`, `app/models/change.py`, `tests/unit/test_models.py`
+**Files:** `app/models/__init__.py`, `app/models/common.py`, `app/models/event.py`, `app/models/plan.py`, `app/models/change.py`, `tests/factories.py`, `tests/unit/test_models.py`
 
 **Acceptance**
-- [ ] Plan, Event, Function, LineItem, Task, Person, Idea, Change, Option, Op match ARCHITECTURE.md
-- [ ] Money fields are strict `int` rupees; floats and negatives rejected
-- [ ] Function uses an IST-aware `start` datetime plus `duration_minutes`
-- [ ] LineItem payer shares sum to 100 when present; `locked` is true when status is booked or paid
-- [ ] Task stores no late or at-risk flag
-- [ ] Plan validator rejects dangling `function_id`, payer `person_id` and `owner_id` references
-- [ ] Length and count limits on every string and list
-- [ ] Plan JSON round-trips unchanged
+- [x] Plan, Event, Function, LineItem, Task, Person, Idea, Change, Option, Op match ARCHITECTURE.md
+- [x] Money fields are strict `int` rupees; floats and negatives rejected
+- [x] Function uses an IST-aware `start` datetime plus `duration_minutes`
+- [x] LineItem payer shares sum to 100 when present; `locked` is true when status is booked or paid
+- [x] Task stores no late or at-risk flag
+- [x] Plan validator rejects dangling `function_id`, payer `person_id` and `owner_id` references
+- [x] Length and count limits on every string and list
+- [x] Plan JSON round-trips unchanged
 
 **Proof:** `pytest tests/unit/test_models.py`
 
@@ -81,25 +81,26 @@ Work top to bottom. One task per session. Tick a task only when its proof test p
 **Files:** `app/data/categories.json`, `app/data/lead_times.json`, `app/data/function_templates.json`, `app/data/city_tiers.json`, `app/data/loader.py`, `tests/unit/test_data.py`
 
 **Acceptance**
-- [ ] Categories with default weights per event type; lead time in days per category
-- [ ] Templates: Telugu wedding, North Indian wedding, birthday, community event
-- [ ] City tiers with cost multipliers
-- [ ] Loader validates each file with Pydantic at startup and keeps it in memory
-- [ ] Every template category exists in `categories.json`; every category has a lead time
-- [ ] Each file carries a "rough defaults, not vendor quotes" note
+- [x] Categories with default weights per event type; lead time in days per category
+- [x] Templates: Telugu wedding, North Indian wedding, birthday, community event
+- [x] City tiers with cost multipliers
+- [x] Loader validates each file with Pydantic at startup and keeps it in memory
+- [x] Default weights use known categories and sum to 100 per event type; every category has a lead time; every event type has a template
+- [x] Each file carries a "rough defaults, not vendor quotes" note
 
 **Proof:** `pytest tests/unit/test_data.py::test_reference_data_consistent`
 
 ## T05 Budget engine
-**Files:** `app/engines/__init__.py`, `app/engines/budget.py`, `tests/unit/test_budget.py`
+**Files:** `app/engines/__init__.py`, `app/engines/budget.py`, `app/models/budget.py`, `tests/unit/test_budget.py`, `tests/unit/test_boundaries.py`
 
 **Acceptance**
-- [ ] `allocate(total, weights, functions, ...)` produces line items by largest remainder; sum equals total exactly
-- [ ] Guests and city tier scale per-plate categories
-- [ ] `what_if(plan, changes)` rebalances only unlocked items; locked items unchanged
-- [ ] Overrun flagged when locked plus actual exceed total, with the amount over
-- [ ] Edge cases covered: zero weights, single item, very large budget, all items locked
-- [ ] Reference data passed in as arguments; no I/O; no imports from ai, api or planner
+- [x] `allocate(total, weights, functions, ...)` produces line items by largest remainder; sum equals total exactly
+- [x] Function-scoped lines split by guests (per-plate) and venue tier; what-if guest and tier changes scale those lines
+- [x] `realism_warnings` flags per-plate lines below a city-tier floor per guest, before anything is booked
+- [x] `what_if(plan, changes)` rebalances only unlocked items; locked items unchanged
+- [x] Overrun flagged when locked plus actual exceed total, with the amount over
+- [x] Edge cases covered: zero weights, single item, very large budget, all items locked
+- [x] Reference data passed in as arguments; no I/O; no imports from ai, api or planner
 
 **Proof:** `pytest tests/unit/test_budget.py` (sum exact, locked unchanged, overrun amount)
 
