@@ -20,6 +20,7 @@ from google import genai
 from google.genai import errors, types
 from pydantic import BaseModel, ValidationError
 
+from app.ai.limits import DailyCallCounter
 from app.config import Settings, get_settings
 
 logger = logging.getLogger("toran.ai")
@@ -38,6 +39,7 @@ class AIErrorKind(StrEnum):
     BLOCKED = "blocked"
     TRUNCATED = "truncated"
     INVALID = "invalid"
+    DAILY_LIMIT = "daily_limit"
 
 
 BANNER_TEXT: dict[AIErrorKind, str] = {
@@ -47,6 +49,10 @@ BANNER_TEXT: dict[AIErrorKind, str] = {
     AIErrorKind.BLOCKED: "The AI declined this request, so this uses rule-based defaults.",
     AIErrorKind.TRUNCATED: "The AI reply was cut short, so this uses rule-based defaults.",
     AIErrorKind.INVALID: "The AI reply could not be used, so this uses rule-based defaults.",
+    AIErrorKind.DAILY_LIMIT: (
+        "Today's AI limit has been reached, so this uses rule-based defaults. "
+        "It resets at midnight IST."
+    ),
 }
 
 
@@ -101,12 +107,14 @@ class GeminiClient:
         deadline_seconds: float,
         fallback_model: str | None = None,
         min_retry_seconds: float = MIN_RETRY_SECONDS,
+        daily_counter: DailyCallCounter | None = None,
         clock: Callable[[], float] = time.monotonic,
     ) -> None:
         self._models = models
         self._deadline = deadline_seconds
         self._fallback_model = fallback_model
         self._min_retry = min_retry_seconds
+        self._daily_counter = daily_counter
         self._clock = clock
 
     async def generate[SchemaT: BaseModel](
@@ -140,6 +148,10 @@ class GeminiClient:
             attempt += 1
             attempt_started = self._clock()
             response: types.GenerateContentResponse | None = None
+            if self._daily_counter is not None and not self._daily_counter.try_acquire():
+                kind = AIErrorKind.DAILY_LIMIT
+                self._log(endpoint, model, attempt, attempt_started, kind, None)
+                raise AIError(kind)
             budget = self._remaining(started)
             if self._fallback_for(model, started) is not None:
                 budget = min(budget, self._deadline / 2)
@@ -249,17 +261,20 @@ def build_client(settings: Settings) -> GeminiClient | None:
         settings.gemini_api_key.get_secret_value(),
         settings.ai_deadline_seconds,
         settings.gemini_fallback_model,
+        settings.ai_daily_call_limit,
     )
 
 
 @lru_cache(maxsize=2)
 def _cached_client(
-    api_key: str, deadline_seconds: float, fallback_model: str | None
+    api_key: str, deadline_seconds: float, fallback_model: str | None, daily_limit: int
 ) -> GeminiClient:
+    """One client per configuration, so the daily counter is shared by every request."""
     return GeminiClient(
         _sdk_client(api_key, int(deadline_seconds * 1000)).aio.models,
         deadline_seconds=deadline_seconds,
         fallback_model=fallback_model,
+        daily_counter=DailyCallCounter(daily_limit),
     )
 
 

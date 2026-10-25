@@ -22,6 +22,7 @@ class Settings(BaseSettings):
     ai_deadline_seconds: float = Field(default=25.0, gt=0, le=60)
     rate_limit_llm: str = Field(default="10/minute", pattern=r"^\d{1,4}/(second|minute|hour|day)$")
     max_body_bytes: int = Field(default=262_144, ge=1_024, le=2_097_152)
+    ai_daily_call_limit: int = Field(default=500, ge=0, le=100_000)
 
     @property
     def ai_configured(self) -> bool:

@@ -107,6 +107,7 @@ All money is `int` rupees (strict, never float), formatted as lakh/crore only at
 - Model output rendered through Jinja autoescape. No raw HTML from the model.
 - Log per call: endpoint, model, latency, tokens from `usage_metadata`, outcome. No user text in logs.
 - No response caching, except stretch vendor lookups (place URIs only, short TTL, per Maps terms).
+- Daily cap: `AI_DAILY_CALL_LIMIT` (default 500) counts every Gemini request per IST day, retries and fallbacks included. Once reached, every AI feature uses its rule-based fallback with a banner saying the limit resets at midnight IST. The count is in memory, so the hard cap is a requests-per-day quota in Google Cloud; this guards against loops and abuse between restarts.
 
 ## Security
 - Pydantic limits on everything: text length, guests 1 to 5000, budget range, max functions, items, tasks, people, string lengths inside imported plans.

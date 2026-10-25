@@ -12,6 +12,7 @@ from typing import Any
 from google.genai import errors, types
 
 from app.ai.client import GeminiClient
+from app.ai.limits import DailyCallCounter
 
 
 @dataclass
@@ -97,6 +98,7 @@ def fake_client(
     deadline_seconds: float = 25.0,
     fallback_model: str | None = None,
     min_retry_seconds: float = 3.0,
+    daily_counter: DailyCallCounter | None = None,
     clock: Callable[[], float] | None = None,
 ) -> tuple[GeminiClient, FakeModels]:
     models = FakeModels(list(steps))
@@ -105,6 +107,7 @@ def fake_client(
         deadline_seconds=deadline_seconds,
         fallback_model=fallback_model,
         min_retry_seconds=min_retry_seconds,
+        daily_counter=daily_counter,
         clock=clock if clock is not None else FakeClock(),
     )
     return client, models

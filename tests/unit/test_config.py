@@ -14,6 +14,7 @@ ENV_VARS = (
     "AI_DEADLINE_SECONDS",
     "RATE_LIMIT_LLM",
     "MAX_BODY_BYTES",
+    "AI_DAILY_CALL_LIMIT",
 )
 
 
