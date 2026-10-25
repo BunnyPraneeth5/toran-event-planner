@@ -10,7 +10,7 @@ Work top to bottom. One task per session. Tick a task only when its proof test p
 - [x] T05 Budget engine
 - [x] T06 Timeline engine
 - [x] T07 Ledger engine
-- [ ] T08 Parse and sanitize engines
+- [x] T08 Parse and sanitize engines
 - [ ] T09 Adapt engine
 - [ ] T10 Gemini wrapper
 - [ ] T11 Intake
@@ -131,10 +131,10 @@ Work top to bottom. One task per session. Tick a task only when its proof test p
 **Files:** `app/engines/parse.py`, `app/engines/sanitize.py`, `tests/unit/test_parse.py`, `tests/unit/test_sanitize.py`, `tests/fixtures/sanitize_cases.json`
 
 **Acceptance**
-- [ ] `parse_amount(value, unit)` handles rupees, thousand, lakh, crore (25 lakh is 2,500,000)
-- [ ] `parse_date(year, month, day, today)` returns a date or a "needs day" marker; past dates flagged
-- [ ] Sanitize clamps guests to 1 to 5000, sets negative weights to 0, replaces zero-sum weights with defaults, maps unknown categories to "other", drops functions outside event dates with a notice, dedupes function names
-- [ ] Every case driven by the fixture file
+- [x] `parse_amount(value, unit)` handles rupees, thousand, lakh, crore (25 lakh is 2,500,000)
+- [x] `parse_date(year, month, day, today)` returns a date or a "needs day" marker; past dates flagged
+- [x] Sanitize clamps guests to 1 to 5000, sets negative weights to 0, replaces zero-sum weights with defaults, maps unknown categories to "other", drops functions outside event dates with a notice, dedupes function names
+- [x] Weight and function cases driven by the fixture file (NaN, infinity and the 12-function cap are inline, since JSON cannot express them compactly)
 
 **Proof:** `pytest tests/unit/test_parse.py tests/unit/test_sanitize.py`
 

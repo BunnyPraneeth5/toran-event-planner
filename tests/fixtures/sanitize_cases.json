@@ -1,0 +1,137 @@
+{
+  "event": {"start": "2027-02-10", "end": "2027-02-11"},
+  "weights": [
+    {
+      "name": "fractions become percents",
+      "input": {"venue": 0.2, "catering": 0.3, "decor": 0.5},
+      "expected": {"venue": 20, "catering": 30, "decor": 50},
+      "notices": []
+    },
+    {
+      "name": "percents that do not sum to 100 are rescaled",
+      "input": {"venue": 30, "catering": 60, "decor": 30},
+      "expected": {"venue": 25, "catering": 50, "decor": 25},
+      "notices": []
+    },
+    {
+      "name": "equal thirds give the remainder to the first",
+      "input": {"venue": 1, "catering": 1, "decor": 1},
+      "expected": {"venue": 34, "catering": 33, "decor": 33},
+      "notices": []
+    },
+    {
+      "name": "negative weights count as zero",
+      "input": {"venue": -5, "catering": 50, "decor": 50},
+      "expected": {"catering": 50, "decor": 50},
+      "notices": ["Ignored an invalid weight for venue"]
+    },
+    {
+      "name": "unknown categories fold into other",
+      "input": {"fireworks": 10, "catering": 90},
+      "expected": {"other": 10, "catering": 90},
+      "notices": ["Moved unknown category fireworks into other"]
+    },
+    {
+      "name": "unknown and explicit other are merged",
+      "input": {"fireworks": 5, "other": 5, "venue": 90},
+      "expected": {"other": 10, "venue": 90},
+      "notices": ["Moved unknown category fireworks into other"]
+    },
+    {
+      "name": "all zero falls back to defaults",
+      "input": {"venue": 0, "catering": 0},
+      "expected": "defaults",
+      "notices": ["Used the default category split"]
+    },
+    {
+      "name": "empty falls back to defaults",
+      "input": {},
+      "expected": "defaults",
+      "notices": ["Used the default category split"]
+    }
+  ],
+  "functions": [
+    {
+      "name": "valid functions pass through",
+      "input": [
+        {"name": "Haldi", "day": "2027-02-10", "start_time": "10:00", "duration_minutes": 180, "guests": 100, "tier": "budget"},
+        {"name": "Reception", "day": "2027-02-11", "start_time": "19:00", "duration_minutes": 240, "guests": 400, "tier": "premium"}
+      ],
+      "expected": [
+        {"name": "Haldi", "day": "2027-02-10", "start_time": "10:00", "duration_minutes": 180, "guests": 100, "tier": "budget"},
+        {"name": "Reception", "day": "2027-02-11", "start_time": "19:00", "duration_minutes": 240, "guests": 400, "tier": "premium"}
+      ],
+      "notices": []
+    },
+    {
+      "name": "guests clamped to 1 and 5000",
+      "input": [
+        {"name": "Haldi", "day": "2027-02-10", "start_time": "10:00", "duration_minutes": 180, "guests": 0},
+        {"name": "Reception", "day": "2027-02-11", "start_time": "19:00", "duration_minutes": 240, "guests": 9000}
+      ],
+      "expected": [
+        {"name": "Haldi", "day": "2027-02-10", "start_time": "10:00", "duration_minutes": 180, "guests": 1, "tier": "standard"},
+        {"name": "Reception", "day": "2027-02-11", "start_time": "19:00", "duration_minutes": 240, "guests": 5000, "tier": "standard"}
+      ],
+      "notices": ["Adjusted guests for Haldi to 1", "Adjusted guests for Reception to 5000"]
+    },
+    {
+      "name": "functions outside event dates are dropped",
+      "input": [
+        {"name": "Engagement", "day": "2026-12-01", "start_time": "18:00", "duration_minutes": 180, "guests": 150},
+        {"name": "Reception", "day": "2027-02-11", "start_time": "19:00", "duration_minutes": 240, "guests": 400},
+        {"name": "Vratham", "day": "2027-02-14", "start_time": "09:00", "duration_minutes": 120, "guests": 50}
+      ],
+      "expected": [
+        {"name": "Reception", "day": "2027-02-11", "start_time": "19:00", "duration_minutes": 240, "guests": 400, "tier": "standard"}
+      ],
+      "notices": ["Dropped Engagement: it falls outside the event dates", "Dropped Vratham: it falls outside the event dates"]
+    },
+    {
+      "name": "exact repeats are dropped",
+      "input": [
+        {"name": "Sangeet", "day": "2027-02-10", "start_time": "19:00", "duration_minutes": 240, "guests": 200},
+        {"name": "sangeet", "day": "2027-02-10", "start_time": "19:00", "duration_minutes": 240, "guests": 200}
+      ],
+      "expected": [
+        {"name": "Sangeet", "day": "2027-02-10", "start_time": "19:00", "duration_minutes": 240, "guests": 200, "tier": "standard"}
+      ],
+      "notices": ["Dropped a repeated sangeet"]
+    },
+    {
+      "name": "same name at another time is numbered",
+      "input": [
+        {"name": "Puja", "day": "2027-02-10", "start_time": "09:00", "duration_minutes": 120, "guests": 60},
+        {"name": "Puja", "day": "2027-02-11", "start_time": "09:00", "duration_minutes": 120, "guests": 60}
+      ],
+      "expected": [
+        {"name": "Puja", "day": "2027-02-10", "start_time": "09:00", "duration_minutes": 120, "guests": 60, "tier": "standard"},
+        {"name": "Puja 2", "day": "2027-02-11", "start_time": "09:00", "duration_minutes": 120, "guests": 60, "tier": "standard"}
+      ],
+      "notices": ["Renamed a second Puja to Puja 2"]
+    },
+    {
+      "name": "names are trimmed and blank names dropped",
+      "input": [
+        {"name": "  Haldi   ceremony ", "day": "2027-02-10", "start_time": "10:00", "duration_minutes": 180, "guests": 100},
+        {"name": "   ", "day": "2027-02-10", "start_time": "12:00", "duration_minutes": 60, "guests": 10}
+      ],
+      "expected": [
+        {"name": "Haldi ceremony", "day": "2027-02-10", "start_time": "10:00", "duration_minutes": 180, "guests": 100, "tier": "standard"}
+      ],
+      "notices": ["Dropped a function with no name"]
+    },
+    {
+      "name": "duration clamped and unknown tier reset",
+      "input": [
+        {"name": "Mehendi", "day": "2027-02-10", "start_time": "16:00", "duration_minutes": 5, "guests": 80, "tier": "luxury"},
+        {"name": "Wedding", "day": "2027-02-11", "start_time": "20:00", "duration_minutes": 3000, "guests": 400}
+      ],
+      "expected": [
+        {"name": "Mehendi", "day": "2027-02-10", "start_time": "16:00", "duration_minutes": 15, "guests": 80, "tier": "standard"},
+        {"name": "Wedding", "day": "2027-02-11", "start_time": "20:00", "duration_minutes": 1440, "guests": 400, "tier": "standard"}
+      ],
+      "notices": ["Adjusted the length of Mehendi to 15 minutes", "Set Mehendi to the standard tier", "Adjusted the length of Wedding to 1440 minutes"]
+    }
+  ]
+}
