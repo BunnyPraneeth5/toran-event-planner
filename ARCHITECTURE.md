@@ -39,7 +39,7 @@ app/
     schemas.py       flat response models for structured output, separate from domain models
     service.py       intake, generate, adapt_options; STRETCH vendors, translate, ideas
   api/               routers: pages, plan, budget, adapt, calendar, health
-  data/              reference JSON: categories, lead_times, function_templates, city_tiers + loader
+  data/              reference JSON: categories (weights, per-plate price ranges by city type and tier), lead_times, function_templates, city_tiers + loader
   web/templates/     Jinja2 pages + HTMX partials
   web/static/        css, js, vendor (htmx, json-enc)
 tests/unit  tests/api  tests/fixtures  tests/evals  e2e/

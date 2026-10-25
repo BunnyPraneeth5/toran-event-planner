@@ -83,7 +83,7 @@ Work top to bottom. One task per session. Tick a task only when its proof test p
 **Acceptance**
 - [x] Categories with default weights per event type; lead time in days per category
 - [x] Templates: Telugu wedding, North Indian wedding, birthday, community event
-- [x] City tiers with cost multipliers
+- [x] Cities mapped to a city type (metro, tier2, tier3); per-plate price ranges for catering and invitations by city type and tier (budget, standard, premium)
 - [x] Loader validates each file with Pydantic at startup and keeps it in memory
 - [x] Default weights use known categories and sum to 100 per event type; every category has a lead time; every event type has a template
 - [x] Each file carries a "rough defaults, not vendor quotes" note
@@ -96,7 +96,7 @@ Work top to bottom. One task per session. Tick a task only when its proof test p
 **Acceptance**
 - [x] `allocate(total, weights, functions, ...)` produces line items by largest remainder; sum equals total exactly
 - [x] Function-scoped lines split by guests (per-plate) and venue tier; what-if guest and tier changes scale those lines
-- [x] `realism_warnings` flags per-plate lines below a city-tier floor per guest, before anything is booked
+- [x] `realism_warnings` flags per-plate lines below the usual range for the function's tier and the city type, with the typical low and high for its guests
 - [x] `what_if(plan, changes)` rebalances only unlocked items; locked items unchanged
 - [x] Overrun flagged when locked plus actual exceed total, with the amount over
 - [x] Edge cases covered: zero weights, single item, very large budget, all items locked

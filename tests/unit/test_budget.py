@@ -282,21 +282,60 @@ def test_category_without_adjustable_lines_rejected(ref: ReferenceData) -> None:
 # realism
 
 
-def test_realism_flags_thin_catering(ref: ReferenceData) -> None:
+def test_realism_flags_thin_catering_against_tier_range(ref: ReferenceData) -> None:
     plan = _plan(ref, total=300_000)
     cats = ref.categories.categories
 
-    warnings = realism_warnings(plan, cats, ref.city_multiplier("Jodhpur"))
+    warnings = realism_warnings(plan, cats, ref.city_tier("Jodhpur"))
     reception = next(w for w in warnings if w.function_id == "reception")
 
-    typical = 350 * 80 * 400 // 100
+    # reception is premium with 400 guests; tier3 premium catering is 900 to 1500 per plate
     assert reception.kind == "below_typical"
-    assert reception.amount == typical - _item(plan, "catering", "reception").planned
-    metro = realism_warnings(plan, cats, ref.city_multiplier("Mumbai"))
-    assert sum(w.amount for w in metro) > sum(w.amount for w in warnings)
+    assert reception.category == "catering"
+    assert (reception.typical_low, reception.typical_high) == (900 * 400, 1500 * 400)
+    assert reception.amount == 900 * 400 - _item(plan, "catering", "reception").planned
+
+
+def test_realism_uses_function_tier(ref: ReferenceData) -> None:
+    plan = _plan(ref, total=300_000)
+
+    warnings = realism_warnings(plan, ref.categories.categories, "tier3")
+    haldi = next(w for w in warnings if w.function_id == "haldi")
+
+    # haldi is budget tier with 100 guests; tier3 budget catering is 300 to 500 per plate
+    assert (haldi.typical_low, haldi.typical_high) == (300 * 100, 500 * 100)
+
+
+def test_realism_event_wide_lines_use_standard_and_event_guests(ref: ReferenceData) -> None:
+    plan = _plan(ref, total=300_000)
+
+    warnings = realism_warnings(plan, ref.categories.categories, "tier2")
+    gifts = next(w for w in warnings if w.category == "invitations_gifts")
+
+    assert gifts.function_id is None
+    assert (gifts.typical_low, gifts.typical_high) == (100 * 400, 200 * 400)
+
+
+def test_realism_metro_expects_more(ref: ReferenceData) -> None:
+    plan = _plan(ref, total=300_000)
+    cats = ref.categories.categories
+
+    town = realism_warnings(plan, cats, ref.city_tier("Jodhpur"))
+    metro = realism_warnings(plan, cats, ref.city_tier("Mumbai"))
+
+    assert sum(w.amount for w in metro) > sum(w.amount for w in town)
 
 
 def test_realism_quiet_for_healthy_budget(ref: ReferenceData) -> None:
     plan = _plan(ref, total=5_000_000)
 
-    assert realism_warnings(plan, ref.categories.categories, 100) == []
+    assert realism_warnings(plan, ref.categories.categories, "tier3") == []
+
+
+def test_realism_ignores_cancelled_lines(ref: ReferenceData) -> None:
+    plan = _plan(ref, total=300_000)
+    for item in plan.line_items:
+        if item.category in {"catering", "invitations_gifts"}:
+            plan = _with_item(plan, item.id, status="cancelled")
+
+    assert realism_warnings(plan, ref.categories.categories, "metro") == []

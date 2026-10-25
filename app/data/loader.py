@@ -27,6 +27,20 @@ DATA_DIR = Path(__file__).parent
 CityTier = Literal["metro", "tier2", "tier3"]
 EVENT_TYPES: tuple[EventType, ...] = ("wedding", "birthday", "community")
 TIERS: tuple[Tier, ...] = ("budget", "standard", "premium")
+CITY_TIERS: tuple[CityTier, ...] = ("metro", "tier2", "tier3")
+
+
+class PriceRange(DomainModel):
+    """Typical rupees per guest, from low to high."""
+
+    low: Rupees
+    high: Rupees
+
+    @model_validator(mode="after")
+    def _ordered(self) -> Self:
+        if self.low > self.high:
+            raise ValueError("price range low is above high")
+        return self
 
 
 class CategoryInfo(DomainModel):
@@ -35,7 +49,28 @@ class CategoryInfo(DomainModel):
     scope: Literal["function", "event"]
     per_plate: bool = False
     tier_sensitive: bool = False
-    per_guest_floor: Rupees | None = None
+    per_plate_ranges: dict[CityTier, dict[Tier, PriceRange]] | None = None
+
+    @model_validator(mode="after")
+    def _ranges_complete(self) -> Self:
+        if self.per_plate_ranges is None:
+            return self
+        if not self.per_plate:
+            raise ValueError(f"{self.key}: per_plate_ranges need per_plate to be true")
+        if set(self.per_plate_ranges) != set(CITY_TIERS):
+            raise ValueError(f"{self.key}: per_plate_ranges need metro, tier2 and tier3")
+        for city_tier, by_tier in self.per_plate_ranges.items():
+            if set(by_tier) != set(TIERS):
+                raise ValueError(f"{self.key}: {city_tier} needs budget, standard and premium")
+            lows = [by_tier[t].low for t in TIERS]
+            if lows != sorted(lows):
+                raise ValueError(f"{self.key}: {city_tier} ranges must rise from budget to premium")
+        return self
+
+    def price_range(self, city_tier: CityTier, tier: Tier) -> PriceRange | None:
+        if self.per_plate_ranges is None:
+            return None
+        return self.per_plate_ranges[city_tier][tier]
 
 
 class CategoriesFile(DomainModel):
@@ -100,14 +135,7 @@ class TemplatesFile(DomainModel):
 class CityTiersFile(DomainModel):
     note: str
     default_tier: CityTier
-    tiers: dict[CityTier, int]
     cities: dict[str, CityTier]
-
-    @model_validator(mode="after")
-    def _all_tiers_priced(self) -> Self:
-        if set(self.tiers) != {"metro", "tier2", "tier3"} or min(self.tiers.values()) <= 0:
-            raise ValueError("tiers needs a positive multiplier for metro, tier2 and tier3")
-        return self
 
 
 class ReferenceData(DomainModel):
@@ -140,10 +168,9 @@ class ReferenceData(DomainModel):
                 return info
         raise KeyError(key)
 
-    def city_multiplier(self, city: str) -> int:
-        """Cost multiplier for a city, as percent of tier-2 costs."""
-        tier = self.city_tiers.cities.get(city.strip().lower(), self.city_tiers.default_tier)
-        return self.city_tiers.tiers[tier]
+    def city_tier(self, city: str) -> CityTier:
+        """City type used to pick per-plate price ranges. Unknown cities get the default."""
+        return self.city_tiers.cities.get(city.strip().lower(), self.city_tiers.default_tier)
 
 
 def load_reference_data(data_dir: Path = DATA_DIR) -> ReferenceData:

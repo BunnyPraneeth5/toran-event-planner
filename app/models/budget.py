@@ -47,12 +47,18 @@ WhatIf = Annotated[
 
 
 class BudgetWarning(DomainModel):
-    """`amount` is the overrun for over_budget and the shortfall for below_typical."""
+    """`amount` is the overrun for over_budget and the shortfall for below_typical.
+
+    For below_typical, `typical_low` and `typical_high` give the usual cost of that line
+    for its guests, tier and city type, so the UI can say "plan for X to Y".
+    """
 
     kind: Literal["over_budget", "below_typical"]
     amount: Rupees
     category: CategoryKey | None = None
     function_id: Id | None = None
+    typical_low: Rupees | None = None
+    typical_high: Rupees | None = None
 
 
 class BudgetResult(DomainModel):

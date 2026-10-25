@@ -1,15 +1,29 @@
 {
-  "note": "Rough defaults, not vendor quotes. Weights are percent of total budget. per_guest_floor is a typical minimum per guest in a tier-2 city, in rupees.",
+  "note": "Rough defaults, not vendor quotes. Weights are percent of total budget. per_plate_ranges are typical rupees per guest by city type and function tier.",
   "categories": [
     {"key": "venue", "label": "Venue", "scope": "function", "tier_sensitive": true},
-    {"key": "catering", "label": "Catering", "scope": "function", "per_plate": true, "tier_sensitive": true, "per_guest_floor": 350},
+    {
+      "key": "catering", "label": "Catering", "scope": "function", "per_plate": true, "tier_sensitive": true,
+      "per_plate_ranges": {
+        "tier3": {"budget": {"low": 300, "high": 500}, "standard": {"low": 500, "high": 800}, "premium": {"low": 900, "high": 1500}},
+        "tier2": {"budget": {"low": 400, "high": 650}, "standard": {"low": 650, "high": 1000}, "premium": {"low": 1100, "high": 2000}},
+        "metro": {"budget": {"low": 600, "high": 900}, "standard": {"low": 1000, "high": 1800}, "premium": {"low": 2000, "high": 3500}}
+      }
+    },
     {"key": "decor", "label": "Decor and flowers", "scope": "function", "tier_sensitive": true},
     {"key": "music_entertainment", "label": "Music and entertainment", "scope": "function"},
     {"key": "photo_video", "label": "Photography and video", "scope": "event"},
     {"key": "attire", "label": "Clothes and jewellery", "scope": "event"},
     {"key": "mehendi_makeup", "label": "Mehendi and makeup", "scope": "event"},
     {"key": "priest_rituals", "label": "Priest and puja items", "scope": "event"},
-    {"key": "invitations_gifts", "label": "Invitations and return gifts", "scope": "event", "per_plate": true, "per_guest_floor": 40},
+    {
+      "key": "invitations_gifts", "label": "Invitations and return gifts", "scope": "event", "per_plate": true,
+      "per_plate_ranges": {
+        "tier3": {"budget": {"low": 30, "high": 80}, "standard": {"low": 80, "high": 150}, "premium": {"low": 150, "high": 400}},
+        "tier2": {"budget": {"low": 40, "high": 100}, "standard": {"low": 100, "high": 200}, "premium": {"low": 200, "high": 500}},
+        "metro": {"budget": {"low": 60, "high": 150}, "standard": {"low": 150, "high": 300}, "premium": {"low": 300, "high": 800}}
+      }
+    },
     {"key": "travel_stay", "label": "Guest travel and stay", "scope": "event"},
     {"key": "cake", "label": "Cake", "scope": "event"},
     {"key": "other", "label": "Other and contingency", "scope": "event"}

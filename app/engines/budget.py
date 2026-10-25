@@ -7,7 +7,7 @@ locked. Locked lines (booked or paid) never move.
 
 from collections.abc import Callable, Mapping, Sequence
 
-from app.data.loader import CategoryInfo
+from app.data.loader import CategoryInfo, CityTier
 from app.models.budget import (
     BudgetResult,
     BudgetWarning,
@@ -101,29 +101,36 @@ def what_if(
 
 
 def realism_warnings(
-    plan: Plan, categories: Sequence[CategoryInfo], city_multiplier_pct: int
+    plan: Plan, categories: Sequence[CategoryInfo], city_tier: CityTier
 ) -> list[BudgetWarning]:
-    """Flag per-plate lines that look too low for the city, before anything is booked."""
-    floors = {
-        c.key: c.per_guest_floor
-        for c in categories
-        if c.per_plate and c.per_guest_floor is not None
-    }
-    guests_by_function = {f.id: f.guests for f in plan.functions}
+    """Flag per-plate lines below the usual range, before anything is booked.
+
+    The range comes from the category's per-plate prices for the city type and the
+    function's tier (budget, standard or premium). Event-wide lines use standard.
+    """
+    info = {c.key: c for c in categories}
+    functions = {f.id: f for f in plan.functions}
     warnings: list[BudgetWarning] = []
     for item in plan.line_items:
-        floor = floors.get(item.category)
-        if floor is None or not item.active:
+        category = info.get(item.category)
+        if category is None or not item.active:
             continue
-        guests = guests_by_function.get(item.function_id or "", plan.event.guests)
-        typical = floor * city_multiplier_pct * guests // 100
-        if item.spend < typical:
+        function = functions.get(item.function_id or "")
+        tier: Tier = function.tier if function else "standard"
+        price = category.price_range(city_tier, tier)
+        if price is None:
+            continue
+        guests = function.guests if function else plan.event.guests
+        typical_low, typical_high = price.low * guests, price.high * guests
+        if item.spend < typical_low:
             warnings.append(
                 BudgetWarning(
                     kind="below_typical",
-                    amount=typical - item.spend,
+                    amount=typical_low - item.spend,
                     category=item.category,
                     function_id=item.function_id,
+                    typical_low=typical_low,
+                    typical_high=typical_high,
                 )
             )
     return warnings
