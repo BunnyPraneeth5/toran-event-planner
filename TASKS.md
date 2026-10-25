@@ -16,7 +16,7 @@ Work top to bottom. One task per session. Tick a task only when its proof test p
 - [x] T11 Intake
 - [x] T12 Generate
 - [x] T13 Adapt options (AI)
-- [ ] T14 API routes
+- [x] T14 API routes
 - [ ] T14a Early Render deploy (checkpoint)
 - [ ] T15 UI base and intake page
 - [ ] T16 Dashboard page and state contract
@@ -211,15 +211,15 @@ Work top to bottom. One task per session. Tick a task only when its proof test p
 **Proof:** `pytest tests/unit/test_adapt_ai.py` (valid options, one invalid op dropped, all invalid falls back, digits in rationale)
 
 ## T14 API routes
-**Files:** `app/api/__init__.py`, `app/api/health.py`, `app/api/plan.py`, `app/api/budget.py`, `app/api/adapt.py`, `app/main.py`, `tests/api/test_routes.py`
+**Files:** `app/api/plan.py`, `app/api/budget.py`, `app/api/adapt.py`, `app/api/deps.py`, `app/api/render.py`, `app/models/view.py`, `app/planner.py` (`recompute`, `run_what_if`), `app/web/formatting.py`, `app/web/templates/partials/*.html` (minimal, fleshed out in T15 and T16), `app/main.py`, `requirements.txt` (jinja2), `tests/api/test_routes.py`, `tests/unit/test_formatting.py`, `tests/factories.py`
 
 **Acceptance**
-- [ ] Routes from ARCHITECTURE.md wired (calendar and stretch routes excluded), each a thin call into `planner`
-- [ ] JSON by default; HTML partial when the `HX-Request` header is present
-- [ ] Intake route passes `GEMINI_LITE_MODEL`; generate and adapt routes pass `GEMINI_MODEL`
-- [ ] 422 on invalid plan, dangling references and oversized lists
-- [ ] `/api/adapt/apply` re-applies ops server-side and never accepts a client-computed plan
-- [ ] LLM routes tested with the fake client via dependency override
+- [x] Routes from ARCHITECTURE.md wired (calendar and stretch routes excluded), each a thin call into `planner`
+- [x] JSON by default; HTML partial when the `HX-Request` header is present
+- [x] Intake route passes `GEMINI_LITE_MODEL`; generate and adapt routes pass `GEMINI_MODEL`
+- [x] 422 on invalid plan, dangling references and oversized lists
+- [x] `/api/adapt/apply` re-applies ops server-side and never accepts a client-computed plan
+- [x] LLM routes tested with the fake client via dependency override
 
 **Proof:** `pytest tests/api/test_routes.py`
 

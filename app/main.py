@@ -2,7 +2,10 @@
 
 from fastapi import FastAPI
 
+from app.api.adapt import router as adapt_router
+from app.api.budget import router as budget_router
 from app.api.health import router as health_router
+from app.api.plan import router as plan_router
 from app.config import get_settings
 
 
@@ -17,7 +20,8 @@ def create_app() -> FastAPI:
         redoc_url=None,
         openapi_url="/openapi.json" if show_docs else None,
     )
-    app.include_router(health_router)
+    for router in (health_router, plan_router, budget_router, adapt_router):
+        app.include_router(router)
     return app
 
 

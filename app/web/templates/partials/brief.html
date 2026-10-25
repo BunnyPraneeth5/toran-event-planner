@@ -1,0 +1,22 @@
+{% set banner = data.banner %}{% include "partials/banner.html" %}
+<section aria-labelledby="brief-heading">
+  <h2 id="brief-heading">Your event</h2>
+  {% if data.status == "not_event" %}
+  <p>{{ data.message }}</p>
+  {% else %}
+  <dl>
+    <dt>Type</dt><dd>{{ data.brief.event_type or "Not given yet" }}</dd>
+    <dt>City</dt><dd>{{ data.brief.city or "Not given yet" }}</dd>
+    <dt>Starts</dt><dd>{{ data.brief.start_date or "Not given yet" }}</dd>
+    <dt>Guests</dt><dd>{{ data.brief.guests or "Not given yet" }}</dd>
+    <dt>Budget</dt><dd>{{ data.brief.total_budget | inr if data.brief.total_budget else "Not given yet" }}</dd>
+  </dl>
+  {% if data.questions %}
+  <h3>A few questions</h3>
+  <ul>
+    {% for question in data.questions %}<li>{{ question.text }}</li>{% endfor %}
+  </ul>
+  {% endif %}
+  {% for notice in data.notices %}<p class="notice">{{ notice }}</p>{% endfor %}
+  {% endif %}
+</section>

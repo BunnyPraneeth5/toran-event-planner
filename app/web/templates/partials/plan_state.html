@@ -1,0 +1,3 @@
+{# The plan travels back to the browser here; static JS saves it to localStorage.
+   JSON data blocks are not executed, and tojson escapes anything that could close the tag. #}
+<script type="application/json" id="plan-state">{{ plan.model_dump(mode="json") | tojson }}</script>

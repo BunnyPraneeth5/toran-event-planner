@@ -1,0 +1,19 @@
+{% set banner = data.banner %}{% include "partials/banner.html" %}
+<section aria-labelledby="options-heading">
+  <h2 id="options-heading">What this change means</h2>
+  <p>{% if data.impact.over_by %}Over budget by {{ data.impact.over_by | inr }}.{% else %}Still within budget.{% endif %}
+    {% if data.impact.newly_flagged_task_ids %}{{ data.impact.newly_flagged_task_ids | length }} task(s) now late or at risk.{% endif %}</p>
+  {% if data.message %}<p>{{ data.message }}</p>{% endif %}
+  {% if data.options %}
+  <h3>Ways to fix it</h3>
+  <ol>
+    {% for option in data.options %}
+    <li>
+      <p>{{ option.rationale }}</p>
+      {% if option.result %}<p>Plan total after this: {{ option.result.total_committed | inr }}</p>{% endif %}
+    </li>
+    {% endfor %}
+  </ol>
+  {% endif %}
+  {% for notice in data.notices %}<p class="notice">{{ notice }}</p>{% endfor %}
+</section>

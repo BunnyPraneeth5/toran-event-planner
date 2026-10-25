@@ -25,7 +25,8 @@ from app.engines.adapt import (
     rule_based_options,
     verify_option,
 )
-from app.engines.budget import allocate
+from app.engines.budget import allocate, budget_status, realism_warnings, what_if
+from app.engines.ledger import ledger_summary
 from app.engines.parse import parse_amount, parse_date
 from app.engines.sanitize import (
     FunctionDraft,
@@ -34,8 +35,9 @@ from app.engines.sanitize import (
     place_functions,
     sanitize_weights,
 )
-from app.engines.timeline import build_tasks
+from app.engines.timeline import assess_tasks, build_tasks
 from app.models.adapt import MAX_OPTIONS, AdaptRequest, AdaptResult, ApplyRequest
+from app.models.budget import BudgetWarning
 from app.models.change import ChangeTier, DropItem, Op, Option, ReduceGuests, ScaleCategory
 from app.models.common import IST, MAX_RUPEES, MIN_BUDGET, Tier, new_id
 from app.models.event import Event, Function, Idea
@@ -50,6 +52,7 @@ from app.models.intake import (
     Question,
 )
 from app.models.plan import MAX_IDEAS, Plan, Sources
+from app.models.view import BudgetView, CategoryTotal, PlanView, WhatIfRequest
 
 MAX_NAME = 120
 MAX_NOTES = 500
@@ -81,6 +84,67 @@ FIELD_QUESTIONS: dict[BriefField, str] = {
     "guests": "About how many guests?",
     "total_budget": "What is the total budget?",
 }
+
+
+def recompute(plan: Plan, *, ref: ReferenceData, today: date) -> PlanView:
+    """Everything the dashboard shows, derived fresh from the plan. No AI involved."""
+    return _view(plan, ref, today, extra_warnings=[])
+
+
+def run_what_if(request: WhatIfRequest, *, ref: ReferenceData, today: date) -> PlanView:
+    """Apply what-if changes with the budget engine and return the new view. No AI.
+
+    Raises ValueError for changes that refer to unknown functions or categories.
+    """
+    result = what_if(
+        request.plan,
+        request.changes,
+        ref.categories.categories,
+        ref.categories.tier_multipliers,
+    )
+    return _view(result.plan, ref, today, extra_warnings=result.warnings)
+
+
+def _view(
+    plan: Plan, ref: ReferenceData, today: date, extra_warnings: Sequence[BudgetWarning]
+) -> PlanView:
+    committed, over_by, unallocated = budget_status(plan)
+    labels = {c.key: c.label for c in ref.categories.categories}
+    planned: dict[str, int] = {}
+    locked: dict[str, int] = {}
+    for item in plan.line_items:
+        if not item.active:
+            continue
+        planned[item.category] = planned.get(item.category, 0) + item.planned
+        if item.locked:
+            locked[item.category] = locked.get(item.category, 0) + item.spend
+    by_category = [
+        CategoryTotal(
+            category=key,
+            label=labels.get(key, key.replace("_", " ").capitalize()),
+            planned=amount,
+            locked=locked.get(key, 0),
+        )
+        for key, amount in sorted(planned.items(), key=lambda kv: (-kv[1], kv[0]))
+    ]
+    warnings = [w for w in extra_warnings if w.kind != "over_budget"]
+    if over_by:
+        warnings.insert(0, BudgetWarning(kind="over_budget", amount=over_by))
+    warnings += realism_warnings(
+        plan, ref.categories.categories, ref.city_tier(plan.event.city)
+    )
+    return PlanView(
+        plan=plan,
+        budget=BudgetView(
+            committed=committed,
+            over_by=over_by,
+            unallocated=unallocated,
+            by_category=by_category,
+            warnings=warnings,
+        ),
+        tasks=assess_tasks(plan, today),
+        ledger=ledger_summary(plan),
+    )
 
 
 async def intake(

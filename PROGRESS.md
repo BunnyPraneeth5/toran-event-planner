@@ -1,8 +1,8 @@
 # PROGRESS: Toran
 
 ## Status
-- Current task: T14
-- Last green commit: T13 Adapt options
+- Current task: T14a (early Render deploy)
+- Last green commit: T14 API routes
 - Last submission tag:
 - Repo: https://github.com/BunnyPraneeth5/toran-event-planner (public, CI on every push)
 - Live link:
@@ -19,6 +19,19 @@ Copy the template below for each session, newest first.
 - Problems and gotchas (add repeats to CLAUDE.md):
 - Next:
 -->
+
+### Session 8
+- Task(s): T14 API routes
+- Done: intake, generate, recompute, what-if, adapt options and adapt apply routes, each a thin call into the planner; one respond() helper returns JSON, or an HTML partial when HX-Request is set; minimal partials (brief, plan, options, banner, plan_state) with the plan-state JSON block; Indian rupee formatting filters.
+- Checks: ruff clean, mypy strict clean, 350 tests passing, 97.2% coverage. Real-server check with the live key: all 7 routes served, generate returned an AI plan, the HTMX partial carried plan-state.
+- Decisions:
+  - Every plan-changing route returns PlanResponse (the plan plus budget, timeline and ledger views), so the UI never needs a second request.
+  - Intake passes GEMINI_LITE_MODEL; generate and adapt pass GEMINI_MODEL (main model with the fallback chain).
+  - Engine ValueErrors (unknown ids, a stale option) become 422 with the engine's message; Pydantic handles malformed, dangling and oversized plans.
+  - Apply takes the original plan, the change and the option, and rejects any extra field, so a client-computed plan cannot be submitted.
+  - Plan state goes into the page through Jinja's tojson, which escapes anything that could close the script tag.
+  - Runtime dependency added: jinja2 3.1.6 (already listed in ARCHITECTURE.md).
+- Next: T14a early Render deploy.
 
 ### Session 7
 - Task(s): free-tier key check, T12 live check, T13 Adapt options

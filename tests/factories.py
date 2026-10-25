@@ -1,8 +1,12 @@
 """Small builders for test data. Tests only."""
 
+import itertools
 from datetime import date, datetime, time, timedelta
 from typing import Any
 
+from app.data.loader import load_reference_data
+from app.engines.budget import allocate
+from app.engines.timeline import build_tasks
 from app.models import IST, Event, Function, LineItem, Person, Plan, Task
 
 DAY0 = date(2027, 2, 10)
@@ -33,6 +37,30 @@ def make_function(fid: str, day: int = 0, hour: int = 10, **overrides: Any) -> F
     }
     data.update(overrides)
     return Function.model_validate(data)
+
+
+def make_allocated_plan(today: date = DAY0 - timedelta(days=365)) -> Plan:
+    """A realistic plan: two functions (haldi, reception), allocated lines li1.., tasks t1.."""
+    ref = load_reference_data()
+    event = make_event()
+    functions = [
+        make_function("haldi", day=0, hour=10, guests=100, tier="budget"),
+        make_function("reception", day=1, hour=19, guests=400, tier="premium"),
+    ]
+    line_ids, task_ids = itertools.count(1), itertools.count(1)
+    items = allocate(
+        event,
+        functions,
+        ref.categories.default_weights["wedding"],
+        ref.categories.categories,
+        ref.categories.tier_multipliers,
+        id_factory=lambda: f"li{next(line_ids)}",
+    )
+    base = Plan(event=event, functions=functions, line_items=items)
+    tasks = build_tasks(
+        base, ref.lead_times.lead_times, today, id_factory=lambda: f"t{next(task_ids)}"
+    )
+    return Plan(event=event, functions=functions, line_items=items, tasks=tasks)
 
 
 def make_plan(**overrides: Any) -> Plan:
