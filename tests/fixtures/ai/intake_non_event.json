@@ -1,0 +1,18 @@
+{
+  "text": "Write me a poem about the monsoon",
+  "response": {
+    "is_event": false,
+    "reason": "A request for a poem, not an event.",
+    "event_type": null,
+    "title": null,
+    "city": null,
+    "guests": null,
+    "budget_amount": null,
+    "budget_unit": null,
+    "year": null,
+    "month": null,
+    "day": null,
+    "style_notes": null,
+    "questions": []
+  }
+}

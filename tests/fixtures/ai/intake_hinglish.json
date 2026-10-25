@@ -1,0 +1,21 @@
+{
+  "text": "Behen ki shaadi Pune mein, March 2027, 300 log, budget 20 lakh",
+  "response": {
+    "is_event": true,
+    "reason": "A sister's wedding.",
+    "event_type": "wedding",
+    "title": "Sister's wedding",
+    "city": "Pune",
+    "guests": 300,
+    "budget_amount": 20,
+    "budget_unit": "lakh",
+    "year": 2027,
+    "month": 3,
+    "day": null,
+    "style_notes": null,
+    "questions": [
+      "Which functions would you like to include?",
+      "Any food preferences?"
+    ]
+  }
+}

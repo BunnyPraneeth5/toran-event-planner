@@ -13,7 +13,7 @@ Work top to bottom. One task per session. Tick a task only when its proof test p
 - [x] T08 Parse and sanitize engines
 - [x] T09 Adapt engine
 - [x] T10 Gemini wrapper
-- [ ] T11 Intake
+- [x] T11 Intake
 - [ ] T12 Generate
 - [ ] T13 Adapt options (AI)
 - [ ] T14 API routes
@@ -170,14 +170,15 @@ Work top to bottom. One task per session. Tick a task only when its proof test p
 **Proof:** `pytest tests/unit/test_ai_client.py` (one test per `AIError`, retry rule, no user text in captured logs)
 
 ## T11 Intake
-**Files:** `app/ai/schemas.py`, `app/ai/prompts.py`, `app/ai/service.py`, `app/planner.py`, `tests/unit/test_intake.py`, `tests/fixtures/ai/intake_*.json`
+**Files:** `app/models/intake.py`, `app/ai/schemas.py`, `app/ai/prompts.py`, `app/ai/service.py`, `app/planner.py`, `tests/unit/test_intake.py`, `tests/fixtures/ai/intake_*.json`
 
 **Acceptance**
-- [ ] Flat BriefDraft schema: raw amount + unit, raw date parts, city, guests, type, `is_event`, `reason`, up to 3 questions
-- [ ] User text and answers fenced as data in the prompt
-- [ ] `planner.intake` converts values with `engines.parse`; a missing day becomes a question, not a guess
-- [ ] Non-event input returns `is_event: false` with a friendly message
-- [ ] AI failure returns an empty brief form with the fallback banner flag set
+- [x] Flat BriefDraft schema: raw amount + unit, raw date parts, city, guests, type, `is_event`, `reason`, up to 3 questions
+- [x] User text and answers fenced as data in the prompt
+- [x] `planner.intake` converts values with `engines.parse`; a missing day becomes a question, not a guess
+- [x] Non-event input returns `is_event: false` with a friendly message
+- [x] AI failure returns an empty brief form with the fallback banner flag set
+- [x] Live check against Gemini: complete brief, Hinglish with a missing day, non-event and an injection attempt all behave as above
 
 **Proof:** `pytest tests/unit/test_intake.py` (fixtures: valid, Hinglish, non-event, injection attempt, timeout)
 
@@ -210,6 +211,7 @@ Work top to bottom. One task per session. Tick a task only when its proof test p
 **Acceptance**
 - [ ] Routes from ARCHITECTURE.md wired (calendar and stretch routes excluded), each a thin call into `planner`
 - [ ] JSON by default; HTML partial when the `HX-Request` header is present
+- [ ] Intake route passes `GEMINI_LITE_MODEL`; generate and adapt routes pass `GEMINI_MODEL`
 - [ ] 422 on invalid plan, dangling references and oversized lists
 - [ ] `/api/adapt/apply` re-applies ops server-side and never accepts a client-computed plan
 - [ ] LLM routes tested with the fake client via dependency override

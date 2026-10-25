@@ -1,0 +1,21 @@
+{
+  "text": "Sister's wedding in Jaipur, Feb 14 2027, about 400 guests, 25 lakh budget. We want a traditional feel and mostly veg food.",
+  "response": {
+    "is_event": true,
+    "reason": "A wedding being planned.",
+    "event_type": "wedding",
+    "title": "Sister's wedding",
+    "city": "Jaipur",
+    "guests": 400,
+    "budget_amount": 25,
+    "budget_unit": "lakh",
+    "year": 2027,
+    "month": 2,
+    "day": 14,
+    "style_notes": "Traditional feel and mostly veg food",
+    "questions": [
+      "Which functions would you like to include?",
+      "Any decor or colour theme in mind?"
+    ]
+  }
+}
