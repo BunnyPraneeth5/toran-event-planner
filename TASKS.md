@@ -22,7 +22,7 @@ Work top to bottom. One task per session. Tick a task only when its proof test p
 - [x] T16 Dashboard page and state contract
 - [x] T16a Try a sample event
 - [x] T17 What-if slider
-- [ ] T18 Something changed UI
+- [x] T18 Something changed UI
 - [ ] T18a Video script (checkpoint, owner: you)
 - [ ] T19 Calendar export
 - [ ] T20 Security middleware
@@ -291,14 +291,14 @@ Venue tier is a select per function rather than a slider: three values read bett
 **Proof:** `pytest tests/api/test_whatif.py` (locked unchanged, overrun text present, fake client records zero calls)
 
 ## T18 Something changed UI
-**Files:** `app/web/templates/partials/change_form.html`, `app/web/templates/partials/options.html`, `app/web/static/js/app.js`, `app/api/adapt.py`, `tests/api/test_adapt_ui.py`
+**Files:** `app/web/templates/partials/change_form.html`, `app/web/templates/partials/options.html`, `app/web/static/js/app.js`, `app/api/adapt.py`, `app/web/templates/partials/plan.html`, `app/web/static/css/app.css`, `tests/api/test_adapt_ui.py`
 
 **Acceptance**
-- [ ] Form for each change kind
-- [ ] Impact shown first, then 2 to 3 options side by side with engine figures and rationale
-- [ ] Choosing an option posts to `/api/adapt/apply`; plan updates and is saved
-- [ ] Fallback options carry the banner
-- [ ] Whole flow works by keyboard alone
+- [x] Form for each change kind
+- [x] Impact shown first, then 2 to 3 options side by side with engine figures and rationale
+- [x] Choosing an option posts to `/api/adapt/apply`; plan updates and is saved
+- [x] Fallback options carry the banner
+- [x] Whole flow works by keyboard alone
 
 **Proof:** `pytest tests/api/test_adapt_ui.py` (budget cut renders options; apply returns a plan that passes all invariants)
 

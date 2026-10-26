@@ -417,3 +417,38 @@ output {
 .locked-line {
   margin: 0 0 1rem;
 }
+
+/* Something changed */
+.change-fields {
+  border: none;
+  padding: 0;
+  margin: 0 0 1rem;
+}
+
+.impact {
+  padding-left: 1.2rem;
+}
+
+.options {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.option {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.75rem var(--space);
+}
+
+.option-title {
+  font-weight: 700;
+  margin: 0;
+}
+
+@media (min-width: 40rem) {
+  .options {
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  }
+}

@@ -1,0 +1,61 @@
+{% set categories = {} %}{% for row in view.budget.by_category %}{% set _ = categories.update({row.category: row.label}) %}{% endfor %}
+<section class="card" aria-labelledby="change-heading">
+  <h3 id="change-heading">Something changed?</h3>
+  <p>Tell Toran what changed. It measures the effect first, then suggests fixes that its engines check before you see them.</p>
+  <form hx-post="/api/adapt/options" hx-target="#options" hx-disabled-elt="find button" data-shape="adapt">
+    <div class="field">
+      <label for="change-kind">What changed</label>
+      <select id="change-kind" name="change.kind" data-change-kind-select required>
+        <option value="budget_cut">The budget was cut</option>
+        <option value="vendor_cancelled">A vendor cancelled</option>
+        <option value="guests_changed">The guest count changed</option>
+        <option value="date_moved">The date moved</option>
+        <option value="function_dropped">A function was dropped</option>
+      </select>
+    </div>
+
+    <fieldset class="change-fields" data-change-kind="budget_cut">
+      <legend>New budget</legend>
+      <label for="change-total">New total budget in rupees</label>
+      <input id="change-total" name="change.new_total" type="number" inputmode="numeric" min="1000" step="1"
+             data-type="int" required value="{{ (plan.event.total_budget * 8 // 10) }}" aria-describedby="change-total-hint">
+      <p id="change-total-hint" class="hint">Now {{ plan.event.total_budget | short_inr }}.</p>
+    </fieldset>
+
+    <fieldset class="change-fields" data-change-kind="vendor_cancelled" hidden disabled>
+      <legend>Which vendor</legend>
+      <label for="change-line">Line that lost its vendor</label>
+      <select id="change-line" name="change.line_item_id" required>
+        {% for item in plan.line_items if item.active %}
+        <option value="{{ item.id }}">{{ categories.get(item.category, item.category) }}{% if item.function_id %} for {{ function_names.get(item.function_id, "a function") }}{% endif %}, {{ item.planned | inr }}{% if item.locked %}, booked{% endif %}</option>
+        {% endfor %}
+      </select>
+    </fieldset>
+
+    <fieldset class="change-fields" data-change-kind="guests_changed" hidden disabled>
+      <legend>New guest count</legend>
+      <label for="change-guests">Guests</label>
+      <input id="change-guests" name="change.guests" type="number" inputmode="numeric" min="1" max="5000" step="1"
+             data-type="int" required value="{{ plan.event.guests }}">
+    </fieldset>
+
+    <fieldset class="change-fields" data-change-kind="date_moved" hidden disabled>
+      <legend>New date</legend>
+      <label for="change-date">New first day</label>
+      <input id="change-date" name="change.new_start_date" type="date" required value="{{ plan.event.start_date }}">
+    </fieldset>
+
+    <fieldset class="change-fields" data-change-kind="function_dropped" hidden disabled>
+      <legend>Which function</legend>
+      <label for="change-function">Function to drop</label>
+      <select id="change-function" name="change.function_id" required>
+        {% for function in plan.functions | sort(attribute="start") %}
+        <option value="{{ function.id }}">{{ function.name }}</option>
+        {% endfor %}
+      </select>
+    </fieldset>
+
+    <button type="submit">See what this changes <span class="htmx-indicator">Working on it</span></button>
+  </form>
+  <div id="options"></div>
+</section>

@@ -1,19 +1,30 @@
 {% set banner = data.banner %}{% include "partials/banner.html" %}
 <section aria-labelledby="options-heading">
-  <h2 id="options-heading">What this change means</h2>
-  <p>{% if data.impact.over_by %}Over budget by {{ data.impact.over_by | inr }}.{% else %}Still within budget.{% endif %}
-    {% if data.impact.newly_flagged_task_ids %}{{ data.impact.newly_flagged_task_ids | length }} task(s) now late or at risk.{% endif %}</p>
+  <h4 id="options-heading" tabindex="-1" data-focus>What this change means</h4>
+  <ul class="impact">
+    <li>{% if data.impact.over_by %}<strong class="over">Over budget by {{ data.impact.over_by | inr }}.</strong>{% else %}Still within budget.{% endif %}</li>
+    {% if data.impact.unallocated %}<li>{{ data.impact.unallocated | inr }} is now free to use.</li>{% endif %}
+    {% set flagged = data.impact.newly_flagged_task_ids | length %}
+    {% if flagged %}<li><strong class="over">{{ flagged }} task{{ "" if flagged == 1 else "s" }} now late or at risk.</strong></li>{% endif %}
+  </ul>
   {% if data.message %}<p>{{ data.message }}</p>{% endif %}
+  {% for notice in data.notices %}<p class="notice">{{ notice }}</p>{% endfor %}
+
   {% if data.options %}
-  <h3>Ways to fix it</h3>
-  <ol>
+  <h4>Ways to fix it</h4>
+  <p class="hint">Every option below was checked by Toran's engines: it fits the budget and leaves booked or paid items untouched.</p>
+  <ul class="options">
     {% for option in data.options %}
-    <li>
+    <li class="option">
+      <p class="option-title">Option {{ loop.index }}</p>
       <p>{{ option.rationale }}</p>
-      {% if option.result %}<p>Plan total after this: {{ option.result.total_committed | inr }}</p>{% endif %}
+      {% if option.result %}
+      <p class="meta">Plan total after this: {{ option.result.total_committed | inr }}{% if option.result.newly_late_tasks %}, {{ option.result.newly_late_tasks }} task{{ "" if option.result.newly_late_tasks == 1 else "s" }} still late or at risk{% endif %}.</p>
+      {% endif %}
+      <button type="button" hx-post="/api/adapt/apply" hx-target="#dashboard" data-shape="apply"
+              data-body='{{ {"change": change.model_dump(mode="json"), "option": option.model_dump(mode="json")} | tojson }}'>Use option {{ loop.index }}</button>
     </li>
     {% endfor %}
-  </ol>
+  </ul>
   {% endif %}
-  {% for notice in data.notices %}<p class="notice">{{ notice }}</p>{% endfor %}
 </section>

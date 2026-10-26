@@ -45,7 +45,8 @@
     // A control that triggers its own request (a what-if slider) sends only itself.
     var fields = elt.matches("input, select, textarea") ? [elt] : form.elements || [];
     Array.prototype.forEach.call(fields, function (field) {
-      if (!field.name || field.disabled || field.type === "submit" || field.type === "button") {
+      // :disabled also covers fields inside a disabled fieldset; field.disabled does not.
+      if (!field.name || field.matches(":disabled") || field.type === "submit" || field.type === "button") {
         return;
       }
       var raw = field.value.trim();
@@ -132,6 +133,30 @@
 
   document.addEventListener("htmx:sendError", function () {
     announce("Could not reach Toran. Check your connection and try again.");
+  });
+
+  // "Something changed" form: only the fields for the chosen kind are shown and sent
+  // (disabled fields are left out of the request, and the API rejects unknown fields).
+  function syncChangeKind(root) {
+    var select = root.querySelector ? root.querySelector("[data-change-kind-select]") : null;
+    if (!select) {
+      return;
+    }
+    select.form.querySelectorAll("[data-change-kind]").forEach(function (fieldset) {
+      var active = fieldset.dataset.changeKind === select.value;
+      fieldset.hidden = !active;
+      fieldset.disabled = !active;
+    });
+  }
+
+  document.addEventListener("change", function (evt) {
+    if (evt.target.matches && evt.target.matches("[data-change-kind-select]")) {
+      syncChangeKind(evt.target.form);
+    }
+  });
+
+  document.addEventListener("htmx:afterSwap", function (evt) {
+    syncChangeKind(evt.detail.target);
   });
 
   // Move keyboard and screen reader focus to the heading of newly swapped content.

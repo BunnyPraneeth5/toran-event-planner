@@ -28,7 +28,7 @@ async def options(
         )
     except ValueError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from None
-    return respond(request, result, "partials/options.html")
+    return respond(request, result, "partials/options.html", change=body.change)
 
 
 @router.post("/apply", response_model=PlanResponse)
