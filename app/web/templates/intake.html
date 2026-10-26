@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% block scripts %}<script src="/static/js/sample.js" defer></script>{% endblock %}
 {% block content %}
 <p class="card saved-plan" data-when-saved hidden>You have a plan saved in this browser. <a href="/plan">Open your saved plan</a></p>
 <section class="card" aria-labelledby="intake-heading">
@@ -10,6 +11,23 @@
               aria-describedby="intake-hint"></textarea>
     <p id="intake-hint" class="hint">For example: Sister's wedding in Jaipur, February 2027, about 400 guests, 25 lakh budget.</p>
     <button type="submit">Read my event <span class="htmx-indicator">Working on it</span></button>
+  </form>
+</section>
+<section class="card" aria-labelledby="sample-heading">
+  <h2 id="sample-heading">Or try a sample wedding</h2>
+  <p>See the whole flow in seconds with a made-up wedding. No AI call, nothing to type.</p>
+  <form hx-post="/api/plan/sample" hx-target="#dashboard" hx-disabled-elt="find button" data-shape="sample">
+    <label for="sample-city">City</label>
+    <select id="sample-city" name="city" aria-describedby="sample-city-hint">
+      {% for city in sample.cities %}
+      <option value="{{ city.name }}" data-lat="{{ city.lat }}" data-lon="{{ city.lon }}"{% if city.name == sample.default_city %} selected{% endif %}>{{ city.name }}</option>
+      {% endfor %}
+    </select>
+    <p id="sample-city-hint" class="hint">Prices follow the city. Use my location picks the nearest city inside this browser; your location is not sent anywhere.</p>
+    <div class="actions">
+      <button type="submit">Try the sample <span class="htmx-indicator">Working on it</span></button>
+      <button type="button" class="secondary" data-action="nearest-city" data-target="sample-city">Use my location</button>
+    </div>
   </form>
 </section>
 <div id="brief"></div>

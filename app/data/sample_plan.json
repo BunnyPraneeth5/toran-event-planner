@@ -1,0 +1,54 @@
+{
+  "note": "Rough defaults. A made-up sample wedding for the one-click demo. No real people or bookings.",
+  "title": "Sample wedding",
+  "template": "north_indian_wedding",
+  "guests": 300,
+  "total_budget": 2500000,
+  "start_in_days": 100,
+  "default_city": "Mumbai",
+  "people": [
+    {"id": "bride_side", "name": "Bride's family", "side_or_role": "bride side", "pledge": 1400000},
+    {"id": "groom_side", "name": "Groom's family", "side_or_role": "groom side", "pledge": 1100000}
+  ],
+  "payers": {
+    "catering": [["bride_side", 50], ["groom_side", 50]],
+    "venue": [["bride_side", 100]],
+    "decor": [["bride_side", 100]],
+    "attire": [["groom_side", 100]],
+    "photo_video": [["groom_side", 100]]
+  },
+  "booked": [{"category": "venue", "function": "Wedding"}],
+  "ideas": [
+    {"function": "Haldi", "text": "Marigold backdrop with brass urlis and floor seating", "cost_band": "low"},
+    {"function": "Mehendi", "text": "Live chaat counter and a folk dholak player", "cost_band": "mid"},
+    {"function": "Sangeet", "text": "Family dance rehearsals a week ahead, one song per side", "cost_band": "low"},
+    {"function": "Wedding", "text": "Phoolon ki chadar for the bride's entry", "cost_band": "mid"},
+    {"function": "Wedding", "text": "Satvik thali counter for elders who prefer simple food", "cost_band": "mid"}
+  ],
+  "cities": [
+    {"name": "Mumbai", "lat": 19.076, "lon": 72.878},
+    {"name": "Delhi", "lat": 28.614, "lon": 77.209},
+    {"name": "Bengaluru", "lat": 12.972, "lon": 77.595},
+    {"name": "Hyderabad", "lat": 17.385, "lon": 78.487},
+    {"name": "Chennai", "lat": 13.083, "lon": 80.271},
+    {"name": "Kolkata", "lat": 22.573, "lon": 88.364},
+    {"name": "Pune", "lat": 18.52, "lon": 73.857},
+    {"name": "Ahmedabad", "lat": 23.023, "lon": 72.571},
+    {"name": "Jaipur", "lat": 26.912, "lon": 75.787},
+    {"name": "Lucknow", "lat": 26.847, "lon": 80.947},
+    {"name": "Kochi", "lat": 9.931, "lon": 76.267},
+    {"name": "Indore", "lat": 22.72, "lon": 75.858},
+    {"name": "Chandigarh", "lat": 30.733, "lon": 76.779},
+    {"name": "Bhopal", "lat": 23.26, "lon": 77.413},
+    {"name": "Nagpur", "lat": 21.146, "lon": 79.088},
+    {"name": "Coimbatore", "lat": 11.017, "lon": 76.956},
+    {"name": "Mysuru", "lat": 12.296, "lon": 76.639},
+    {"name": "Surat", "lat": 21.17, "lon": 72.831},
+    {"name": "Nashik", "lat": 19.998, "lon": 73.79},
+    {"name": "Jodhpur", "lat": 26.239, "lon": 73.024},
+    {"name": "Udaipur", "lat": 24.585, "lon": 73.712},
+    {"name": "Dehradun", "lat": 30.316, "lon": 78.032},
+    {"name": "Kolhapur", "lat": 16.705, "lon": 74.243},
+    {"name": "Siliguri", "lat": 26.727, "lon": 88.396}
+  ]
+}

@@ -49,7 +49,7 @@ docs/PROBLEM_ALIGNMENT.md  docs/SECURITY.md
 ## Data models (core fields)
 All money is `int` rupees (strict, never float), formatted as lakh/crore only at render. All datetimes are timezone-aware in Asia/Kolkata. Ids are short UUIDs assigned by the server after sanitize; Gemini never invents ids.
 
-- **Plan** (root, the single body for storage, import and API): schema_version, event, functions, line_items, tasks, people, ideas, sources (brief, plan, options: "ai" or "fallback"). A model validator checks every reference resolves.
+- **Plan** (root, the single body for storage, import and API): schema_version, event, functions, line_items, tasks, people, ideas, sources (brief, plan, options: "ai", "fallback" or "sample"). A model validator checks every reference resolves.
 - **Event**: id, type (wedding | birthday | community), title, city, start_date, end_date, guests, total_budget, language, style_notes
 - **Function**: id, name, start (datetime), duration_minutes, guests, guests_override, tier (budget | standard | premium)
 - **LineItem**: id, function_id (nullable = event-wide), category, planned, actual (nullable), payers [{person_id, share_pct}] (shares sum to 100 when present), status (planned | booked | paid | cancelled), locked (true when booked or paid)
@@ -85,6 +85,7 @@ All money is `int` rupees (strict, never float), formatted as lakh/crore only at
 |---|---|---|---|
 | POST | /api/plan/intake | yes | text (+ answers) to brief + questions |
 | POST | /api/plan/generate | yes | brief to full plan |
+| POST | /api/plan/sample | no | city to the one-click sample wedding, built by the engines |
 | POST | /api/plan/recompute | no | plan to budget, timeline (late, at risk) and ledger views; also validates imports |
 | POST | /api/budget/whatif | no | plan + changes to rebalanced plan |
 | POST | /api/adapt/options | yes | plan + change to impact + verified options |

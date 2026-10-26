@@ -28,7 +28,8 @@ Note = Annotated[str, StringConstraints(strip_whitespace=True, max_length=500)]
 EventType = Literal["wedding", "birthday", "community"]
 Tier = Literal["budget", "standard", "premium"]
 Language = Literal["en", "te", "hi"]
-Source = Literal["ai", "fallback"]
+Source = Literal["ai", "fallback", "sample"]
+"""Where a section came from: Gemini, rule-based fallback, or the one-click sample."""
 
 
 def new_id() -> str:

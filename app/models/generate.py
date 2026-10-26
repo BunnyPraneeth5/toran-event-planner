@@ -29,3 +29,7 @@ class GenerateResult(DomainModel):
     plan: Plan
     notices: list[str] = Field(default_factory=list, max_length=50)
     banner: str | None = None
+
+
+class SampleRequest(DomainModel):
+    city: Name

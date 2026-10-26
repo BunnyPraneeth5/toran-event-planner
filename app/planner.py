@@ -7,7 +7,7 @@ returns reaches the user without passing through here.
 import calendar
 import re
 from collections.abc import Callable, Sequence
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from typing import cast
 
 from pydantic import TypeAdapter, ValidationError
@@ -15,7 +15,7 @@ from pydantic import TypeAdapter, ValidationError
 from app.ai.client import BANNER_TEXT, AIError, AIErrorKind, GeminiClient
 from app.ai.schemas import BriefDraft, OpOut, OptionsDraft, PlanDraft
 from app.ai.service import extract_brief, propose_options, propose_plan
-from app.data.loader import FunctionTemplate, ReferenceData
+from app.data.loader import FunctionTemplate, ReferenceData, SampleFile
 from app.engines.adapt import (
     AdaptContext,
     apply_change,
@@ -40,7 +40,7 @@ from app.models.adapt import MAX_OPTIONS, AdaptRequest, AdaptResult, ApplyReques
 from app.models.budget import BudgetWarning
 from app.models.change import ChangeTier, DropItem, Op, Option, ReduceGuests, ScaleCategory
 from app.models.common import IST, MAX_RUPEES, MIN_BUDGET, Tier, new_id
-from app.models.event import Event, Function, Idea
+from app.models.event import Event, Function, Idea, LineItem, Person
 from app.models.generate import CompleteBrief, GenerateRequest, GenerateResult
 from app.models.intake import (
     MAX_QUESTIONS,
@@ -84,6 +84,95 @@ FIELD_QUESTIONS: dict[BriefField, str] = {
     "guests": "About how many guests?",
     "total_budget": "What is the total budget?",
 }
+
+
+def sample_plan(
+    city: str,
+    *,
+    ref: ReferenceData,
+    sample: SampleFile,
+    today: date,
+    id_factory: Callable[[], str] = new_id,
+) -> Plan:
+    """The one-click sample wedding for a city, built by the engines with no AI call.
+
+    Raises ValueError for a city that is not on the sample list.
+    """
+    chosen = sample.city(city)
+    if chosen is None:
+        raise ValueError(f"choose one of the sample cities, not {city[:40]}")
+    template = next(t for t in ref.templates.templates if t.key == sample.template)
+    start = today + timedelta(days=sample.start_in_days)
+    drafts, _ = place_functions(_template_proposals(template), start, sample.guests)
+    event = Event(
+        id=id_factory(),
+        type=template.event_type,
+        title=sample.title,
+        city=chosen.name,
+        start_date=start,
+        end_date=max(d.day for d in drafts),
+        guests=sample.guests,
+        total_budget=sample.total_budget,
+        style_notes="A made-up sample to show how Toran works.",
+    )
+    functions = [
+        Function(
+            id=id_factory(),
+            name=d.name,
+            start=datetime.combine(d.day, d.start_time, tzinfo=IST),
+            duration_minutes=d.duration_minutes,
+            guests=d.guests,
+            tier=cast(Tier, d.tier),
+        )
+        for d in drafts
+    ]
+    by_name = {f.name: f.id for f in functions}
+    booked = {(b.category, by_name.get(b.function)) for b in sample.booked}
+    items = [
+        LineItem.model_validate(
+            {
+                **item.model_dump(),
+                "payers": [
+                    {"person_id": person, "share_pct": pct}
+                    for person, pct in sample.payers.get(item.category, [])
+                ],
+                "status": "booked" if (item.category, item.function_id) in booked else "planned",
+            }
+        )
+        for item in allocate(
+            event,
+            functions,
+            ref.categories.default_weights[template.event_type],
+            ref.categories.categories,
+            ref.categories.tier_multipliers,
+            id_factory=id_factory,
+        )
+    ]
+    people = [
+        Person(id=p.id, name=p.name, side_or_role=p.side_or_role, pledge=p.pledge)
+        for p in sample.people
+    ]
+    ideas = [
+        Idea(
+            id=id_factory(),
+            function_id=by_name.get(i.function),
+            text=i.text,
+            cost_band=i.cost_band,
+        )
+        for i in sample.ideas
+    ]
+    sources = Sources(brief="sample", plan="sample", options="sample")
+    base = Plan(event=event, functions=functions, line_items=items, people=people, sources=sources)
+    tasks = build_tasks(base, ref.lead_times.lead_times, today, id_factory=id_factory)
+    return Plan(
+        event=event,
+        functions=functions,
+        line_items=items,
+        tasks=tasks,
+        people=people,
+        ideas=ideas,
+        sources=sources,
+    )
 
 
 def recompute(plan: Plan, *, ref: ReferenceData, today: date) -> PlanView:

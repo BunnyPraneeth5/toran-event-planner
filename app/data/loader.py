@@ -191,3 +191,68 @@ def load_reference_data(data_dir: Path = DATA_DIR) -> ReferenceData:
 def get_reference_data() -> ReferenceData:
     """Reference data singleton, loaded once per process."""
     return load_reference_data()
+
+
+class SampleCity(DomainModel):
+    name: Name
+    lat: float = Field(ge=-90, le=90)
+    lon: float = Field(ge=-180, le=180)
+
+
+class SampleIdea(DomainModel):
+    function: Name
+    text: Name
+    cost_band: Literal["low", "mid", "high"]
+
+
+class SampleBooking(DomainModel):
+    category: CategoryKey
+    function: Name
+
+
+class SamplePerson(DomainModel):
+    id: CategoryKey
+    name: Name
+    side_or_role: Name
+    pledge: Rupees
+
+
+class SampleFile(DomainModel):
+    """Inputs for the one-click sample plan. The engines build the plan from these."""
+
+    note: str
+    title: Name
+    template: CategoryKey
+    guests: int = Field(strict=True, ge=1, le=5000)
+    total_budget: Rupees
+    start_in_days: int = Field(strict=True, ge=1, le=365)
+    default_city: Name
+    people: list[SamplePerson]
+    payers: dict[CategoryKey, list[tuple[CategoryKey, int]]]
+    booked: list[SampleBooking]
+    ideas: list[SampleIdea]
+    cities: list[SampleCity] = Field(min_length=1)
+
+    @model_validator(mode="after")
+    def _consistent(self) -> Self:
+        names = [c.name for c in self.cities]
+        if self.default_city not in names:
+            raise ValueError("default_city must be one of the sample cities")
+        people = {p.id for p in self.people}
+        for category, shares in self.payers.items():
+            if sum(pct for _, pct in shares) != 100:
+                raise ValueError(f"sample payer shares for {category} must sum to 100")
+            if any(person not in people for person, _ in shares):
+                raise ValueError(f"sample payers for {category} name an unknown person")
+        return self
+
+    def city(self, name: str) -> SampleCity | None:
+        return next((c for c in self.cities if c.name.casefold() == name.strip().casefold()), None)
+
+
+@lru_cache(maxsize=1)
+def get_sample() -> SampleFile:
+    """The sample plan inputs, loaded once per process."""
+    return SampleFile.model_validate(
+        json.loads((DATA_DIR / "sample_plan.json").read_text(encoding="utf-8"))
+    )

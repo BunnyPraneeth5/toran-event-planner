@@ -11,6 +11,7 @@
     whatif: ["plan", "changes"],
     adapt: ["plan", "change"],
     apply: ["plan", "change", "option"],
+    sample: ["city"],
   };
 
   function setPath(target, path, value) {

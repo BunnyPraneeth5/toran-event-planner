@@ -20,7 +20,7 @@ Work top to bottom. One task per session. Tick a task only when its proof test p
 - [ ] T14a Early Vercel deploy (checkpoint)
 - [x] T15 UI base and intake page
 - [x] T16 Dashboard page and state contract
-- [ ] T16a Try a sample event
+- [x] T16a Try a sample event
 - [ ] T17 What-if slider
 - [ ] T18 Something changed UI
 - [ ] T18a Video script (checkpoint, owner: you)
@@ -265,14 +265,14 @@ Done right after T14, so hosting, env var and cold start problems show up early,
 ## T16a Try a sample event
 A one-click demo so judges see the whole flow in seconds, even if Gemini is slow or rate limited.
 
-**Files:** `app/data/sample_plan.json`, `app/api/pages.py`, `app/web/templates/intake.html`, `app/web/static/js/sample.js`, `tests/api/test_sample.py`
+**Files:** `app/data/sample_plan.json`, `app/data/loader.py` (`SampleFile`), `app/planner.py` (`sample_plan`), `app/api/plan.py` (`/api/plan/sample`), `app/api/pages.py`, `app/models/common.py` (source `sample`), `app/web/templates/intake.html`, `app/web/templates/partials/plan.html`, `app/web/static/js/sample.js`, `tests/api/test_sample.py`
 
 **Acceptance**
-- [ ] "Try a sample wedding" loads a prebuilt plan instantly, with no AI call
-- [ ] The user picks the city from a list (default: a neutral metro); the sample plan is rebuilt by the engines for that city
-- [ ] Optional "Use my location": the browser picks the nearest supported city from built-in coordinates; the location never leaves the browser
-- [ ] Sample data names no real people and no Andhra Pradesh cities
-- [ ] Sample plan passes every engine invariant and is clearly labelled as a sample
+- [x] "Try a sample wedding" loads a prebuilt plan instantly, with no AI call
+- [x] The user picks the city from a list (default: a neutral metro); the sample plan is rebuilt by the engines for that city
+- [x] Optional "Use my location": the browser picks the nearest supported city from built-in coordinates; the location never leaves the browser
+- [x] Sample data names no real people and no Andhra Pradesh cities
+- [x] Sample plan passes every engine invariant and is clearly labelled as a sample
 
 **Proof:** `pytest tests/api/test_sample.py` (loads without an AI client, invariants hold, city change reprices catering ranges)
 

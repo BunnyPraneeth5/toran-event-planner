@@ -4,6 +4,7 @@ from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse
 
 from app.api.render import TEMPLATES
+from app.data.loader import get_sample
 
 router = APIRouter(include_in_schema=False)
 
@@ -11,7 +12,7 @@ router = APIRouter(include_in_schema=False)
 @router.get("/", response_class=HTMLResponse)
 def home(request: Request) -> HTMLResponse:
     """The intake page: one text box, then the brief form, then the plan."""
-    return TEMPLATES.TemplateResponse(request, "intake.html")
+    return TEMPLATES.TemplateResponse(request, "intake.html", {"sample": get_sample()})
 
 
 @router.get("/plan", response_class=HTMLResponse)

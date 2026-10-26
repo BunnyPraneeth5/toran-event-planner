@@ -1,12 +1,13 @@
 """Intake, generate and recompute."""
 
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import Response
 
 from app import planner
 from app.api.deps import AIDep, ReferenceDep, SettingsDep, TodayDep
 from app.api.render import respond
-from app.models.generate import GenerateRequest
+from app.data.loader import get_sample
+from app.models.generate import GenerateRequest, SampleRequest
 from app.models.intake import IntakeRequest, IntakeResult
 from app.models.view import PlanRequest, PlanResponse
 
@@ -42,4 +43,15 @@ async def generate(
 def recompute(body: PlanRequest, request: Request, ref: ReferenceDep, today: TodayDep) -> Response:
     """Fresh budget, timeline and ledger views for a plan. Also validates imported plans."""
     view = planner.recompute(body.plan, ref=ref, today=today)
+    return respond(request, PlanResponse(view=view), "partials/plan.html")
+
+
+@router.post("/sample", response_model=PlanResponse)
+def sample(body: SampleRequest, request: Request, ref: ReferenceDep, today: TodayDep) -> Response:
+    """The one-click sample wedding for a chosen city. Built by the engines, no AI call."""
+    try:
+        plan = planner.sample_plan(body.city, ref=ref, sample=get_sample(), today=today)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from None
+    view = planner.recompute(plan, ref=ref, today=today)
     return respond(request, PlanResponse(view=view), "partials/plan.html")

@@ -1,7 +1,11 @@
 {# The dashboard: every view of the plan, rebuilt from the engines on each request. #}
 {% set view = data.view %}{% set plan = view.plan %}
 {% set function_names = {} %}{% for f in plan.functions %}{% set _ = function_names.update({f.id: f.name}) %}{% endfor %}
-{% set banner = data.banner or ("Parts of this plan use rule-based defaults because the AI was unavailable." if plan.sources.plan == "fallback" else none) %}{% include "partials/banner.html" %}
+{% if data.banner %}{% set banner = data.banner %}
+{% elif plan.sources.plan == "sample" %}{% set banner = "This is a sample plan with made-up details, built by Toran's engines without AI. Try a what-if or a change to see how it adapts." %}
+{% elif plan.sources.plan == "fallback" %}{% set banner = "Parts of this plan use rule-based defaults because the AI was unavailable." %}
+{% else %}{% set banner = none %}{% endif %}
+{% include "partials/banner.html" %}
 <section class="card" aria-labelledby="plan-heading">
   <h2 id="plan-heading" tabindex="-1" data-focus>{{ plan.event.title }}</h2>
   <p class="meta">{{ plan.event.city }}, {{ plan.event.start_date | nice_date }}{% if plan.event.end_date != plan.event.start_date %} to {{ plan.event.end_date | nice_date }}{% endif %}, {{ plan.event.guests }} guests, budget {{ plan.event.total_budget | short_inr }}</p>
