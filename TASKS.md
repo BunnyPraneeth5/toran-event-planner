@@ -22,6 +22,9 @@ Work top to bottom. One task per session. Tick a task only when its proof test p
 - [x] T16 Dashboard page and state contract
 - [x] T16a Try a sample event
 - [ ] T16b People and payers
+- [ ] T16c Bookings and actual costs
+- [ ] T16d Navigation, overview and small usability details
+- [ ] T16e Indian visual theme
 - [x] T17 What-if slider
 - [x] T18 Something changed UI
 - [ ] T18a Video script (checkpoint, owner: you)
@@ -292,6 +295,58 @@ The ledger can show who pays, but nobody can enter their own people or assign pa
 - [ ] Labelled inputs, keyboard only flow, works at 390px, no inline scripts or styles
 
 **Proof:** `pytest tests/unit/test_ledger.py tests/api/test_people.py` (add, change pledge, remove with payer and owner clean-up, single and split payers, split equally gives exact rupees, shares not adding to 100 return 422, zero AI calls, partial embeds plan state)
+
+## T16c Bookings and actual costs
+Only the sample shows booked lines today. Users need to mark their own bookings, because booked or paid lines are what stay fixed in what-if and fill the ledger's Paid column.
+
+**Files:** `app/engines/budget.py` (or a small `engines/lines.py`), `app/models/lines.py`, `app/planner.py`, `app/api/lines.py`, `app/main.py`, `app/web/templates/partials/budget.html`, `app/web/static/js/app.js`, `tests/unit/test_lines.py`, `tests/api/test_lines.py`
+
+**Acceptance**
+- [ ] Each budget line can be marked planned, booked or paid, and given an actual cost in rupees
+- [ ] Booked or paid lines lock automatically (existing model rule); marking a line back to planned unlocks it
+- [ ] The line's task is marked done when it is booked or paid, and back to to-do when unbooked
+- [ ] An actual cost above the planned amount shows the difference as text ("₹20,000 over the plan for this line") and counts towards the overrun
+- [ ] Engine only, no LLM call; unknown ids or negative amounts return 422 with a clear message in the live region
+- [ ] Labelled inputs, keyboard only flow, works at 390px, no inline scripts or styles
+
+**Proof:** `pytest tests/unit/test_lines.py tests/api/test_lines.py` (book, pay with actual, unbook, task status follows, over-plan text, locked line unchanged by a later what-if, zero AI calls)
+
+## T16d Navigation, overview and small usability details
+The dashboard holds a lot. This makes it easy to scan on a phone and a laptop, with what needs action first.
+
+**Files:** `app/web/templates/dashboard.html`, `app/web/templates/partials/plan.html`, `app/web/templates/partials/overview.html`, `app/web/templates/partials/nav.html`, `app/web/templates/partials/timeline.html`, `app/web/templates/partials/functions.html`, `app/web/templates/intake.html`, `app/web/static/js/nav.js`, `app/web/static/js/state.js`, `app/web/static/js/app.js`, `app/web/static/css/app.css`, `tests/api/test_dashboard_nav.py`
+
+**Acceptance**
+- [ ] Creating a plan (generate, sample or import) opens the dashboard on `/plan`; the home page stays short (describe, check, or try the sample)
+- [ ] Step marker on the home page: Describe, Check, Plan, with the current step announced
+- [ ] Sticky contents panel on wide screens (left rail): Overview, Something changed, Budget, What if, Timeline, Functions, Who pays, Keep your plan, each with a live status next to it (for example "Over by ₹40,000", "3 late", "₹2 lakh unassigned"); the section in view is highlighted as you scroll
+- [ ] On phones the panel becomes a sticky one-line status bar at the top ("₹25 lakh, over ₹40k, 3 late"); tapping it opens the full list
+- [ ] Overview section first: countdown ("97 days to go"), a budget bar (planned, booked or paid, and any overrun, drawn with SVG or `<meter>` and always repeated as text), and an "Action needed" list (late tasks, at-risk tasks, over-budget lines, unassigned money) with links to the right section
+- [ ] "Something changed?" is one click away from anywhere (in the panel and the overview)
+- [ ] Long lists collapse by default using `<details>`: the timeline shows late, at-risk and the next five tasks, the rest folded; done tasks and ideas folded
+- [ ] Function times shown as ranges with weekday ("Sat 8 Mar, 19:00 to 23:00")
+- [ ] Undo: the last plan change (what-if, applied option, import, new plan) can be undone once; starting a new plan or the sample no longer silently overwrites the saved plan without an undo
+- [ ] "Saved in this browser" status in the panel after each change
+- [ ] Budget fields in the brief form show the amount in lakh or crore as you type
+- [ ] Panel is a `<nav aria-label>` with ordinary links; works by keyboard; respects reduced motion; no inline scripts or styles; no horizontal scroll at 390px
+
+**Proof:** `pytest tests/api/test_dashboard_nav.py` (panel links match section ids, statuses match engine figures, overview action list, collapsed timeline, undo kept in state.js, generate and sample responses send the browser to /plan) and a browser check at 390px and desktop
+
+## T16e Indian visual theme
+Make Toran look like an Indian celebration planner without hurting speed, contrast or the strict CSP.
+
+**Files:** `app/web/static/css/app.css`, `app/web/static/img/` (hand-made SVGs), `app/web/templates/base.html`, `app/web/templates/partials/*.html`, `tests/unit/test_theme.py`
+
+**Acceptance**
+- [ ] Palette from the occasion (marigold, turmeric, sindoor red, mehendi green, peacock blue) as CSS tokens, in light and dark mode
+- [ ] Every text and background token pair meets WCAG AA contrast (4.5:1 for body text, 3:1 for large text and focus outlines)
+- [ ] A toran (marigold and mango-leaf garland) SVG across the header; a matching favicon
+- [ ] Light motifs: rangoli or mandala corner on cards, a paisley divider between sections, and one small SVG icon per budget category (no emoji)
+- [ ] One display font for headings from Google Fonts with a Devanagari-capable family, `display=swap`; body text stays Noto Sans
+- [ ] All SVGs drawn for this project (no third-party art), decorative ones `aria-hidden`, total added weight under 30 KB
+- [ ] No inline `style` attributes, no animation when reduced motion is requested; still no horizontal scroll at 390px
+
+**Proof:** `pytest tests/unit/test_theme.py` (contrast ratio of every token pair from app.css, SVG files exist and are under the size budget, no `style=` in SVGs or templates) and screenshots at 390px and desktop in light and dark mode
 
 ## T17 What-if slider
 **Files:** `app/web/templates/partials/whatif.html`, `app/web/templates/partials/plan.html`, `app/web/static/js/whatif.js`, `app/web/static/js/app.js` (single-control requests), `app/web/static/css/app.css`, `tests/api/test_whatif.py`
