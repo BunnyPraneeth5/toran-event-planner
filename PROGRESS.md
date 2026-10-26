@@ -1,7 +1,7 @@
 # PROGRESS: Toran
 
 ## Status
-- Current task: T16b People and payers, then T16c bookings, T16d navigation and overview, T16e Indian theme, then T22; T18a video script is yours
+- Current task: T16e Indian visual theme, then T22; T18a video script is yours
 - Last green commit: T20 Security middleware
 - Last submission tag:
 - Repo: https://github.com/BunnyPraneeth5/toran-event-planner (public, CI on every push)
