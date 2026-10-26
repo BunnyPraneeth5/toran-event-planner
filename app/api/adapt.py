@@ -8,11 +8,13 @@ from app.api.deps import AIDep, ReferenceDep, SettingsDep, TodayDep
 from app.api.render import respond
 from app.models.adapt import AdaptRequest, AdaptResult, ApplyRequest
 from app.models.view import PlanResponse
+from app.security import limiter, llm_limit
 
 router = APIRouter(prefix="/api/adapt", tags=["adapt"])
 
 
 @router.post("/options", response_model=AdaptResult)
+@limiter.limit(llm_limit)
 async def options(
     body: AdaptRequest,
     request: Request,

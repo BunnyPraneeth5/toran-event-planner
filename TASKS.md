@@ -25,7 +25,7 @@ Work top to bottom. One task per session. Tick a task only when its proof test p
 - [x] T18 Something changed UI
 - [ ] T18a Video script (checkpoint, owner: you)
 - [x] T19 Calendar export
-- [ ] T20 Security middleware
+- [x] T20 Security middleware
 - [x] T21 CI
 - [ ] T22 E2E and accessibility tests
 - [ ] T23 Live evals
@@ -318,15 +318,15 @@ Once T18 works, write the 2 to 3 minute video script against the flow in PRD.md,
 **Proof:** `pytest tests/unit/test_calendar.py tests/api/test_calendar_api.py` (escaping, stable UIDs, `text/calendar` attachment)
 
 ## T20 Security middleware
-**Files:** `app/security.py`, `app/main.py`, `tests/api/test_security.py`
+**Files:** `app/security.py`, `app/main.py`, `app/api/plan.py` and `app/api/adapt.py` (rate limits), `requirements.txt` and `pyproject.toml` (slowapi 0.1.10), `tests/conftest.py` (limiter reset), `tests/api/test_security.py`
 
 **Acceptance**
-- [ ] CSP (as in ARCHITECTURE.md), HSTS, nosniff, Referrer-Policy, Permissions-Policy on every response
-- [ ] Body size cap returns 413
-- [ ] slowapi limit on LLM routes returns 429, keyed on the real client IP (first entry of Vercel's `x-forwarded-for`)
-- [ ] Gzip enabled; static assets sent with cache headers
-- [ ] Global exception handler returns a generic message with a request id, no stack trace
-- [ ] Every rendered page still works under the CSP
+- [x] CSP (as in ARCHITECTURE.md), HSTS, nosniff, Referrer-Policy, Permissions-Policy on every response
+- [x] Body size cap returns 413
+- [x] slowapi limit on LLM routes returns 429, keyed on the real client IP (first entry of Vercel's `x-forwarded-for`)
+- [x] Gzip enabled; static assets sent with cache headers
+- [x] Global exception handler returns a generic message with a request id, no stack trace
+- [x] Every rendered page still works under the CSP
 
 **Proof:** `pytest tests/api/test_security.py`
 

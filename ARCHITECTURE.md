@@ -113,9 +113,9 @@ All money is `int` rupees (strict, never float), formatted as lakh/crore only at
 ## Security
 - Pydantic limits on everything: text length, guests 1 to 5000, budget range, max functions, items, tasks, people, string lengths inside imported plans.
 - Request body size cap (413). Rate limit on LLM endpoints per client IP (slowapi), with the IP taken from the first entry of Vercel's `x-forwarded-for` header. Limits are kept in memory, so they apply per serverless instance.
-- Headers: CSP `default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'`, HSTS, X-Content-Type-Options, Referrer-Policy, Permissions-Policy.
+- Headers (`app/security.py`, on every response including 413, 429 and 500): CSP `default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'`, HSTS, X-Content-Type-Options, X-Frame-Options, Referrer-Policy `strict-origin-when-cross-origin`, Permissions-Policy (geolocation for this site only, for the sample's nearest city; camera, microphone, payment and usb off), Cross-Origin-Opener-Policy, and an X-Request-ID. The CSP is relaxed only on `/docs` outside production, where Swagger needs its CDN scripts.
 - No cookies, no sessions, same-origin only, no CORS middleware, so CSRF and CORS do not apply (documented in SECURITY.md).
-- Global exception handler returns a generic message with a request id. No stack traces. Debug off in production.
+- Global exception handler returns a generic message with a request id. No stack traces. Debug off in production. Rate-limited routes: intake, generate, adapt options (the three that call Gemini).
 - Secrets only in env (`SecretStr`), set in the Vercel dashboard for production. `.env.example` committed, `.env` gitignored. Pinned dependencies in both `pyproject.toml` (read by Vercel) and `requirements.txt` (read by CI), kept identical by a test. pip-audit in CI.
 - No server-side storage means no PII at rest. AI Studio data handling noted in SECURITY.md.
 

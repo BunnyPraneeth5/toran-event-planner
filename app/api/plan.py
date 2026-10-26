@@ -10,11 +10,13 @@ from app.data.loader import get_sample
 from app.models.generate import GenerateRequest, SampleRequest
 from app.models.intake import IntakeRequest, IntakeResult
 from app.models.view import PlanRequest, PlanResponse
+from app.security import limiter, llm_limit
 
 router = APIRouter(prefix="/api/plan", tags=["plan"])
 
 
 @router.post("/intake", response_model=IntakeResult)
+@limiter.limit(llm_limit)
 async def intake(
     body: IntakeRequest, request: Request, ai: AIDep, settings: SettingsDep, today: TodayDep
 ) -> Response:
@@ -24,6 +26,7 @@ async def intake(
 
 
 @router.post("/generate", response_model=PlanResponse)
+@limiter.limit(llm_limit)
 async def generate(
     body: GenerateRequest,
     request: Request,

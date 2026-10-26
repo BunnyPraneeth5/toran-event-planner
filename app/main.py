@@ -3,7 +3,6 @@
 from pathlib import Path
 
 from fastapi import FastAPI
-from fastapi.staticfiles import StaticFiles
 
 from app.api.adapt import router as adapt_router
 from app.api.budget import router as budget_router
@@ -12,6 +11,7 @@ from app.api.health import router as health_router
 from app.api.pages import router as pages_router
 from app.api.plan import router as plan_router
 from app.config import get_settings
+from app.security import CachedStaticFiles, install
 
 STATIC_DIR = Path(__file__).parent / "web" / "static"
 
@@ -37,7 +37,8 @@ def create_app() -> FastAPI:
     )
     for router in routers:
         app.include_router(router)
-    app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
+    app.mount("/static", CachedStaticFiles(directory=STATIC_DIR), name="static")
+    install(app)
     return app
 
 
