@@ -1,7 +1,7 @@
 # PROGRESS: Toran
 
 ## Status
-- Current task: T22 (T18a video script is yours; T21 already done)
+- Current task: T16b People and payers (added after T16a), then T22; T18a video script is yours
 - Last green commit: T20 Security middleware
 - Last submission tag:
 - Repo: https://github.com/BunnyPraneeth5/toran-event-planner (public, CI on every push)
