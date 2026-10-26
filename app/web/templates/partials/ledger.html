@@ -1,6 +1,9 @@
 {% set ledger = view.ledger %}
+{% set line_labels = {} %}{% for row in view.budget.by_category %}{% set _ = line_labels.update({row.category: row.label}) %}{% endfor %}
+{% set person_names = {} %}{% for p in plan.people %}{% set _ = person_names.update({p.id: p.name}) %}{% endfor %}
+{% set people_form = 'hx-post="/api/people" hx-target="#dashboard" hx-disabled-elt="find button" data-shape="people" data-keep-focus="ledger-heading"' %}
 <section class="card" aria-labelledby="ledger-heading">
-  <h3 id="ledger-heading">Who pays</h3>
+  <h3 id="ledger-heading" tabindex="-1">Who pays</h3>
   {% if ledger.rows %}
   <div class="table-wrap">
     <table>
@@ -22,7 +25,89 @@
     </table>
   </div>
   {% else %}
-  <p>No one has been added as a payer yet.</p>
+  <p>No one has been added as a payer yet. Add each family, side or committee member who is paying.</p>
   {% endif %}
   <p class="summary">{% if ledger.unassigned %}{{ ledger.unassigned | inr }} is not yet assigned to anyone.{% else %}Every planned rupee has a payer.{% endif %}</p>
+
+  <details class="editor" id="add-person"{% if not plan.people %} open{% endif %}>
+    <summary>Add a person or side</summary>
+    <form {{ people_form | safe }} data-body='{{ {"change": {"action": "add_person"}} | tojson }}'>
+      <div class="field">
+        <label for="person-name">Name</label>
+        <input id="person-name" name="change.name" type="text" maxlength="120" required autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="person-role">Side or role <span class="optional">(optional)</span></label>
+        <input id="person-role" name="change.side_or_role" type="text" maxlength="60" autocomplete="off" placeholder="Bride's side">
+      </div>
+      <div class="field">
+        <label for="person-pledge">Pledge in rupees <span class="optional">(optional)</span></label>
+        <input id="person-pledge" name="change.pledge" type="number" inputmode="numeric" min="0" step="1" data-type="int">
+      </div>
+      <button type="submit">Add person</button>
+    </form>
+  </details>
+
+  {% if plan.people %}
+  <details class="editor" id="edit-people">
+    <summary>Change pledges or remove someone</summary>
+    <ul class="people">
+      {% for person in plan.people %}
+      <li>
+        <p class="person-name">{{ person.name }}{% if person.side_or_role %} <span class="meta">{{ person.side_or_role }}</span>{% endif %}</p>
+        <form class="inline-form" {{ people_form | safe }} data-body='{{ {"change": {"action": "update_pledge", "person_id": person.id}} | tojson }}'>
+          <label for="pledge-{{ loop.index }}">Pledge for {{ person.name }}, in rupees</label>
+          <input id="pledge-{{ loop.index }}" name="change.pledge" type="number" inputmode="numeric" min="0" step="1" data-type="int" required value="{{ person.pledge }}">
+          <button type="submit">Save pledge</button>
+        </form>
+        <form class="inline-form" {{ people_form | safe }} data-body='{{ {"change": {"action": "remove_person", "person_id": person.id}} | tojson }}'>
+          <button type="submit" class="secondary" aria-label="Remove {{ person.name }}">Remove</button>
+        </form>
+      </li>
+      {% endfor %}
+    </ul>
+  </details>
+
+  <details class="editor" id="edit-payers">
+    <summary>Choose who pays for each line</summary>
+    <form {{ people_form | safe }} data-body='{{ {"change": {"action": "set_payers"}} | tojson }}'>
+      <div class="field">
+        <label for="payer-line">Budget line</label>
+        <select id="payer-line" data-keep-value name="change.line_item_id" required>
+          {% for item in plan.line_items if item.active %}
+          <option value="{{ item.id }}">{{ line_labels.get(item.category, item.category) }}{% if item.function_id %} for {{ function_names.get(item.function_id, "a function") }}{% endif %}, {{ item.planned | inr }}: {% if item.payers %}{% for share in item.payers %}{{ person_names.get(share.person_id, "someone") }}{% if item.payers | length > 1 %} {{ share.share_pct }}%{% endif %}{% if not loop.last %}, {% endif %}{% endfor %}{% else %}no payer yet{% endif %}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="field">
+        <label for="payer-mode">Who pays</label>
+        <select id="payer-mode" data-keep-value name="change.mode" data-change-kind-select>
+          <option value="single">One person</option>
+          <option value="everyone">Split equally between everyone</option>
+          <option value="custom">Split by percent</option>
+          <option value="none">No one yet</option>
+        </select>
+      </div>
+      <fieldset class="change-fields" data-change-kind="single">
+        <legend>One person</legend>
+        <label for="payer-person">Person</label>
+        <select id="payer-person" data-keep-value name="change.person_id">
+          {% for person in plan.people %}<option value="{{ person.id }}">{{ person.name }}</option>{% endfor %}
+        </select>
+      </fieldset>
+      <fieldset class="change-fields" data-change-kind="custom" hidden disabled>
+        <legend>Percent for each person, adding up to 100</legend>
+        {% for person in plan.people %}
+        <div class="field">
+          <label for="share-{{ loop.index }}">{{ person.name }}, percent</label>
+          <input id="share-{{ loop.index }}" name="share_pct" type="number" inputmode="numeric" min="0" max="100" step="1"
+                 data-type="int" data-list="change.shares" data-list-key="share_pct"
+                 data-list-extra='{{ {"person_id": person.id} | tojson }}'>
+        </div>
+        {% endfor %}
+      </fieldset>
+      <button type="submit">Set payer</button>
+    </form>
+  </details>
+  {% endif %}
 </section>

@@ -21,7 +21,7 @@ Work top to bottom. One task per session. Tick a task only when its proof test p
 - [x] T15 UI base and intake page
 - [x] T16 Dashboard page and state contract
 - [x] T16a Try a sample event
-- [ ] T16b People and payers
+- [x] T16b People and payers
 - [ ] T16c Bookings and actual costs
 - [ ] T16d Navigation, overview and small usability details
 - [ ] T16e Indian visual theme
@@ -286,13 +286,13 @@ The ledger can show who pays, but nobody can enter their own people or assign pa
 **Files:** `app/engines/ledger.py`, `app/models/people.py`, `app/planner.py`, `app/api/people.py`, `app/main.py`, `app/web/templates/partials/ledger.html`, `app/web/static/js/app.js`, `app/web/static/css/app.css`, `tests/unit/test_ledger.py`, `tests/api/test_people.py`
 
 **Acceptance**
-- [ ] In "Who pays", the user can add a person or side (name, role, pledge in rupees), change a pledge, and remove a person
-- [ ] Removing a person also removes them from every line they pay for and every task they own; the affected lines become unassigned, and a notice says how many
-- [ ] Each budget line can be given one payer, or split between people by percent, with a "Split equally" choice; shares must add up to 100
-- [ ] Pure engine functions in `engines/ledger.py` (add person, update pledge, remove person, assign payers) return a new plan; ids are assigned by the server; no LLM call
-- [ ] Unknown ids, shares that do not add up to 100, a duplicate person in one split, or more than 50 people return 422 with a clear message, shown in the live region
-- [ ] After every change the ledger (pledged, assigned, paid, balance, unassigned) updates, the response embeds the plan state, and the plan is saved in the browser
-- [ ] Labelled inputs, keyboard only flow, works at 390px, no inline scripts or styles
+- [x] In "Who pays", the user can add a person or side (name, role, pledge in rupees), change a pledge, and remove a person
+- [x] Removing a person also removes them from every line they pay for and every task they own; the affected lines become unassigned, and a notice says how many
+- [x] Each budget line can be given one payer, or split between people by percent, with a "Split equally" choice; shares must add up to 100
+- [x] Pure engine functions in `engines/ledger.py` (add person, update pledge, remove person, assign payers) return a new plan; ids are assigned by the server; no LLM call
+- [x] Unknown ids, shares that do not add up to 100, a duplicate person in one split, or more than 50 people return 422 with a clear message, shown in the live region
+- [x] After every change the ledger (pledged, assigned, paid, balance, unassigned) updates, the response embeds the plan state, and the plan is saved in the browser
+- [x] Labelled inputs, keyboard only flow, works at 390px, no inline scripts or styles
 
 **Proof:** `pytest tests/unit/test_ledger.py tests/api/test_people.py` (add, change pledge, remove with payer and owner clean-up, single and split payers, split equally gives exact rupees, shares not adding to 100 return 422, zero AI calls, partial embeds plan state)
 

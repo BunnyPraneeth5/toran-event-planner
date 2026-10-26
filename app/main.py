@@ -9,6 +9,7 @@ from app.api.budget import router as budget_router
 from app.api.calendar import router as calendar_router
 from app.api.health import router as health_router
 from app.api.pages import router as pages_router
+from app.api.people import router as people_router
 from app.api.plan import router as plan_router
 from app.config import get_settings
 from app.security import CachedStaticFiles, install
@@ -33,6 +34,7 @@ def create_app() -> FastAPI:
         plan_router,
         budget_router,
         adapt_router,
+        people_router,
         calendar_router,
     )
     for router in routers:

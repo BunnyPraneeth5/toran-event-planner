@@ -26,7 +26,14 @@ from app.engines.adapt import (
     verify_option,
 )
 from app.engines.budget import allocate, budget_status, realism_warnings, what_if
-from app.engines.ledger import ledger_summary
+from app.engines.ledger import (
+    add_person,
+    assign_payers,
+    equal_shares,
+    ledger_summary,
+    remove_person,
+    update_pledge,
+)
 from app.engines.parse import parse_amount, parse_date
 from app.engines.sanitize import (
     FunctionDraft,
@@ -51,6 +58,7 @@ from app.models.intake import (
     IntakeResult,
     Question,
 )
+from app.models.people import AddPerson, PeopleRequest, RemovePerson, SetPayers, UpdatePledge
 from app.models.plan import MAX_IDEAS, Plan, Sources
 from app.models.view import BudgetView, CategoryTotal, PlanView, WhatIfRequest
 
@@ -686,3 +694,50 @@ def _no_digits(text: str) -> str:
 
 
 _OP_ADAPTER: TypeAdapter[Op] = TypeAdapter(Op)
+
+
+def change_people(
+    request: PeopleRequest, *, id_factory: Callable[[], str] = new_id
+) -> tuple[Plan, list[str]]:
+    """Apply one people or payer change with the ledger engine. No AI involved.
+
+    Returns the new plan and notices for the user. Raises ValueError for unknown ids,
+    splits that do not add up to 100, or one person too many.
+    """
+    plan, change = request.plan, request.change
+    if isinstance(change, AddPerson):
+        person = Person(
+            id=id_factory(),
+            name=change.name,
+            side_or_role=change.side_or_role,
+            pledge=change.pledge,
+        )
+        return add_person(plan, person), []
+    if isinstance(change, UpdatePledge):
+        return update_pledge(plan, change.person_id, change.pledge), []
+    if isinstance(change, RemovePerson):
+        name = next((p.name for p in plan.people if p.id == change.person_id), "")
+        changed, affected = remove_person(plan, change.person_id)
+        notice = f"Removed {name}."
+        if affected:
+            lines = "line now has" if affected == 1 else "lines now have"
+            notice += f" {affected} {lines} no payer."
+        return changed, [notice]
+    return assign_payers(plan, change.line_item_id, _payer_shares(plan, change)), []
+
+
+def _payer_shares(plan: Plan, change: SetPayers) -> list[tuple[str, int]]:
+    if change.mode == "none":
+        return []
+    if change.mode == "single":
+        if change.person_id is None:
+            raise ValueError("choose who pays for this line")
+        return [(change.person_id, 100)]
+    if change.mode == "everyone":
+        if not plan.people:
+            raise ValueError("add a person before splitting a line")
+        return equal_shares([p.id for p in plan.people])
+    shares = [(s.person_id, s.share_pct) for s in change.shares if s.share_pct]
+    if not shares:
+        raise ValueError("enter a percent for at least one person")
+    return shares

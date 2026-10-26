@@ -50,7 +50,10 @@
 
   document.addEventListener("htmx:beforeRequest", function (evt) {
     var elt = evt.detail.elt;
-    keepFocusId = elt && elt.hasAttribute && elt.hasAttribute("data-keep-focus") ? elt.id : null;
+    // data-keep-focus="some-id" returns focus to that element; empty means the control itself.
+    keepFocusId = elt && elt.hasAttribute && elt.hasAttribute("data-keep-focus")
+      ? elt.getAttribute("data-keep-focus") || elt.id
+      : null;
   });
 
   // Runs after app.js has focused the new heading, so the control gets focus back.
@@ -62,10 +65,18 @@
     if (control) {
       control.focus();
     }
-    var summary = document.querySelector("#budget-heading + .summary");
+    // Announce any notices, then the summary of the section the control is in (or the budget).
+    var section = control && control.closest("section");
+    var summary = (section && section.querySelector(".summary")) ||
+      document.querySelector("#budget-heading + .summary");
+    var parts = ["Plan updated."];
+    document.querySelectorAll("#plan-heading ~ .notice").forEach(function (notice) {
+      parts.push(notice.textContent.trim());
+    });
     if (summary) {
-      announce("Plan updated. " + summary.textContent.trim());
+      parts.push(summary.textContent.trim());
     }
+    announce(parts.join(" "));
     keepFocusId = null;
   });
 })();

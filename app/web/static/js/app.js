@@ -12,7 +12,14 @@
     adapt: ["plan", "change"],
     apply: ["plan", "change", "option"],
     sample: ["city"],
+    people: ["plan", "change"],
   };
+
+  function getPath(target, path) {
+    return path.split(".").reduce(function (node, part) {
+      return node ? node[part] : undefined;
+    }, target);
+  }
 
   function setPath(target, path, value) {
     var parts = path.split(".");
@@ -60,10 +67,11 @@
       var value = field.dataset.type === "int" ? Number(raw) : raw;
       if (field.dataset.list) {
         // Fields with data-list="changes" each add one item, e.g. {"change": "set_total", ...}.
+        // The list name may be dotted ("change.shares").
         var item = {};
         item[field.dataset.listKey || field.name] = value;
         Object.assign(item, JSON.parse(field.dataset.listExtra || "{}"));
-        body[field.dataset.list] = (body[field.dataset.list] || []).concat([item]);
+        setPath(body, field.dataset.list, (getPath(body, field.dataset.list) || []).concat([item]));
         return;
       }
       setPath(body, field.name, value);
@@ -135,13 +143,10 @@
     announce("Could not reach Toran. Check your connection and try again.");
   });
 
-  // "Something changed" form: only the fields for the chosen kind are shown and sent
-  // (disabled fields are left out of the request, and the API rejects unknown fields).
-  function syncChangeKind(root) {
-    var select = root.querySelector ? root.querySelector("[data-change-kind-select]") : null;
-    if (!select) {
-      return;
-    }
+  // Forms with a kind select ("Something changed", "Who pays"): only the fields for the
+  // chosen kind are shown and sent (disabled fields are left out of the request, and the
+  // API rejects unknown fields).
+  function syncKind(select) {
     select.form.querySelectorAll("[data-change-kind]").forEach(function (fieldset) {
       var active = fieldset.dataset.changeKind === select.value;
       fieldset.hidden = !active;
@@ -149,13 +154,51 @@
     });
   }
 
+  function syncChangeKind(root) {
+    if (root.querySelectorAll) {
+      root.querySelectorAll("[data-change-kind-select]").forEach(syncKind);
+    }
+  }
+
   document.addEventListener("change", function (evt) {
     if (evt.target.matches && evt.target.matches("[data-change-kind-select]")) {
-      syncChangeKind(evt.target.form);
+      syncKind(evt.target);
     }
   });
 
   document.addEventListener("htmx:afterSwap", function (evt) {
+    syncChangeKind(evt.detail.target);
+  });
+
+  // Open <details> sections, and choices marked data-keep-value, survive the dashboard being
+  // rebuilt around them, so assigning payers line by line does not start over each time.
+  var kept = { open: [], values: {} };
+
+  document.addEventListener("htmx:beforeSwap", function (evt) {
+    var target = evt.detail.target;
+    kept.open = Array.prototype.map.call(target.querySelectorAll("details[open][id]"), function (details) {
+      return details.id;
+    });
+    kept.values = {};
+    target.querySelectorAll("[data-keep-value][id]").forEach(function (field) {
+      kept.values[field.id] = field.value;
+    });
+  });
+
+  document.addEventListener("htmx:afterSwap", function (evt) {
+    kept.open.forEach(function (id) {
+      var details = document.getElementById(id);
+      if (details) {
+        details.open = true;
+      }
+    });
+    Object.keys(kept.values).forEach(function (id) {
+      var field = document.getElementById(id);
+      if (field && field.querySelector("option[value='" + CSS.escape(kept.values[id]) + "']")) {
+        field.value = kept.values[id];
+      }
+    });
+    kept = { open: [], values: {} };
     syncChangeKind(evt.detail.target);
   });
 
