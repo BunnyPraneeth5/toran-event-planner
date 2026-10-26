@@ -1,0 +1,36 @@
+{% set budget = view.budget %}{% set total = plan.event.total_budget %}
+{% set labels = {} %}{% for row in budget.by_category %}{% set _ = labels.update({row.category: row.label}) %}{% endfor %}
+<section class="card" aria-labelledby="budget-heading">
+  <h3 id="budget-heading">Budget</h3>
+  <p class="summary">{{ budget.committed | short_inr }} planned of {{ total | short_inr }}.
+    {%- if budget.over_by %} <strong class="over">Over by {{ budget.over_by | inr }}.</strong>
+    {%- elif budget.unallocated %} {{ budget.unallocated | inr }} not yet allocated.{% endif %}</p>
+  {% set low = budget.warnings | selectattr("kind", "equalto", "below_typical") | list %}
+  {% if low %}
+  <ul class="warnings">
+    {% for w in low %}
+    <li>{{ labels.get(w.category, w.category) }}{% if w.function_id %} for {{ function_names.get(w.function_id, "a function") }}{% endif %} looks low for {{ plan.event.city }}: usually {{ w.typical_low | short_inr }} to {{ w.typical_high | short_inr }}.</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  <div class="table-wrap">
+    <table>
+      <caption>Budget by category</caption>
+      <thead>
+        <tr><th scope="col">Category</th><th scope="col">Planned</th><th scope="col">Share</th><th scope="col">Booked or paid</th></tr>
+      </thead>
+      <tbody>
+        {% for row in budget.by_category %}
+        {% set share = (row.planned * 100 // total) if total else 0 %}
+        <tr>
+          <th scope="row">{{ row.label }}</th>
+          <td>{{ row.planned | inr }}</td>
+          <td><meter min="0" max="{{ total }}" value="{{ row.planned }}" aria-label="{{ row.label }}: {{ share }} percent of the budget">{{ share }}%</meter> {{ share }}%</td>
+          <td>{{ row.locked | inr }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <p class="hint">Amounts are rough defaults, not vendor quotes.</p>
+</section>

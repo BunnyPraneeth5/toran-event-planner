@@ -19,7 +19,7 @@ Work top to bottom. One task per session. Tick a task only when its proof test p
 - [x] T14 API routes
 - [ ] T14a Early Vercel deploy (checkpoint)
 - [x] T15 UI base and intake page
-- [ ] T16 Dashboard page and state contract
+- [x] T16 Dashboard page and state contract
 - [ ] T16a Try a sample event
 - [ ] T17 What-if slider
 - [ ] T18 Something changed UI
@@ -251,14 +251,14 @@ Done right after T14, so hosting, env var and cold start problems show up early,
 **Proof:** `pytest tests/api/test_pages.py` (pages render; every `<script>` has a local `src`; no `style=` attributes; banner present on fallback)
 
 ## T16 Dashboard page and state contract
-**Files:** `app/web/templates/dashboard.html`, `app/web/templates/partials/functions.html`, `app/web/templates/partials/budget.html`, `app/web/templates/partials/timeline.html`, `app/web/templates/partials/ledger.html`, `app/web/templates/partials/plan_state.html`, `app/web/static/js/state.js`, `app/web/static/css/app.css`, `tests/api/test_pages.py`
+**Files:** `app/web/templates/dashboard.html`, `app/web/templates/partials/functions.html`, `app/web/templates/partials/budget.html`, `app/web/templates/partials/timeline.html`, `app/web/templates/partials/ledger.html`, `app/web/templates/partials/plan_state.html`, `app/web/templates/partials/plan.html`, `app/web/templates/partials/plan_tools.html`, `app/web/static/js/state.js`, `app/web/static/js/app.js`, `app/api/pages.py` (`/plan`), `app/web/formatting.py` (date filters), `app/web/static/css/app.css`, `tests/api/test_pages.py`
 
 **Acceptance**
-- [ ] Dashboard shows functions, budget table, timeline with late and at-risk text labels, ledger
-- [ ] Every plan-changing partial embeds `<div id="plan-state" hidden data-plan="...">` (htmx strips script tags from swaps)
-- [ ] `state.js` adds the plan to requests, saves on `htmx:afterSwap`, checks `schema_version`, warns on changes from another tab, calls `navigator.storage.persist()`
-- [ ] Export and import JSON; imports validated server-side through `/api/plan/recompute`
-- [ ] Budget bars via `<meter>` or SVG; every chart also a table; rupees in lakh/crore
+- [x] Dashboard shows functions, budget table, timeline with late and at-risk text labels, ledger
+- [x] Every plan-changing partial embeds `<div id="plan-state" hidden data-plan="...">` (htmx strips script tags from swaps)
+- [x] `state.js` adds the plan to requests, saves on `htmx:afterSwap`, checks `schema_version`, warns on changes from another tab, calls `navigator.storage.persist()`
+- [x] Export and import JSON; imports validated server-side through `/api/plan/recompute`
+- [x] Budget bars via `<meter>` or SVG; every chart also a table; rupees in lakh/crore
 
 **Proof:** `pytest tests/api/test_pages.py::test_dashboard_partials_embed_plan_state` (browser round-trip covered in T22)
 

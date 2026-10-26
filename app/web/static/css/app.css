@@ -314,3 +314,87 @@ td {
     transition: none !important;
   }
 }
+
+/* Dashboard */
+.meta {
+  color: var(--muted);
+  margin: 0.2rem 0;
+}
+
+.summary {
+  font-weight: 600;
+}
+
+.over {
+  color: var(--needed);
+}
+
+.warnings {
+  padding-left: 1.2rem;
+}
+
+meter {
+  width: 5rem;
+  vertical-align: middle;
+}
+
+.functions,
+.ideas {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.functions > li {
+  border-top: 1px solid var(--border);
+  padding: 0.75rem 0;
+}
+
+.function-name {
+  font-weight: 700;
+  margin: 0;
+}
+
+.ideas li {
+  margin: 0.3rem 0;
+}
+
+.band {
+  color: var(--muted);
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.status-late,
+.status-risk {
+  color: var(--needed);
+  font-weight: 600;
+}
+
+.status-done {
+  color: var(--muted);
+}
+
+.saved-plan {
+  font-weight: 600;
+}
+
+input[type="file"] {
+  padding: 0.4rem;
+}
+
+th[scope="row"] {
+  white-space: normal;
+  min-width: 7rem;
+}
+
+@media (max-width: 30rem) {
+  meter {
+    width: 3rem;
+  }
+
+  th,
+  td {
+    padding: 0.4rem 0.3rem;
+  }
+}

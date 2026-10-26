@@ -1,6 +1,7 @@
 """Display formatting for rupees in the Indian system. Presentation only, no arithmetic
 on the plan: the amounts were already computed by the engines."""
 
+from datetime import date, datetime
 from decimal import ROUND_HALF_UP, Decimal
 
 LAKH = 100_000
@@ -35,3 +36,13 @@ def format_short(amount: int) -> str:
 def _trim(value: Decimal) -> str:
     rounded = value.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
     return f"{rounded:f}".rstrip("0").rstrip(".")
+
+
+def format_date(value: date) -> str:
+    """8 Mar 2027 (no leading zero, same on every platform)."""
+    return f"{value.day} {value:%b %Y}"
+
+
+def format_datetime(value: datetime) -> str:
+    """Mon 8 Mar, 19:00, in the time zone the value carries (IST for plan times)."""
+    return f"{value:%a} {value.day} {value:%b}, {value:%H:%M}"

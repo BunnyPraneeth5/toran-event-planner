@@ -1,5 +1,7 @@
 import json
 import re
+from datetime import timedelta
+from html import unescape
 from pathlib import Path
 from typing import Any
 
@@ -7,8 +9,10 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app.ai.client import BANNER_TEXT, AIErrorKind, get_ai_client
+from app.api.deps import get_today
 from app.config import Settings, get_settings
 from app.main import create_app
+from app.models import Plan
 from tests.factories import make_allocated_plan
 from tests.fakes import fake_client, response
 
@@ -174,3 +178,135 @@ def test_ai_plan_has_no_banner(settings: Settings) -> None:
     html = _client(settings).post("/api/plan/recompute", json={"plan": plan}, headers=HTMX).text
 
     assert 'class="banner"' not in html
+
+
+# T16 dashboard and state contract
+
+
+def _dashboard_client(settings: Settings, today: Any = None) -> TestClient:
+    app = create_app()
+    app.dependency_overrides[get_settings] = lambda: settings
+    app.dependency_overrides[get_ai_client] = lambda: None
+    if today is not None:
+        app.dependency_overrides[get_today] = lambda: today
+    return TestClient(app)
+
+
+def _plan_state(html: str) -> Plan:
+    found = re.findall(r'<div id="plan-state" hidden data-plan="([^"]*)"></div>', html)
+    assert len(found) == 1
+    return Plan.model_validate_json(unescape(found[0]))
+
+
+def _post_all_plan_routes(client: TestClient) -> dict[str, str]:
+    plan = make_allocated_plan().model_dump(mode="json")
+    cut = {"kind": "budget_cut", "new_total": 2_000_000}
+    option = {"id": "o1", "rationale": "Trim evenly",
+              "ops": [{"op": "scale_category", "category": c, "percent": -30}
+                      for c in ("catering", "venue", "attire", "decor", "photo_video")]}
+    brief = {"event_type": "wedding", "city": "Jaipur", "start_date": "2027-02-14",
+             "guests": 400, "total_budget": 2_500_000}
+    requests = {
+        "generate": ("/api/plan/generate", {"brief": brief}),
+        "recompute": ("/api/plan/recompute", {"plan": plan}),
+        "whatif": ("/api/budget/whatif",
+                   {"plan": plan, "changes": [{"change": "set_total", "total": 2_000_000}]}),
+        "apply": ("/api/adapt/apply", {"plan": plan, "change": cut, "option": option}),
+    }
+    pages = {}
+    for name, (path, body) in requests.items():
+        response_ = client.post(path, json=body, headers=HTMX)
+        assert response_.status_code == 200, (name, response_.text[:300])
+        pages[name] = response_.text
+    return pages
+
+
+def test_dashboard_partials_embed_plan_state(settings: Settings) -> None:
+    pages = _post_all_plan_routes(_dashboard_client(settings))
+
+    for name, html in pages.items():
+        plan = _plan_state(html)
+        assert plan.schema_version == 1, name
+        _assert_csp_safe(html)
+    assert _plan_state(pages["whatif"]).event.total_budget == 2_000_000
+
+
+def test_dashboard_shows_every_section(settings: Settings) -> None:
+    html = _post_all_plan_routes(_dashboard_client(settings))["recompute"]
+
+    for heading in ("Budget", "Functions", "Timeline", "Who pays", "Keep your plan"):
+        assert f">{heading}</h3>" in html, heading
+    categories = {i.category for i in make_allocated_plan().line_items}
+    assert html.count("<meter ") == len(categories)
+    assert "<caption>Budget by category</caption>" in html
+    assert "₹25 lakh planned of ₹25 lakh." in html
+    assert "Haldi" in html
+    assert "Due in " in html
+    assert 'data-action="export-plan"' in html
+    assert 'data-action="import-plan"' in html
+
+
+def test_timeline_labels_late_and_at_risk_in_text(settings: Settings) -> None:
+    plan = make_allocated_plan()
+    soon = plan.event.start_date - timedelta(days=30)
+
+    html = _dashboard_client(settings, today=soon).post(
+        "/api/plan/recompute", json={"plan": plan.model_dump(mode="json")}, headers=HTMX
+    ).text
+
+    assert '<span class="status status-late">Late, ready by' in html
+    assert re.search(r"\d+ tasks: [1-9]\d* late, [1-9]\d* at risk\.", html)
+
+
+def test_ledger_shows_people_and_balances(settings: Settings) -> None:
+    plan = make_allocated_plan().model_dump(mode="json")
+    plan["people"] = [{"id": "bride", "name": "Bride's family", "pledge": 1_000_000}]
+    plan["line_items"][0]["payers"] = [{"person_id": "bride", "share_pct": 100}]
+
+    html = _dashboard_client(settings).post(
+        "/api/plan/recompute", json={"plan": plan}, headers=HTMX
+    ).text
+
+    assert "<th scope=\"row\">Bride&#39;s family</th>" in html
+    assert "of pledge unused" in html
+    assert "is not yet assigned to anyone." in html
+
+
+def test_low_catering_warns_with_typical_range(settings: Settings) -> None:
+    plan = make_allocated_plan().model_dump(mode="json")
+    plan["event"]["total_budget"] = 300_000
+    for item in plan["line_items"]:
+        item["planned"] = item["planned"] * 300_000 // 2_500_000
+
+    html = _dashboard_client(settings).post(
+        "/api/plan/recompute", json={"plan": plan}, headers=HTMX
+    ).text
+
+    assert "Catering for Reception looks low for Jodhpur: usually" in html
+
+
+def test_saved_plan_page_loads_from_the_browser(client: TestClient) -> None:
+    html = client.get("/plan").text
+
+    assert 'hx-post="/api/plan/recompute" hx-trigger="toran:load" data-shape="recompute"' in html
+    assert "There is no plan saved in this browser yet." in html
+    assert 'data-when-empty' in html
+    _assert_csp_safe(html)
+
+
+def test_home_links_to_saved_plan_when_one_exists(client: TestClient) -> None:
+    html = client.get("/").text
+
+    assert '<p class="card saved-plan" data-when-saved hidden>' in html
+    assert '<div id="dashboard"></div>' in html
+
+
+def test_state_js_handles_saving_versions_tabs_and_persistence(client: TestClient) -> None:
+    script = client.get("/static/js/state.js").text
+
+    assert "SCHEMA_VERSION = 1" in script
+    assert "navigator.storage.persist()" in script
+    assert 'window.addEventListener("storage"' in script
+    assert 'fetch("/api/plan/recompute"' in script
+    assert "htmx:afterSwap" in script
+    assert "eval(" not in script

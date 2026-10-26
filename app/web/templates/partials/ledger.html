@@ -1,0 +1,28 @@
+{% set ledger = view.ledger %}
+<section class="card" aria-labelledby="ledger-heading">
+  <h3 id="ledger-heading">Who pays</h3>
+  {% if ledger.rows %}
+  <div class="table-wrap">
+    <table>
+      <caption>Contributions by person or side</caption>
+      <thead>
+        <tr><th scope="col">Person</th><th scope="col">Pledged</th><th scope="col">Assigned</th><th scope="col">Paid</th><th scope="col">Balance</th></tr>
+      </thead>
+      <tbody>
+        {% for row in ledger.rows %}
+        <tr>
+          <th scope="row">{{ row.name }}</th>
+          <td>{{ row.pledged | inr }}</td>
+          <td>{{ row.assigned | inr }}</td>
+          <td>{{ row.paid | inr }}</td>
+          <td>{% if row.gap > 0 %}Short by {{ row.gap | inr }}{% elif row.gap < 0 %}{{ (0 - row.gap) | inr }} of pledge unused{% else %}Balanced{% endif %}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p>No one has been added as a payer yet.</p>
+  {% endif %}
+  <p class="summary">{% if ledger.unassigned %}{{ ledger.unassigned | inr }} is not yet assigned to anyone.{% else %}Every planned rupee has a payer.{% endif %}</p>
+</section>

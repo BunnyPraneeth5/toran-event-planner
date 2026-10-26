@@ -16,7 +16,7 @@
   {% else %}
   <p>{% if data.missing %}Fill in the fields marked Needed, then make your plan.{% else %}Everything needed is here. Adjust anything, then make your plan.{% endif %}</p>
   {% for notice in data.notices %}<p class="notice">{{ notice }}</p>{% endfor %}
-  <form class="brief-form" hx-post="/api/plan/generate" hx-target="#result" hx-disabled-elt="find button" data-shape="generate">
+  <form class="brief-form" hx-post="/api/plan/generate" hx-target="#dashboard" hx-disabled-elt="find button" data-shape="generate">
     <input type="hidden" name="text" value="{{ text }}">
     <input type="hidden" name="brief_source" value="{{ data.source }}">
 

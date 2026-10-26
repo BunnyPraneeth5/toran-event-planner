@@ -1,0 +1,31 @@
+{% set status = {} %}{% for a in view.tasks %}{% set _ = status.update({a.task_id: a}) %}{% endfor %}
+{% set late = view.tasks | selectattr("late") | list %}{% set risky = view.tasks | selectattr("at_risk") | list %}
+<section class="card" aria-labelledby="timeline-heading">
+  <h3 id="timeline-heading">Timeline</h3>
+  <p class="summary">{{ plan.tasks | length }} tasks: {{ late | length }} late, {{ risky | length }} at risk.</p>
+  <div class="table-wrap">
+    <table>
+      <caption>Tasks, counted back from each function's date</caption>
+      <thead>
+        <tr><th scope="col">Due</th><th scope="col">Task</th><th scope="col">Status</th></tr>
+      </thead>
+      <tbody>
+        {% for task in plan.tasks | sort(attribute="due_date") %}
+        {% set s = status.get(task.id) %}
+        <tr>
+          <td>{{ task.due_date | nice_date }}</td>
+          <th scope="row">{{ task.title }}</th>
+          <td>
+            {%- if task.status == "done" -%}<span class="status status-done">Done</span>
+            {%- elif s and s.late -%}<span class="status status-late">Late{% if s.ready_by %}, ready by {{ s.ready_by | nice_date }}{% endif %}</span>
+            {%- elif s and s.at_risk -%}<span class="status status-risk">At risk, ready by {{ s.ready_by | nice_date }}</span>
+            {%- elif s and s.days_until_due == 0 -%}<span class="status">Due today</span>
+            {%- elif s -%}<span class="status">Due in {{ s.days_until_due }} day{{ "" if s.days_until_due == 1 else "s" }}</span>
+            {%- endif -%}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>

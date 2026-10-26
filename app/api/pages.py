@@ -12,3 +12,9 @@ router = APIRouter(include_in_schema=False)
 def home(request: Request) -> HTMLResponse:
     """The intake page: one text box, then the brief form, then the plan."""
     return TEMPLATES.TemplateResponse(request, "intake.html")
+
+
+@router.get("/plan", response_class=HTMLResponse)
+def dashboard(request: Request) -> HTMLResponse:
+    """The saved plan. The page is empty until the browser sends the plan it has stored."""
+    return TEMPLATES.TemplateResponse(request, "dashboard.html")

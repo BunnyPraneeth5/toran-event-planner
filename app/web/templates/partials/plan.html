@@ -1,32 +1,15 @@
+{# The dashboard: every view of the plan, rebuilt from the engines on each request. #}
 {% set view = data.view %}{% set plan = view.plan %}
+{% set function_names = {} %}{% for f in plan.functions %}{% set _ = function_names.update({f.id: f.name}) %}{% endfor %}
 {% set banner = data.banner or ("Parts of this plan use rule-based defaults because the AI was unavailable." if plan.sources.plan == "fallback" else none) %}{% include "partials/banner.html" %}
 <section class="card" aria-labelledby="plan-heading">
   <h2 id="plan-heading" tabindex="-1" data-focus>{{ plan.event.title }}</h2>
-  <p>{{ plan.event.city }}, {{ plan.event.start_date }} to {{ plan.event.end_date }}, {{ plan.event.guests }} guests</p>
+  <p class="meta">{{ plan.event.city }}, {{ plan.event.start_date | nice_date }}{% if plan.event.end_date != plan.event.start_date %} to {{ plan.event.end_date | nice_date }}{% endif %}, {{ plan.event.guests }} guests, budget {{ plan.event.total_budget | short_inr }}</p>
   {% for notice in data.notices %}<p class="notice">{{ notice }}</p>{% endfor %}
-
-  <h3>Budget</h3>
-  <p>{{ view.budget.committed | inr }} of {{ plan.event.total_budget | inr }} planned{% if view.budget.over_by %}, over by {{ view.budget.over_by | inr }}{% endif %}.</p>
-  <div class="table-wrap">
-  <table>
-    <caption>Budget by category</caption>
-    <thead><tr><th scope="col">Category</th><th scope="col">Planned</th><th scope="col">Booked or paid</th></tr></thead>
-    <tbody>
-      {% for row in view.budget.by_category %}
-      <tr><th scope="row">{{ row.label }}</th><td>{{ row.planned | inr }}</td><td>{{ row.locked | inr }}</td></tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  </div>
-
-  <h3>Functions</h3>
-  <ul>
-    {% for function in plan.functions %}
-    <li>{{ function.name }}: {{ function.start.strftime("%d %b %H:%M") }}, {{ function.guests }} guests, {{ function.tier }}</li>
-    {% endfor %}
-  </ul>
-
-  {% set late = view.tasks | selectattr("late") | list %}{% set risky = view.tasks | selectattr("at_risk") | list %}
-  <p>{{ plan.tasks | length }} tasks: {{ late | length }} late, {{ risky | length }} at risk.</p>
 </section>
+{% include "partials/budget.html" %}
+{% include "partials/functions.html" %}
+{% include "partials/timeline.html" %}
+{% include "partials/ledger.html" %}
+{% include "partials/plan_tools.html" %}
 {% include "partials/plan_state.html" %}

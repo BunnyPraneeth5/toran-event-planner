@@ -11,11 +11,13 @@ from fastapi.responses import JSONResponse, Response
 from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 
-from app.web.formatting import format_inr, format_short
+from app.web.formatting import format_date, format_datetime, format_inr, format_short
 
 TEMPLATES = Jinja2Templates(directory=Path(__file__).parents[1] / "web" / "templates")
 TEMPLATES.env.filters["inr"] = format_inr
 TEMPLATES.env.filters["short_inr"] = format_short
+TEMPLATES.env.filters["nice_date"] = format_date
+TEMPLATES.env.filters["nice_datetime"] = format_datetime
 
 
 def wants_html(request: Request) -> bool:

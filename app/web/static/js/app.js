@@ -7,6 +7,10 @@
   var SHAPES = {
     intake: ["text", "answers"],
     generate: ["brief", "brief_source"],
+    recompute: ["plan"],
+    whatif: ["plan", "changes"],
+    adapt: ["plan", "change"],
+    apply: ["plan", "change", "option"],
   };
 
   function setPath(target, path, value) {
@@ -21,12 +25,25 @@
 
   // Build a JSON body from the form: numbers stay numbers, dotted names nest
   // ("brief.city"), answers to follow-up questions become a list, empty fields are left out.
+  // Fixed values come from a data-body attribute, and the saved plan is added when the
+  // shape needs one.
   function buildBody(elt) {
     var form = elt.closest("form") || elt;
-    var shape = SHAPES[elt.dataset.shape || form.dataset.shape] || null;
+    var shapeName = elt.dataset.shape || form.dataset.shape;
+    var shape = SHAPES[shapeName] || null;
     var body = {};
     var answers = [];
-    Array.prototype.forEach.call(form.elements, function (field) {
+    [form.dataset.body, elt.dataset.body].forEach(function (fixed) {
+      if (fixed) {
+        Object.assign(body, JSON.parse(fixed));
+      }
+    });
+    if (shape && shape.indexOf("plan") !== -1 && window.ToranState) {
+      body.plan = window.ToranState.load();
+    }
+    // A control that triggers its own request (a what-if slider) sends only itself.
+    var fields = elt.matches("input, select, textarea") ? [elt] : form.elements || [];
+    Array.prototype.forEach.call(fields, function (field) {
       if (!field.name || field.disabled || field.type === "submit" || field.type === "button") {
         return;
       }
@@ -39,6 +56,14 @@
         return;
       }
       var value = field.dataset.type === "int" ? Number(raw) : raw;
+      if (field.dataset.list) {
+        // Fields with data-list="changes" each add one item, e.g. {"change": "set_total", ...}.
+        var item = {};
+        item[field.dataset.listKey || field.name] = value;
+        Object.assign(item, JSON.parse(field.dataset.listExtra || "{}"));
+        body[field.dataset.list] = (body[field.dataset.list] || []).concat([item]);
+        return;
+      }
       setPath(body, field.name, value);
     });
     if (answers.length) {

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Your plan: Toran{% endblock %}
+{% block content %}
+<div id="dashboard" data-load-saved-plan hx-post="/api/plan/recompute" hx-trigger="toran:load" data-shape="recompute">
+  <section class="card" aria-labelledby="empty-heading" data-when-empty>
+    <h1 id="empty-heading">Your plan</h1>
+    <p>There is no plan saved in this browser yet.</p>
+    <p><a href="/">Start a new plan</a></p>
+    <div class="field">
+      <label for="import-plan">Or open a plan file</label>
+      <input id="import-plan" type="file" accept="application/json,.json" data-action="import-plan">
+    </div>
+  </section>
+</div>
+{% endblock %}
