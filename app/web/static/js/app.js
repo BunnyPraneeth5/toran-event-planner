@@ -13,6 +13,7 @@
     apply: ["plan", "change", "option"],
     sample: ["city"],
     people: ["plan", "change"],
+    lines: ["plan", "change"],
   };
 
   function getPath(target, path) {

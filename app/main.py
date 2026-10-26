@@ -8,6 +8,7 @@ from app.api.adapt import router as adapt_router
 from app.api.budget import router as budget_router
 from app.api.calendar import router as calendar_router
 from app.api.health import router as health_router
+from app.api.lines import router as lines_router
 from app.api.pages import router as pages_router
 from app.api.people import router as people_router
 from app.api.plan import router as plan_router
@@ -35,6 +36,7 @@ def create_app() -> FastAPI:
         budget_router,
         adapt_router,
         people_router,
+        lines_router,
         calendar_router,
     )
     for router in routers:

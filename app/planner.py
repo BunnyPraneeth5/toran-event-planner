@@ -34,6 +34,8 @@ from app.engines.ledger import (
     remove_person,
     update_pledge,
 )
+from app.engines.lines import over_plan
+from app.engines.lines import update_line as book_line
 from app.engines.parse import parse_amount, parse_date
 from app.engines.sanitize import (
     FunctionDraft,
@@ -58,9 +60,10 @@ from app.models.intake import (
     IntakeResult,
     Question,
 )
+from app.models.lines import LineRequest
 from app.models.people import AddPerson, PeopleRequest, RemovePerson, SetPayers, UpdatePledge
 from app.models.plan import MAX_IDEAS, Plan, Sources
-from app.models.view import BudgetView, CategoryTotal, PlanView, WhatIfRequest
+from app.models.view import BudgetView, CategoryTotal, LineOverPlan, PlanView, WhatIfRequest
 
 MAX_NAME = 120
 MAX_NOTES = 500
@@ -238,6 +241,11 @@ def _view(
             unallocated=unallocated,
             by_category=by_category,
             warnings=warnings,
+            over_plan=[
+                LineOverPlan(line_item_id=item.id, amount=over_plan(item))
+                for item in plan.line_items
+                if item.active and over_plan(item)
+            ],
         ),
         tasks=assess_tasks(plan, today),
         ledger=ledger_summary(plan),
@@ -741,3 +749,9 @@ def _payer_shares(plan: Plan, change: SetPayers) -> list[tuple[str, int]]:
     if not shares:
         raise ValueError("enter a percent for at least one person")
     return shares
+
+
+def update_line(request: LineRequest) -> Plan:
+    """Mark one line planned, booked or paid with the bookings engine. No AI involved."""
+    change = request.change
+    return book_line(request.plan, change.line_item_id, change.status, change.actual)

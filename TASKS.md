@@ -22,7 +22,7 @@ Work top to bottom. One task per session. Tick a task only when its proof test p
 - [x] T16 Dashboard page and state contract
 - [x] T16a Try a sample event
 - [x] T16b People and payers
-- [ ] T16c Bookings and actual costs
+- [x] T16c Bookings and actual costs
 - [ ] T16d Navigation, overview and small usability details
 - [ ] T16e Indian visual theme
 - [x] T17 What-if slider
@@ -299,17 +299,17 @@ The ledger can show who pays, but nobody can enter their own people or assign pa
 ## T16c Bookings and actual costs
 Only the sample shows booked lines today. Users need to mark their own bookings, because booked or paid lines are what stay fixed in what-if and fill the ledger's Paid column.
 
-**Files:** `app/engines/budget.py` (or a small `engines/lines.py`), `app/models/lines.py`, `app/planner.py`, `app/api/lines.py`, `app/main.py`, `app/web/templates/partials/budget.html`, `app/web/static/js/app.js`, `tests/unit/test_lines.py`, `tests/api/test_lines.py`
+**Files:** `app/engines/budget.py` (or a small `engines/lines.py`), `app/models/lines.py`, `app/planner.py`, `app/api/lines.py`, `app/main.py`, `app/web/templates/partials/budget.html`, `app/web/static/js/app.js`, `tests/unit/test_lines.py`, `tests/api/test_lines_api.py`
 
 **Acceptance**
-- [ ] Each budget line can be marked planned, booked or paid, and given an actual cost in rupees
-- [ ] Booked or paid lines lock automatically (existing model rule); marking a line back to planned unlocks it
-- [ ] The line's task is marked done when it is booked or paid, and back to to-do when unbooked
-- [ ] An actual cost above the planned amount shows the difference as text ("₹20,000 over the plan for this line") and counts towards the overrun
-- [ ] Engine only, no LLM call; unknown ids or negative amounts return 422 with a clear message in the live region
-- [ ] Labelled inputs, keyboard only flow, works at 390px, no inline scripts or styles
+- [x] Each budget line can be marked planned, booked or paid, and given an actual cost in rupees
+- [x] Booked or paid lines lock automatically (existing model rule); marking a line back to planned unlocks it
+- [x] The line's task is marked done when it is booked or paid, and back to to-do when unbooked
+- [x] An actual cost above the planned amount shows the difference as text ("₹20,000 over the plan for this line") and counts towards the overrun
+- [x] Engine only, no LLM call; unknown ids or negative amounts return 422 with a clear message in the live region
+- [x] Labelled inputs, keyboard only flow, works at 390px, no inline scripts or styles
 
-**Proof:** `pytest tests/unit/test_lines.py tests/api/test_lines.py` (book, pay with actual, unbook, task status follows, over-plan text, locked line unchanged by a later what-if, zero AI calls)
+**Proof:** `pytest tests/unit/test_lines.py tests/api/test_lines_api.py` (book, pay with actual, unbook, task status follows, over-plan text, locked line unchanged by a later what-if, zero AI calls)
 
 ## T16d Navigation, overview and small usability details
 The dashboard holds a lot. This makes it easy to scan on a phone and a laptop, with what needs action first.

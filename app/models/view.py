@@ -3,7 +3,7 @@
 from pydantic import Field
 
 from app.models.budget import BudgetWarning, WhatIf
-from app.models.common import CategoryKey, DomainModel, Rupees
+from app.models.common import CategoryKey, DomainModel, Id, Rupees
 from app.models.ledger import LedgerSummary
 from app.models.plan import Plan
 from app.models.timeline import TaskAssessment
@@ -18,12 +18,20 @@ class CategoryTotal(DomainModel):
     locked: Rupees
 
 
+class LineOverPlan(DomainModel):
+    """A booked or paid line whose actual cost is above its plan, and by how much."""
+
+    line_item_id: Id
+    amount: Rupees
+
+
 class BudgetView(DomainModel):
     committed: Rupees
     over_by: Rupees
     unallocated: Rupees
     by_category: list[CategoryTotal]
     warnings: list[BudgetWarning] = Field(default_factory=list)
+    over_plan: list[LineOverPlan] = Field(default_factory=list)
 
 
 class PlanView(DomainModel):

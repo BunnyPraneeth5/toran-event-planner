@@ -1,7 +1,7 @@
 {% set budget = view.budget %}{% set total = plan.event.total_budget %}
 {% set labels = {} %}{% for row in budget.by_category %}{% set _ = labels.update({row.category: row.label}) %}{% endfor %}
 <section class="card" aria-labelledby="budget-heading">
-  <h3 id="budget-heading">Budget</h3>
+  <h3 id="budget-heading" tabindex="-1">Budget</h3>
   <p class="summary">{{ budget.committed | short_inr }} planned of {{ total | short_inr }}.
     {%- if budget.over_by %} <strong class="over">Over by {{ budget.over_by | inr }}.</strong>
     {%- elif budget.unallocated %} {{ budget.unallocated | inr }} not yet allocated.{% endif %}</p>
@@ -33,4 +33,41 @@
     </table>
   </div>
   <p class="hint">Amounts are rough defaults, not vendor quotes.</p>
+  {% set lines_by_id = {} %}{% for item in plan.line_items %}{% set _ = lines_by_id.update({item.id: item}) %}{% endfor %}
+  {% if budget.over_plan %}
+  <ul class="warnings">
+    {% for row in budget.over_plan %}{% set item = lines_by_id[row.line_item_id] %}
+    <li>{{ labels.get(item.category, item.category) }}{% if item.function_id %} for {{ function_names.get(item.function_id, "a function") }}{% endif %}: {{ row.amount | inr }} over the plan for this line.</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+
+  <details class="editor" id="edit-bookings">
+    <summary>Mark bookings and actual costs</summary>
+    <p class="hint">Booked and paid lines stay fixed when the budget changes, and their task is marked done.</p>
+    <form hx-post="/api/lines" hx-target="#dashboard" hx-disabled-elt="find button" data-shape="lines" data-keep-focus="budget-heading">
+      <div class="field">
+        <label for="booking-line">Budget line</label>
+        <select id="booking-line" data-keep-value name="change.line_item_id" required>
+          {% for item in plan.line_items if item.active %}
+          <option value="{{ item.id }}">{{ labels.get(item.category, item.category) }}{% if item.function_id %} for {{ function_names.get(item.function_id, "a function") }}{% endif %}, {{ item.planned | inr }}, {{ {"planned": "not booked", "booked": "booked", "paid": "paid"}[item.status] }}{% if item.actual is not none %} at {{ item.actual | inr }}{% endif %}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="field">
+        <label for="booking-status">Status</label>
+        <select id="booking-status" name="change.status" required>
+          <option value="booked">Booked</option>
+          <option value="paid">Paid</option>
+          <option value="planned">Not booked yet</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="booking-actual">Actual cost in rupees <span class="optional">(optional)</span></label>
+        <input id="booking-actual" name="change.actual" type="number" inputmode="numeric" min="0" step="1" data-type="int" aria-describedby="booking-actual-hint">
+        <p id="booking-actual-hint" class="hint">Leave empty if the final price is not known. Cleared when a line goes back to not booked.</p>
+      </div>
+      <button type="submit">Save booking</button>
+    </form>
+  </details>
 </section>
