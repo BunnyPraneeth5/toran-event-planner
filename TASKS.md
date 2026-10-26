@@ -17,7 +17,7 @@ Work top to bottom. One task per session. Tick a task only when its proof test p
 - [x] T12 Generate
 - [x] T13 Adapt options (AI)
 - [x] T14 API routes
-- [ ] T14a Early Vercel deploy (checkpoint)
+- [x] T14a Early Vercel deploy (checkpoint)
 - [x] T15 UI base and intake page
 - [x] T16 Dashboard page and state contract
 - [x] T16a Try a sample event

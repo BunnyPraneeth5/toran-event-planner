@@ -1,11 +1,11 @@
 # PROGRESS: Toran
 
 ## Status
-- Current task: T16 (T14a open only for hiding /docs on the live site)
-- Last green commit: T15 UI base and intake page
+- Current task: T22 (T18a video script is yours; T21 already done)
+- Last green commit: T20 Security middleware
 - Last submission tag:
 - Repo: https://github.com/BunnyPraneeth5/toran-event-planner (public, CI on every push)
-- Live link: https://toran-event-planner.vercel.app (Vercel Hobby, Mumbai region; pages arrive with T15, `/healthz` works now)
+- Live link: https://toran-event-planner.vercel.app (Vercel Hobby, Mumbai region)
 
 ## Session log
 Copy the template below for each session, newest first.
@@ -19,6 +19,29 @@ Copy the template below for each session, newest first.
 - Problems and gotchas (add repeats to CLAUDE.md):
 - Next:
 -->
+
+### Session 11
+- Task(s): T14a leftover, T16, T16a, T17, T18, T19, T20
+- Done:
+  - T14a: the app treats Vercel's own VERCEL_ENV=production as production, so `/docs` and `/openapi.json` are 404 on the live site without depending on the dashboard variable.
+  - T16: dashboard (budget table with meters and share, functions with ideas, timeline with Late, At risk and Done labels, ledger with balances, keep your plan section) on the home page and a new `/plan` page; state.js saves the plan from every response, sends it with requests, sets aside plans from another schema version, warns on changes from another tab, asks for persistent storage, exports and imports (imports validated by the server).
+  - T16a: one-click sample wedding built by the engines (no AI), 24 cities with prices per city type, optional in-browser nearest city, honest "sample" banner via a new `sample` source value.
+  - T17: what-if sliders (total, guests, each category) and a tier select per function; one control per request; readouts and aria-valuetext update while dragging; focus kept and one announcement per settled change; booked categories shown as fixed.
+  - T18: Something changed form for all five kinds, impact first, up to three verified options side by side, apply re-checked by the server.
+  - T19: .ics export (all-day tasks, timed functions in UTC, stable UIDs, RFC 5545 escaping and folding) and a Google Calendar link per task.
+  - T20: security headers and request ids on every response, 413 body cap (also for streamed bodies), slowapi limits on the three Gemini routes keyed on the first x-forwarded-for entry, gzip, static cache headers, generic 500s.
+- Checks: ruff clean, mypy strict clean, 460 tests passing, 97.5% coverage, pip-audit clean, CI green. Browser checks at 390px for every task, including the full keyboard-only Something changed flow; no CSP violations with the strict policy on. Live on Vercel without AI calls: /docs 404, headers present, sample, dashboard, what-if, calendar file and 413 all work.
+- Problems and gotchas:
+  - A field inside a disabled fieldset still reports `field.disabled === false`; use `field.matches(":disabled")`. Found in the browser, not by server tests.
+  - Test files in different folders must have different names (no package `__init__` files): `test_calendar_api.py`.
+  - The local dev server can get stuck mid-reload after a burst of edits; restart it before trusting a browser check.
+  - Exception handlers for 429 run inside the middleware stack (headers added there); only 500s run outside it.
+- Decisions:
+  - Google Calendar links live in `app/web/links.py`, not in engines (engines stay free of urllib).
+  - Venue tier in what-if is a select, not a slider.
+  - The sample's people are "Bride's family" and "Groom's family"; no real names, no Andhra Pradesh cities.
+- Gaps to schedule: no UI yet to add people or assign payers (the ledger can only show them); no favicon (browsers log a 404).
+- Next: T22 E2E and accessibility tests; T18a video script (yours).
 
 ### Session 10
 - Task(s): CLAUDE.md hosting line, T15 UI base and intake page
