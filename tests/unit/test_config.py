@@ -15,6 +15,7 @@ ENV_VARS = (
     "RATE_LIMIT_LLM",
     "MAX_BODY_BYTES",
     "AI_DAILY_CALL_LIMIT",
+    "VERCEL_ENV",
 )
 
 
@@ -91,3 +92,22 @@ def test_invalid_values_rejected(monkeypatch: pytest.MonkeyPatch, name: str, val
 
     with pytest.raises(ValidationError):
         Settings(_env_file=None)
+
+
+@pytest.mark.parametrize(
+    ("environment", "vercel_env", "production"),
+    [
+        ("development", None, False),
+        ("production", None, True),
+        ("development", "production", True),
+        ("development", "preview", False),
+    ],
+)
+def test_vercel_production_counts_as_production(
+    monkeypatch: pytest.MonkeyPatch, environment: str, vercel_env: str | None, production: bool
+) -> None:
+    monkeypatch.setenv("ENVIRONMENT", environment)
+    if vercel_env is not None:
+        monkeypatch.setenv("VERCEL_ENV", vercel_env)
+
+    assert Settings(_env_file=None).is_production is production

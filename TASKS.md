@@ -226,14 +226,14 @@ Work top to bottom. One task per session. Tick a task only when its proof test p
 ## T14a Early Vercel deploy (checkpoint)
 Done right after T14, so hosting, env var and cold start problems show up early, not on the last day. Render was dropped: every existing service on that account was suspended for billing, and its free plan sleeps for about a minute.
 
-**Files:** `pyproject.toml` (runtime dependencies), `tests/unit/test_dependencies.py`
+**Files:** `pyproject.toml` (runtime dependencies), `app/config.py` (`VERCEL_ENV`), `tests/unit/test_dependencies.py`, `tests/unit/test_config.py`, `tests/api/test_health.py`
 
 **Acceptance**
 - [x] Vercel project imported from GitHub: FastAPI preset, root `./`, Hobby plan, Mumbai region (`bom1`), deploys on every push to `main`
 - [x] `GEMINI_API_KEY` and `ENVIRONMENT` set in the Vercel dashboard, never in the repo
 - [x] Runtime dependencies declared in `pyproject.toml` (Vercel installs from it); a test keeps them identical to `requirements.txt`
 - [x] Live `/healthz` returns `{"status": "ok", "ai_configured": true}`; recompute and the HTMX partial work live; responses in about 0.4 seconds
-- [ ] `/docs` hidden on the live site (`ENVIRONMENT=production` must apply to the Production environment, then redeploy)
+- [x] `/docs` hidden on the live site: the app also treats Vercel's own `VERCEL_ENV=production` as production, so it no longer depends on the dashboard variable's scope
 
 **Proof:** `GET https://toran-event-planner.vercel.app/healthz` returns ok; `GET /docs` returns 404
 

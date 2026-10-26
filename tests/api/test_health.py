@@ -1,3 +1,4 @@
+import pytest
 from fastapi.testclient import TestClient
 from pydantic import SecretStr
 
@@ -23,3 +24,14 @@ def test_healthz_reports_ai_configured(client: TestClient, settings: Settings) -
 
     assert body["ai_configured"] is True
     assert "test-key-abc" not in str(body)
+
+
+def test_docs_hidden_on_vercel_production(
+    settings: Settings, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    production = settings.model_copy(update={"vercel_env": "production"})
+    monkeypatch.setattr("app.main.get_settings", lambda: production)
+
+    with TestClient(create_app()) as client:
+        assert client.get("/docs").status_code == 404
+        assert client.get("/openapi.json").status_code == 404

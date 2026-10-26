@@ -25,6 +25,8 @@ class Settings(BaseSettings):
     rate_limit_llm: str = Field(default="10/minute", pattern=r"^\d{1,4}/(second|minute|hour|day)$")
     max_body_bytes: int = Field(default=262_144, ge=1_024, le=2_097_152)
     ai_daily_call_limit: int = Field(default=500, ge=0, le=100_000)
+    vercel_env: str | None = Field(default=None, max_length=40)
+    """Set by Vercel itself (production, preview or development); never set by hand."""
 
     @property
     def ai_configured(self) -> bool:
@@ -40,7 +42,8 @@ class Settings(BaseSettings):
 
     @property
     def is_production(self) -> bool:
-        return self.environment == "production"
+        """Production if configured so, or if Vercel says this is its production deployment."""
+        return self.environment == "production" or self.vercel_env == "production"
 
 
 @lru_cache(maxsize=1)
