@@ -1,0 +1,60 @@
+{% set total = plan.event.total_budget %}
+{% set slider = 'type="range" data-type="int" data-shape="whatif" data-list="changes" hx-post="/api/budget/whatif" hx-target="#dashboard" hx-trigger="input changed delay:250ms" hx-sync="this:replace" data-keep-focus' %}
+<section class="card" aria-labelledby="whatif-heading">
+  <h3 id="whatif-heading">What if</h3>
+  <p class="hint">Move a slider and every open line rebalances to fit the budget. Booked or paid items stay fixed. Nothing here calls the AI.</p>
+
+  <div class="field">
+    <label for="wi-total">Total budget</label>
+    <input id="wi-total" name="total" {{ slider | safe }} data-format="money" data-list-key="total"
+           data-list-extra='{{ {"change": "set_total"} | tojson }}'
+           min="{{ [1000, total // 2] | max }}" max="{{ total * 2 }}" step="10000" value="{{ total }}"
+           aria-valuetext="{{ total | short_inr }}">
+    <output for="wi-total" data-output-for="wi-total">{{ total | short_inr }}</output>
+  </div>
+
+  <div class="field">
+    <label for="wi-guests">Guests</label>
+    <input id="wi-guests" name="guests" {{ slider | safe }} data-format="guests" data-list-key="guests"
+           data-list-extra='{{ {"change": "set_guests"} | tojson }}'
+           min="10" max="{{ [5000, plan.event.guests * 2] | min }}" step="10" value="{{ plan.event.guests }}"
+           aria-valuetext="{{ plan.event.guests }} guests">
+    <output for="wi-guests" data-output-for="wi-guests">{{ plan.event.guests }} guests</output>
+  </div>
+
+  {% if plan.functions %}
+  <fieldset class="questions">
+    <legend>Venue and setup level</legend>
+    {% for function in plan.functions | sort(attribute="start") %}
+    <div class="field">
+      <label for="wi-tier-{{ loop.index }}">{{ function.name }}</label>
+      <select id="wi-tier-{{ loop.index }}" name="tier" data-shape="whatif" data-list="changes" data-list-key="tier"
+              data-list-extra='{{ {"change": "set_tier", "function_id": function.id} | tojson }}'
+              hx-post="/api/budget/whatif" hx-target="#dashboard" hx-trigger="change" hx-sync="this:replace" data-keep-focus>
+        {% for value, label in [("budget", "Budget"), ("standard", "Standard"), ("premium", "Premium")] %}
+        <option value="{{ value }}"{% if function.tier == value %} selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    {% endfor %}
+  </fieldset>
+  {% endif %}
+
+  <fieldset class="questions">
+    <legend>Spend by category</legend>
+    {% for row in view.budget.by_category %}
+    {% if row.locked >= row.planned %}
+    <p class="locked-line"><strong>{{ row.label }}</strong>: {{ row.planned | inr }}, booked or paid, so it stays fixed.</p>
+    {% else %}
+    <div class="field">
+      <label for="wi-cat-{{ row.category }}">{{ row.label }}{% if row.locked %} <span class="optional">(includes {{ row.locked | inr }} booked)</span>{% endif %}</label>
+      <input id="wi-cat-{{ row.category }}" name="amount" {{ slider | safe }} data-format="money" data-list-key="amount"
+             data-list-extra='{{ {"change": "set_category", "category": row.category} | tojson }}'
+             min="{{ row.locked }}" max="{{ total }}" step="5000" value="{{ row.planned }}"
+             aria-valuetext="{{ row.planned | short_inr }}">
+      <output for="wi-cat-{{ row.category }}" data-output-for="wi-cat-{{ row.category }}">{{ row.planned | short_inr }}</output>
+    </div>
+    {% endif %}
+    {% endfor %}
+  </fieldset>
+</section>

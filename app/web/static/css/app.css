@@ -398,3 +398,22 @@ th[scope="row"] {
     padding: 0.4rem 0.3rem;
   }
 }
+
+/* What-if */
+input[type="range"] {
+  padding: 0;
+  border: none;
+  background: transparent;
+  accent-color: var(--accent);
+  min-height: 2.75rem;
+}
+
+output {
+  display: block;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.locked-line {
+  margin: 0 0 1rem;
+}

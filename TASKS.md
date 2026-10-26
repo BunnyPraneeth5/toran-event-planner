@@ -21,7 +21,7 @@ Work top to bottom. One task per session. Tick a task only when its proof test p
 - [x] T15 UI base and intake page
 - [x] T16 Dashboard page and state contract
 - [x] T16a Try a sample event
-- [ ] T17 What-if slider
+- [x] T17 What-if slider
 - [ ] T18 Something changed UI
 - [ ] T18a Video script (checkpoint, owner: you)
 - [ ] T19 Calendar export
@@ -277,14 +277,16 @@ A one-click demo so judges see the whole flow in seconds, even if Gemini is slow
 **Proof:** `pytest tests/api/test_sample.py` (loads without an AI client, invariants hold, city change reprices catering ranges)
 
 ## T17 What-if slider
-**Files:** `app/web/templates/partials/whatif.html`, `app/web/static/js/whatif.js`, `app/api/budget.py`, `tests/api/test_whatif.py`
+**Files:** `app/web/templates/partials/whatif.html`, `app/web/templates/partials/plan.html`, `app/web/static/js/whatif.js`, `app/web/static/js/app.js` (single-control requests), `app/web/static/css/app.css`, `tests/api/test_whatif.py`
+
+Venue tier is a select per function rather than a slider: three values read better as a list.
 
 **Acceptance**
-- [ ] Sliders for guests, venue tier and category amounts; `hx-trigger="input changed delay:250ms"`, `hx-sync="this:replace"`
-- [ ] `aria-valuetext` in Indian format; one live announcement per settled change
-- [ ] Locked items shown as locked and never move
-- [ ] Overrun shown as text ("Over by ₹40,000"), not color alone
-- [ ] No LLM call
+- [x] Sliders for guests, venue tier and category amounts; `hx-trigger="input changed delay:250ms"`, `hx-sync="this:replace"`
+- [x] `aria-valuetext` in Indian format; one live announcement per settled change
+- [x] Locked items shown as locked and never move
+- [x] Overrun shown as text ("Over by ₹40,000"), not color alone
+- [x] No LLM call
 
 **Proof:** `pytest tests/api/test_whatif.py` (locked unchanged, overrun text present, fake client records zero calls)
 
