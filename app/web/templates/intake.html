@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 {% block scripts %}<script src="/static/js/sample.js" defer></script>{% endblock %}
 {% block content %}
-<p class="card saved-plan" data-when-saved hidden>You have a plan saved in this browser. <a href="/plan">Open your saved plan</a></p>
+{% with current = "describe" %}{% include "partials/steps.html" %}{% endwith %}
+<p class="card saved-plan" data-when-saved hidden>You have a plan saved in this browser. <a href="/plan">Open your saved plan</a>. Starting a new one replaces it, and you can undo that once.</p>
 <section class="card" aria-labelledby="intake-heading">
   <h1 id="intake-heading">Plan your celebration</h1>
   <p>Describe the event in one line. Toran asks about anything missing, then builds the budget, timeline and checklist.</p>
@@ -31,5 +32,5 @@
   </form>
 </section>
 <div id="brief"></div>
-<div id="dashboard"></div>
+<div id="dashboard" data-open-plan="/plan" hidden></div>
 {% endblock %}

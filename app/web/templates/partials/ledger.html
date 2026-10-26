@@ -2,7 +2,7 @@
 {% set line_labels = {} %}{% for row in view.budget.by_category %}{% set _ = line_labels.update({row.category: row.label}) %}{% endfor %}
 {% set person_names = {} %}{% for p in plan.people %}{% set _ = person_names.update({p.id: p.name}) %}{% endfor %}
 {% set people_form = 'hx-post="/api/people" hx-target="#dashboard" hx-disabled-elt="find button" data-shape="people" data-keep-focus="ledger-heading"' %}
-<section class="card" aria-labelledby="ledger-heading">
+<section id="who-pays" class="card" aria-labelledby="ledger-heading">
   <h3 id="ledger-heading" tabindex="-1">Who pays</h3>
   {% if ledger.rows %}
   <div class="table-wrap">

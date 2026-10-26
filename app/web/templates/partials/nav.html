@@ -1,0 +1,21 @@
+{# Contents panel: a left rail on wide screens, a one-line status bar on phones. Every
+   status is an engine figure from this response, set in plan.html. #}
+<nav class="plan-nav" aria-label="Plan sections">
+  <details class="plan-nav-panel" data-plan-nav>
+    <summary class="plan-nav-bar">
+      <span class="plan-nav-line">{{ plan.event.total_budget | short_inr }}, {{ budget_status | lower }}, {{ timeline_status | lower }}</span>
+      <span class="plan-nav-open">Sections</span>
+    </summary>
+    <ul class="plan-nav-list">
+      <li><a href="#overview">Overview</a> <span class="nav-status">{{ overview_status }}</span></li>
+      <li><a href="#change">Something changed?</a> <span class="nav-status">Get fixes</span></li>
+      <li><a href="#budget">Budget</a> <span class="nav-status">{{ budget_status }}</span></li>
+      <li><a href="#what-if">What if</a> <span class="nav-status">Try a change</span></li>
+      <li><a href="#timeline">Timeline</a> <span class="nav-status">{{ timeline_status }}</span></li>
+      <li><a href="#functions">Functions</a> <span class="nav-status">{{ plan.functions | length }}</span></li>
+      <li><a href="#who-pays">Who pays</a> <span class="nav-status">{{ ledger_status }}</span></li>
+      <li><a href="#keep-plan">Keep your plan</a> <span class="nav-status" data-save-status>Saved in this browser.</span></li>
+    </ul>
+    <button type="button" class="secondary small" data-action="undo-plan" hidden>Undo last change</button>
+  </details>
+</nav>

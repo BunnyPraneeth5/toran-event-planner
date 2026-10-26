@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% block title %}Your plan: Toran{% endblock %}
+{% block main_class %} wide{% endblock %}
 {% block content %}
+{% with current = "plan" %}{% include "partials/steps.html" %}{% endwith %}
 <div id="dashboard" data-load-saved-plan hx-post="/api/plan/recompute" hx-trigger="toran:load" data-shape="recompute">
   <section class="card" aria-labelledby="empty-heading" data-when-empty>
     <h1 id="empty-heading">Your plan</h1>

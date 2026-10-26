@@ -23,7 +23,7 @@ Work top to bottom. One task per session. Tick a task only when its proof test p
 - [x] T16a Try a sample event
 - [x] T16b People and payers
 - [x] T16c Bookings and actual costs
-- [ ] T16d Navigation, overview and small usability details
+- [x] T16d Navigation, overview and small usability details
 - [ ] T16e Indian visual theme
 - [x] T17 What-if slider
 - [x] T18 Something changed UI
@@ -317,18 +317,18 @@ The dashboard holds a lot. This makes it easy to scan on a phone and a laptop, w
 **Files:** `app/web/templates/dashboard.html`, `app/web/templates/partials/plan.html`, `app/web/templates/partials/overview.html`, `app/web/templates/partials/nav.html`, `app/web/templates/partials/timeline.html`, `app/web/templates/partials/functions.html`, `app/web/templates/intake.html`, `app/web/static/js/nav.js`, `app/web/static/js/state.js`, `app/web/static/js/app.js`, `app/web/static/css/app.css`, `tests/api/test_dashboard_nav.py`
 
 **Acceptance**
-- [ ] Creating a plan (generate, sample or import) opens the dashboard on `/plan`; the home page stays short (describe, check, or try the sample)
-- [ ] Step marker on the home page: Describe, Check, Plan, with the current step announced
-- [ ] Sticky contents panel on wide screens (left rail): Overview, Something changed, Budget, What if, Timeline, Functions, Who pays, Keep your plan, each with a live status next to it (for example "Over by ₹40,000", "3 late", "₹2 lakh unassigned"); the section in view is highlighted as you scroll
-- [ ] On phones the panel becomes a sticky one-line status bar at the top ("₹25 lakh, over ₹40k, 3 late"); tapping it opens the full list
-- [ ] Overview section first: countdown ("97 days to go"), a budget bar (planned, booked or paid, and any overrun, drawn with SVG or `<meter>` and always repeated as text), and an "Action needed" list (late tasks, at-risk tasks, over-budget lines, unassigned money) with links to the right section
-- [ ] "Something changed?" is one click away from anywhere (in the panel and the overview)
-- [ ] Long lists collapse by default using `<details>`: the timeline shows late, at-risk and the next five tasks, the rest folded; done tasks and ideas folded
-- [ ] Function times shown as ranges with weekday ("Sat 8 Mar, 19:00 to 23:00")
-- [ ] Undo: the last plan change (what-if, applied option, import, new plan) can be undone once; starting a new plan or the sample no longer silently overwrites the saved plan without an undo
-- [ ] "Saved in this browser" status in the panel after each change
-- [ ] Budget fields in the brief form show the amount in lakh or crore as you type
-- [ ] Panel is a `<nav aria-label>` with ordinary links; works by keyboard; respects reduced motion; no inline scripts or styles; no horizontal scroll at 390px
+- [x] Creating a plan (generate, sample or import) opens the dashboard on `/plan`; the home page stays short (describe, check, or try the sample)
+- [x] Step marker on the home page: Describe, Check, Plan, with the current step announced
+- [x] Sticky contents panel on wide screens (left rail): Overview, Something changed, Budget, What if, Timeline, Functions, Who pays, Keep your plan, each with a live status next to it (for example "Over by ₹40,000", "3 late", "₹2 lakh unassigned"); the section in view is highlighted as you scroll
+- [x] On phones the panel becomes a sticky one-line status bar at the top ("₹25 lakh, over ₹40k, 3 late"); tapping it opens the full list
+- [x] Overview section first: countdown ("97 days to go"), a budget bar (planned, booked or paid, and any overrun, drawn with SVG or `<meter>` and always repeated as text), and an "Action needed" list (late tasks, at-risk tasks, over-budget lines, unassigned money) with links to the right section
+- [x] "Something changed?" is one click away from anywhere (in the panel and the overview)
+- [x] Long lists collapse by default using `<details>`: the timeline shows late, at-risk and the next five tasks, the rest folded; done tasks and ideas folded
+- [x] Function times shown as ranges with weekday ("Sat 8 Mar, 19:00 to 23:00")
+- [x] Undo: the last plan change (what-if, applied option, import, new plan) can be undone once; starting a new plan or the sample no longer silently overwrites the saved plan without an undo
+- [x] "Saved in this browser" status in the panel after each change
+- [x] Budget fields in the brief form show the amount in lakh or crore as you type
+- [x] Panel is a `<nav aria-label>` with ordinary links; works by keyboard; respects reduced motion; no inline scripts or styles; no horizontal scroll at 390px
 
 **Proof:** `pytest tests/api/test_dashboard_nav.py` (panel links match section ids, statuses match engine figures, overview action list, collapsed timeline, undo kept in state.js, generate and sample responses send the browser to /plan) and a browser check at 390px and desktop
 

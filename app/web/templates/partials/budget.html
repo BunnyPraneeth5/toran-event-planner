@@ -1,6 +1,6 @@
 {% set budget = view.budget %}{% set total = plan.event.total_budget %}
 {% set labels = {} %}{% for row in budget.by_category %}{% set _ = labels.update({row.category: row.label}) %}{% endfor %}
-<section class="card" aria-labelledby="budget-heading">
+<section id="budget" class="card" aria-labelledby="budget-heading">
   <h3 id="budget-heading" tabindex="-1">Budget</h3>
   <p class="summary">{{ budget.committed | short_inr }} planned of {{ total | short_inr }}.
     {%- if budget.over_by %} <strong class="over">Over by {{ budget.over_by | inr }}.</strong>

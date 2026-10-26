@@ -255,7 +255,7 @@ def test_timeline_labels_late_and_at_risk_in_text(settings: Settings) -> None:
     ).text
 
     assert '<span class="status status-late">Late, ready by' in html
-    assert re.search(r"\d+ tasks: [1-9]\d* late, [1-9]\d* at risk\.", html)
+    assert re.search(r"\d+ tasks: [1-9]\d* late, \d+ more at risk, \d+ done\.", html)
 
 
 def test_ledger_shows_people_and_balances(settings: Settings) -> None:
@@ -298,7 +298,7 @@ def test_home_links_to_saved_plan_when_one_exists(client: TestClient) -> None:
     html = client.get("/").text
 
     assert '<p class="card saved-plan" data-when-saved hidden>' in html
-    assert '<div id="dashboard"></div>' in html
+    assert '<div id="dashboard" data-open-plan="/plan" hidden></div>' in html
 
 
 def test_state_js_handles_saving_versions_tabs_and_persistence(client: TestClient) -> None:

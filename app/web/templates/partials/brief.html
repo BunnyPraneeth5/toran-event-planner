@@ -9,7 +9,7 @@
 {% macro invalid(name) -%}
   {%- if name in data.missing %} aria-invalid="true" aria-describedby="{{ name }}-note"{% endif -%}
 {%- endmacro %}
-<section class="card" aria-labelledby="brief-heading">
+<section class="card" aria-labelledby="brief-heading" data-step="check">
   <h2 id="brief-heading" tabindex="-1" data-focus>Check your event</h2>
   {% if data.status == "not_event" %}
   <p>{{ data.message }}</p>
@@ -53,7 +53,7 @@
     <div class="field{% if 'total_budget' in data.missing %} missing{% endif %}">
       <label for="f-budget">Total budget in rupees</label>
       <input id="f-budget" name="brief.total_budget" type="number" inputmode="numeric" min="1000" step="1"
-             data-type="int" required value="{{ brief.total_budget or '' }}"
+             data-type="int" data-live-amount="budget-hint" required value="{{ brief.total_budget or '' }}"
              {%- if 'total_budget' in data.missing %} aria-invalid="true" aria-describedby="total_budget-note budget-hint"{% else %} aria-describedby="budget-hint"{% endif %}>
       <p id="budget-hint" class="hint">{% if brief.total_budget %}That is {{ brief.total_budget | short_inr }}.{% else %}For example 2500000 for 25 lakh.{% endif %}</p>
       {{ field_note("total_budget") }}

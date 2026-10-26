@@ -1,24 +1,29 @@
-<section class="card" aria-labelledby="functions-heading">
+<section id="functions" class="card" aria-labelledby="functions-heading">
   <h3 id="functions-heading">Functions</h3>
   <ul class="functions">
     {% for function in plan.functions | sort(attribute="start") %}
     <li>
       <p class="function-name">{{ function.name }}</p>
-      <p class="meta">{{ function.start | nice_datetime }}, {{ function.duration_minutes // 60 }} h{% if function.duration_minutes % 60 %} {{ function.duration_minutes % 60 }} min{% endif %}, {{ function.guests }} guests, {{ function.tier }} setup</p>
+      <p class="meta">{{ function.start | time_range(function.end) }}, {{ function.guests }} guests, {{ function.tier }} setup</p>
       {% set ideas = plan.ideas | selectattr("function_id", "equalto", function.id) | list %}
       {% if ideas %}
-      <ul class="ideas">
-        {% for idea in ideas %}<li>{{ idea.text }} <span class="band">{{ idea.cost_band }} cost</span></li>{% endfor %}
-      </ul>
+      <details class="ideas-fold" id="ideas-{{ function.id }}">
+        <summary>{{ ideas | length }} idea{{ "" if ideas | length == 1 else "s" }}</summary>
+        <ul class="ideas">
+          {% for idea in ideas %}<li>{{ idea.text }} <span class="band">{{ idea.cost_band }} cost</span></li>{% endfor %}
+        </ul>
+      </details>
       {% endif %}
     </li>
     {% endfor %}
   </ul>
   {% set general = plan.ideas | selectattr("function_id", "none") | list %}
   {% if general %}
-  <h4>Ideas for the whole event</h4>
-  <ul class="ideas">
-    {% for idea in general %}<li>{{ idea.text }} <span class="band">{{ idea.cost_band }} cost</span></li>{% endfor %}
-  </ul>
+  <details class="ideas-fold" id="ideas-event">
+    <summary>Ideas for the whole event</summary>
+    <ul class="ideas">
+      {% for idea in general %}<li>{{ idea.text }} <span class="band">{{ idea.cost_band }} cost</span></li>{% endfor %}
+    </ul>
+  </details>
   {% endif %}
 </section>

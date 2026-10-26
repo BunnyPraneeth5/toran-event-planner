@@ -1,0 +1,7 @@
+{# Where the user is: Describe, Check, Plan. `current` is set by the page; app.js moves it to
+   Check when the brief appears. #}
+<ol class="steps" aria-label="Steps">
+  {% for key, label in [("describe", "Describe"), ("check", "Check"), ("plan", "Plan")] %}
+  <li data-step-marker="{{ key }}"{% if key == current %} aria-current="step"{% endif %}>{{ label }}</li>
+  {% endfor %}
+</ol>

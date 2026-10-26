@@ -89,3 +89,8 @@ def assess_tasks(plan: Plan, today: date) -> list[TaskAssessment]:
 def flagged_task_ids(plan: Plan, today: date) -> set[str]:
     """Ids of tasks that are late or at risk as of `today`."""
     return {a.task_id for a in assess_tasks(plan, today) if a.late or a.at_risk}
+
+
+def days_to_go(plan: Plan, today: date) -> int:
+    """Days from today to the event's first day; negative once it has started."""
+    return (plan.event.start_date - today).days

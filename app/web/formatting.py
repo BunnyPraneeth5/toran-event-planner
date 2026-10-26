@@ -46,3 +46,10 @@ def format_date(value: date) -> str:
 def format_datetime(value: datetime) -> str:
     """Mon 8 Mar, 19:00, in the time zone the value carries (IST for plan times)."""
     return f"{value:%a} {value.day} {value:%b}, {value:%H:%M}"
+
+
+def format_time_range(start: datetime, end: datetime) -> str:
+    """Sat 8 Mar, 19:00 to 23:00; the end gets its own day when it falls on the next one."""
+    if end.date() == start.date():
+        return f"{format_datetime(start)} to {end:%H:%M}"
+    return f"{format_datetime(start)} to {format_datetime(end)}"

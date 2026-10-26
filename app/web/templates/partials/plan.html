@@ -1,21 +1,39 @@
 {# The dashboard: every view of the plan, rebuilt from the engines on each request. #}
 {% set view = data.view %}{% set plan = view.plan %}
 {% set function_names = {} %}{% for f in plan.functions %}{% set _ = function_names.update({f.id: f.name}) %}{% endfor %}
+{# Shared counts for the contents panel, the overview and the timeline. A late task is not
+   also counted as at risk. #}
+{% set late_tasks = view.tasks | selectattr("late") | list %}
+{% set risky_tasks = view.tasks | rejectattr("late") | selectattr("at_risk") | list %}
+{# One-line statuses for the contents panel and the overview. #}
+{% if view.budget.over_by %}{% set budget_status = "Over by " ~ (view.budget.over_by | inr) %}
+{% elif view.budget.unallocated %}{% set budget_status = (view.budget.unallocated | short_inr) ~ " spare" %}
+{% else %}{% set budget_status = "On budget" %}{% endif %}
+{% if late_tasks %}{% set timeline_status = (late_tasks | length) ~ " late" %}
+{% elif risky_tasks %}{% set timeline_status = (risky_tasks | length) ~ " at risk" %}
+{% else %}{% set timeline_status = "On track" %}{% endif %}
+{% if view.ledger.unassigned %}{% set ledger_status = (view.ledger.unassigned | short_inr) ~ " unassigned" %}
+{% else %}{% set ledger_status = "All assigned" %}{% endif %}
+{% if view.days_to_go > 1 %}{% set overview_status = view.days_to_go ~ " days to go" %}
+{% elif view.days_to_go == 1 %}{% set overview_status = "1 day to go" %}
+{% elif view.days_to_go == 0 %}{% set overview_status = "Starts today" %}
+{% else %}{% set overview_status = "Under way" %}{% endif %}
 {% if data.banner %}{% set banner = data.banner %}
 {% elif plan.sources.plan == "sample" %}{% set banner = "This is a sample plan with made-up details, built by Toran's engines without AI. Try a what-if or a change to see how it adapts." %}
 {% elif plan.sources.plan == "fallback" %}{% set banner = "Parts of this plan use rule-based defaults because the AI was unavailable." %}
 {% else %}{% set banner = none %}{% endif %}
 {% include "partials/banner.html" %}
-<section class="card" aria-labelledby="plan-heading">
-  <h2 id="plan-heading" tabindex="-1" data-focus>{{ plan.event.title }}</h2>
-  <p class="meta">{{ plan.event.city }}, {{ plan.event.start_date | nice_date }}{% if plan.event.end_date != plan.event.start_date %} to {{ plan.event.end_date | nice_date }}{% endif %}, {{ plan.event.guests }} guests, budget {{ plan.event.total_budget | short_inr }}</p>
-  {% for notice in data.notices %}<p class="notice">{{ notice }}</p>{% endfor %}
-</section>
-{% include "partials/budget.html" %}
-{% include "partials/change_form.html" %}
-{% include "partials/whatif.html" %}
-{% include "partials/functions.html" %}
-{% include "partials/timeline.html" %}
-{% include "partials/ledger.html" %}
-{% include "partials/plan_tools.html" %}
+<div class="plan-layout">
+  {% include "partials/nav.html" %}
+  <div class="plan-sections">
+    {% include "partials/overview.html" %}
+    {% include "partials/change_form.html" %}
+    {% include "partials/budget.html" %}
+    {% include "partials/whatif.html" %}
+    {% include "partials/timeline.html" %}
+    {% include "partials/functions.html" %}
+    {% include "partials/ledger.html" %}
+    {% include "partials/plan_tools.html" %}
+  </div>
+</div>
 {% include "partials/plan_state.html" %}

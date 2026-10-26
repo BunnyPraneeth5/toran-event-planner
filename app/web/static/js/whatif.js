@@ -1,6 +1,7 @@
-// What-if sliders: live readouts while dragging, one announcement per settled change, and
-// focus kept on the control after the dashboard refreshes. The numbers shown while dragging
-// are only the slider's own value; every rebalanced figure comes from the server's engines.
+// What-if sliders and money fields: live readouts while dragging or typing, one announcement
+// per settled change, and focus kept on the control after the dashboard refreshes. The numbers
+// shown while dragging are only the control's own value; every rebalanced figure comes from
+// the server's engines.
 (function () {
   "use strict";
 
@@ -34,6 +35,21 @@
       live.textContent = message;
     }
   }
+
+  // Money fields with data-live-amount show the amount in lakh or crore as you type.
+  document.addEventListener("input", function (evt) {
+    var input = evt.target;
+    var hint = input.dataset && input.dataset.liveAmount
+      ? document.getElementById(input.dataset.liveAmount)
+      : null;
+    if (!hint) {
+      return;
+    }
+    var value = Number(input.value);
+    hint.textContent = value >= 1000 && Number.isInteger(value)
+      ? "That is " + shortRupees(value) + "."
+      : "For example 2500000 for 25 lakh.";
+  });
 
   document.addEventListener("input", function (evt) {
     var input = evt.target;

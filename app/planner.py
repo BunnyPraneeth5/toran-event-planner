@@ -44,7 +44,7 @@ from app.engines.sanitize import (
     place_functions,
     sanitize_weights,
 )
-from app.engines.timeline import assess_tasks, build_tasks
+from app.engines.timeline import assess_tasks, build_tasks, days_to_go
 from app.models.adapt import MAX_OPTIONS, AdaptRequest, AdaptResult, ApplyRequest
 from app.models.budget import BudgetWarning
 from app.models.change import ChangeTier, DropItem, Op, Option, ReduceGuests, ScaleCategory
@@ -237,6 +237,7 @@ def _view(
         plan=plan,
         budget=BudgetView(
             committed=committed,
+            booked=sum(locked.values()),
             over_by=over_by,
             unallocated=unallocated,
             by_category=by_category,
@@ -249,6 +250,7 @@ def _view(
         ),
         tasks=assess_tasks(plan, today),
         ledger=ledger_summary(plan),
+        days_to_go=days_to_go(plan, today),
     )
 
 

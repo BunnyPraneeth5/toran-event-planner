@@ -27,6 +27,8 @@ class LineOverPlan(DomainModel):
 
 class BudgetView(DomainModel):
     committed: Rupees
+    booked: Rupees = 0
+    """What booked or paid lines commit; part of `committed`."""
     over_by: Rupees
     unallocated: Rupees
     by_category: list[CategoryTotal]
@@ -41,6 +43,7 @@ class PlanView(DomainModel):
     budget: BudgetView
     tasks: list[TaskAssessment]
     ledger: LedgerSummary
+    days_to_go: int = Field(default=0, strict=True, ge=-100_000, le=100_000)
 
 
 class PlanResponse(DomainModel):

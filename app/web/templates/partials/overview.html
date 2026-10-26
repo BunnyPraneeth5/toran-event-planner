@@ -1,0 +1,33 @@
+{% set budget = view.budget %}{% set total = plan.event.total_budget %}
+{% set scale = [total, budget.committed] | max %}
+<section id="overview" class="card" aria-labelledby="plan-heading">
+  <h2 id="plan-heading" tabindex="-1" data-focus>{{ plan.event.title }}</h2>
+  <p class="meta">{{ plan.event.city }}, {{ plan.event.start_date | nice_date }}{% if plan.event.end_date != plan.event.start_date %} to {{ plan.event.end_date | nice_date }}{% endif %}, {{ plan.event.guests }} guests, budget {{ total | short_inr }}</p>
+  {% for notice in data.notices %}<p class="notice">{{ notice }}</p>{% endfor %}
+  <p class="countdown">{{ overview_status }}</p>
+
+  <figure class="budget-bar">
+    <svg viewBox="0 0 100 6" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+      <rect class="bar-track" x="0" y="0" width="100" height="6"></rect>
+      <rect class="bar-planned{% if budget.over_by %} bar-over{% endif %}" x="0" y="0" width="{{ budget.committed * 100 // scale }}" height="6"></rect>
+      <rect class="bar-booked" x="0" y="0" width="{{ budget.booked * 100 // scale }}" height="6"></rect>
+      {% if budget.over_by %}<rect class="bar-limit" x="{{ total * 100 // scale }}" y="0" width="0.6" height="6"></rect>{% endif %}
+    </svg>
+    <figcaption>{{ budget.committed | short_inr }} planned of {{ total | short_inr }}, of which {{ budget.booked | short_inr }} is booked or paid.{% if budget.over_by %} Over by {{ budget.over_by | inr }}.{% elif budget.unallocated %} {{ budget.unallocated | inr }} not yet allocated.{% endif %}</figcaption>
+  </figure>
+
+  <h3 id="actions-heading">Action needed</h3>
+  {% set over_lines = budget.over_plan | length %}
+  {% if late_tasks or risky_tasks or budget.over_by or over_lines or view.ledger.unassigned %}
+  <ul class="action-list" aria-labelledby="actions-heading">
+    {% if late_tasks %}<li><a href="#timeline">{{ late_tasks | length }} late task{{ "" if late_tasks | length == 1 else "s" }}</a></li>{% endif %}
+    {% if risky_tasks %}<li><a href="#timeline">{{ risky_tasks | length }} task{{ " is" if risky_tasks | length == 1 else "s are" }} at risk of not being ready in time</a></li>{% endif %}
+    {% if budget.over_by %}<li><a href="#budget">The plan is over budget by {{ budget.over_by | inr }}</a></li>{% endif %}
+    {% if over_lines %}<li><a href="#budget">{{ over_lines }} booked line{{ " costs" if over_lines == 1 else "s cost" }} more than planned</a></li>{% endif %}
+    {% if view.ledger.unassigned %}<li><a href="#who-pays">{{ view.ledger.unassigned | inr }} is not assigned to anyone</a></li>{% endif %}
+  </ul>
+  {% else %}
+  <p>Nothing needs action right now.</p>
+  {% endif %}
+  <p><a class="button-link" href="#change">Something changed? Get fixes</a></p>
+</section>

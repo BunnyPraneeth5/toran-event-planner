@@ -203,6 +203,21 @@
     syncChangeKind(evt.detail.target);
   });
 
+  // Step marker (Describe, Check, Plan): swapped content with data-step moves it on.
+  document.addEventListener("htmx:afterSwap", function (evt) {
+    var stepped = evt.detail.target.querySelector("[data-step]");
+    if (!stepped) {
+      return;
+    }
+    document.querySelectorAll("[data-step-marker]").forEach(function (marker) {
+      if (marker.dataset.stepMarker === stepped.dataset.step) {
+        marker.setAttribute("aria-current", "step");
+      } else {
+        marker.removeAttribute("aria-current");
+      }
+    });
+  });
+
   // Move keyboard and screen reader focus to the heading of newly swapped content.
   document.addEventListener("htmx:afterSwap", function (evt) {
     var heading = evt.detail.target.querySelector("[data-focus]");

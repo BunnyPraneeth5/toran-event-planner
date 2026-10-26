@@ -1,5 +1,5 @@
 {% set categories = {} %}{% for row in view.budget.by_category %}{% set _ = categories.update({row.category: row.label}) %}{% endfor %}
-<section class="card" aria-labelledby="change-heading">
+<section id="change" class="card" aria-labelledby="change-heading">
   <h3 id="change-heading">Something changed?</h3>
   <p>Tell Toran what changed. It measures the effect first, then suggests fixes that its engines check before you see them.</p>
   <form hx-post="/api/adapt/options" hx-target="#options" hx-disabled-elt="find button" data-shape="adapt">
