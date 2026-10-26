@@ -3,6 +3,10 @@
 <section class="card" aria-labelledby="timeline-heading">
   <h3 id="timeline-heading">Timeline</h3>
   <p class="summary">{{ plan.tasks | length }} tasks: {{ late | length }} late, {{ risky | length }} at risk.</p>
+  <div class="actions">
+    <button type="button" class="secondary" data-action="download-ics">Download calendar file</button>
+  </div>
+  <p class="hint">The file adds every task and function to Google Calendar, Apple Calendar or Outlook. Or add tasks one by one below.</p>
   <div class="table-wrap">
     <table>
       <caption>Tasks, counted back from each function's date</caption>
@@ -14,7 +18,8 @@
         {% set s = status.get(task.id) %}
         <tr>
           <td>{{ task.due_date | nice_date }}</td>
-          <th scope="row">{{ task.title }}</th>
+          <th scope="row">{{ task.title }}
+            <a class="gcal" href="{{ google_calendar_url(task, plan.event.title) }}" target="_blank" rel="noopener noreferrer">Add to Google Calendar<span class="visually-hidden">: {{ task.title }} (opens in a new tab)</span></a></th>
           <td>
             {%- if task.status == "done" -%}<span class="status status-done">Done</span>
             {%- elif s and s.late -%}<span class="status status-late">Late{% if s.ready_by %}, ready by {{ s.ready_by | nice_date }}{% endif %}</span>

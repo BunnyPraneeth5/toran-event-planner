@@ -24,7 +24,7 @@ Work top to bottom. One task per session. Tick a task only when its proof test p
 - [x] T17 What-if slider
 - [x] T18 Something changed UI
 - [ ] T18a Video script (checkpoint, owner: you)
-- [ ] T19 Calendar export
+- [x] T19 Calendar export
 - [ ] T20 Security middleware
 - [x] T21 CI
 - [ ] T22 E2E and accessibility tests
@@ -306,16 +306,16 @@ Venue tier is a select per function rather than a slider: three values read bett
 Once T18 works, write the 2 to 3 minute video script against the flow in PRD.md, and plan to record it on the deployed link, not localhost.
 
 ## T19 Calendar export
-**Files:** `app/engines/calendar.py`, `app/api/calendar.py`, `app/web/static/js/calendar.js`, `app/web/templates/partials/timeline.html`, `tests/unit/test_calendar.py`, `tests/api/test_calendar.py`
+**Files:** `app/engines/calendar.py`, `app/web/links.py` (Google Calendar link, kept out of engines), `app/api/calendar.py`, `app/clock.py` (`now_utc`), `app/web/static/js/calendar.js`, `app/web/templates/partials/timeline.html`, `tests/unit/test_calendar.py`, `tests/api/test_calendar_api.py`
 
 **Acceptance**
-- [ ] .ics with one all-day event per task and one timed event per function (UTC, converted from IST), stable UIDs
-- [ ] User text escaped per RFC 5545
-- [ ] "Add to Google Calendar" link per task
-- [ ] Download via fetch + blob, filename `toran-plan.ics`
-- [ ] No LLM call
+- [x] .ics with one all-day event per task and one timed event per function (UTC, converted from IST), stable UIDs
+- [x] User text escaped per RFC 5545
+- [x] "Add to Google Calendar" link per task
+- [x] Download via fetch + blob, filename `toran-plan.ics`
+- [x] No LLM call
 
-**Proof:** `pytest tests/unit/test_calendar.py tests/api/test_calendar.py` (escaping, stable UIDs, `text/calendar` attachment)
+**Proof:** `pytest tests/unit/test_calendar.py tests/api/test_calendar_api.py` (escaping, stable UIDs, `text/calendar` attachment)
 
 ## T20 Security middleware
 **Files:** `app/security.py`, `app/main.py`, `tests/api/test_security.py`

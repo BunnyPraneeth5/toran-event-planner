@@ -31,7 +31,7 @@ app/
     timeline.py      backward schedule, late and at-risk flags
     ledger.py        pledged, assigned, paid, gap per person
     adapt.py         apply a Change, compute impact, apply and verify option ops, rule-based options
-    calendar.py      .ics export, Google Calendar links
+    calendar.py      .ics export (Google Calendar links live in web/links.py)
     runsheet.py      STRETCH: ordering, owner clashes
   ai/
     client.py        async Gemini wrapper: overall deadline, retry on invalid output only, AIError, token logging
