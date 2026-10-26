@@ -180,3 +180,10 @@ Copy the template below for each session, newest first.
   - Starlette's TestClient warns that httpx is deprecated in favour of httpx2. Harmless for now; revisit before CI.
   - `model_copy(update=...)` skips validation, so engines must rebuild the Plan (which re-runs its validators) after changes.
 - Next: T06 Timeline engine.
+
+## Session 12
+- T16b done: add people, change pledges, remove people (payers and task owners cleared, notice with count), one payer, equal split or percent split per line. Engine only, POST /api/people.
+- T16c done: mark lines planned, booked or paid with actual cost; locks and task status follow; over-plan text counts towards the overrun. POST /api/lines.
+- T16d done: contents panel (left rail on desktop, status bar on phones) with live statuses, overview with countdown, budget bar and action list, timeline and ideas folded, function time ranges, one-level undo, saved status, home hands new plans to /plan, live lakh display.
+- Checks: ruff, mypy and 536 tests green; browser checked at 375px and desktop. Committed locally, not pushed.
+- Next: T16e theme, then stop for review before pushing.
