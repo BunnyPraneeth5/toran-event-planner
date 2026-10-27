@@ -1,7 +1,7 @@
 # PROGRESS: Toran
 
 ## Status
-- Current task: T16e Indian visual theme, then T22; T18a video script is yours
+- Current task: review of T16b to T16e, then push; next T22. T18a video script is yours
 - Last green commit: T20 Security middleware
 - Last submission tag:
 - Repo: https://github.com/BunnyPraneeth5/toran-event-planner (public, CI on every push)
@@ -185,5 +185,6 @@ Copy the template below for each session, newest first.
 - T16b done: add people, change pledges, remove people (payers and task owners cleared, notice with count), one payer, equal split or percent split per line. Engine only, POST /api/people.
 - T16c done: mark lines planned, booked or paid with actual cost; locks and task status follow; over-plan text counts towards the overrun. POST /api/lines.
 - T16d done: contents panel (left rail on desktop, status bar on phones) with live statuses, overview with countdown, budget bar and action list, timeline and ideas folded, function time ranges, one-level undo, saved status, home hands new plans to /plan, live lakh display.
-- Checks: ruff, mypy and 536 tests green; browser checked at 375px and desktop. Committed locally, not pushed.
-- Next: T16e theme, then stop for review before pushing.
+- T16e done: occasion palette (sindoor, marigold, turmeric, mehendi, peacock) in light and dark with every text pair at WCAG AA, toran garland header, marigold favicon, rangoli card corners, paisley dividers, one icon per budget category, Rozha One headings. Hand-made SVGs total about 6.5 KB.
+- Checks: ruff, mypy and 596 tests green; browser checked at 375px and desktop in light and dark. Committed locally, not pushed.
+- Every task from T01 to T21 is done except T18a (video script, yours). Waiting for review before pushing; then T22.
