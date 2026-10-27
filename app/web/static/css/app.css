@@ -1,17 +1,25 @@
 /* Toran styles. Hand-written, mobile first, no inline styles anywhere (strict CSP). */
 
+/* Palette from the occasion: sindoor red (accent), marigold and turmeric (decoration only,
+   never text), mehendi green and peacock blue. tests/unit/test_theme.py checks every text and
+   background pair against WCAG AA. */
 :root {
-  --bg: #faf8f5;
+  --bg: #fbf6ec;
   --surface: #ffffff;
-  --text: #1f1a17;
-  --muted: #5c534d;
-  --border: #d9d1c9;
-  --accent: #8a2c0d;
+  --text: #24170e;
+  --muted: #5c4a3a;
+  --border: #e6d5bd;
+  --accent: #9c1c1c;
   --accent-text: #ffffff;
-  --focus: #1a5fb4;
-  --warn-bg: #fff4d6;
-  --warn-border: #a86b00;
+  --focus: #0d5f78;
+  --warn-bg: #fff0c7;
+  --warn-border: #9a6200;
   --needed: #a3260f;
+  --mehendi: #3f6418;
+  --peacock: #0d5f78;
+  --marigold: #e8910c;
+  --turmeric: #f2c230;
+  --heading-font: "Rozha One", Georgia, serif;
   --radius: 10px;
   --space: 1rem;
   color-scheme: light dark;
@@ -19,17 +27,21 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #171412;
-    --surface: #221e1b;
-    --text: #f3eee9;
-    --muted: #c4b9b0;
-    --border: #453d37;
-    --accent: #f09a6b;
-    --accent-text: #1a0f0a;
-    --focus: #8ab4f8;
-    --warn-bg: #3a2e12;
-    --warn-border: #e0a83a;
+    --bg: #17110c;
+    --surface: #221a13;
+    --text: #f7efe4;
+    --muted: #cfbea9;
+    --border: #4d3e30;
+    --accent: #ff9d7a;
+    --accent-text: #1d0c06;
+    --focus: #79cfe2;
+    --warn-bg: #3b2b0c;
+    --warn-border: #e3a93c;
     --needed: #ff9b85;
+    --mehendi: #a9cd7c;
+    --peacock: #79cfe2;
+    --marigold: #f6b23c;
+    --turmeric: #f2c230;
   }
 }
 
@@ -97,8 +109,7 @@ main:focus {
 
 .brand {
   margin: 0;
-  font-size: 1.35rem;
-  font-weight: 700;
+  font-size: 1.6rem;
 }
 
 .brand a {
@@ -113,6 +124,15 @@ main:focus {
 main.wrap {
   padding-top: 1.5rem;
   padding-bottom: 2rem;
+}
+
+h1,
+h2,
+h3,
+.brand {
+  font-family: var(--heading-font);
+  font-weight: 400;
+  letter-spacing: 0.01em;
 }
 
 h1 {
@@ -132,7 +152,8 @@ h3 {
 }
 
 .card {
-  background: var(--surface);
+  position: relative;
+  background: var(--surface) url("/static/img/rangoli-corner.svg") no-repeat top right / 4rem 4rem;
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 1.25rem var(--space);
@@ -372,7 +393,7 @@ meter {
 }
 
 .status-done {
-  color: var(--muted);
+  color: var(--mehendi);
 }
 
 .saved-plan {
@@ -687,7 +708,7 @@ output {
 }
 
 .bar-planned {
-  fill: var(--muted);
+  fill: var(--marigold);
 }
 
 .bar-booked {
@@ -728,4 +749,40 @@ output {
   cursor: pointer;
   color: var(--muted);
   min-height: 2rem;
+}
+
+/* Indian theme: toran across the header, paisley between sections, category icons */
+.toran {
+  height: 2.5rem;
+  background: url("/static/img/toran.svg") repeat-x left top / auto 100%;
+}
+
+.site-header {
+  border-bottom: none;
+}
+
+.plan-sections > .card + .card,
+main > .card:not([hidden]) + .card {
+  margin-top: 2.25rem;
+}
+
+.plan-sections > .card + .card::before,
+main > .card:not([hidden]) + .card::before {
+  content: "";
+  position: absolute;
+  top: -1.75rem;
+  left: 50%;
+  width: 7.5rem;
+  height: 1rem;
+  transform: translateX(-50%);
+  background: url("/static/img/paisley-divider.svg") no-repeat center / contain;
+}
+
+.icon {
+  width: 1.15em;
+  height: 1.15em;
+  margin-right: 0.4em;
+  vertical-align: -0.2em;
+  color: var(--accent);
+  flex: none;
 }

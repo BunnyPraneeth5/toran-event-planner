@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- A quarter rangoli for card corners; faint so it never competes with text. Drawn for Toran. -->
+  <g fill="none" stroke="#e8910c" stroke-opacity="0.45" stroke-width="1.5">
+    <circle cx="64" cy="0" r="14"/>
+    <circle cx="64" cy="0" r="26"/>
+    <circle cx="64" cy="0" r="40"/>
+    <path d="M64 26 Q52 26 46 14 Q52 6 64 14"/>
+    <path d="M38 0 Q38 12 50 18 Q58 12 50 0"/>
+    <path d="M24 0 Q26 22 44 34 Q58 40 64 40"/>
+  </g>
+  <g fill="#9c1c1c" fill-opacity="0.35">
+    <circle cx="50" cy="26" r="2"/>
+    <circle cx="38" cy="14" r="2"/>
+    <circle cx="30" cy="30" r="2"/>
+  </g>
+</svg>

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- A marigold, matching the header toran. Drawn for Toran. -->
+  <g transform="translate(16 16)" fill="#e8910c">
+    <circle r="15"/>
+  </g>
+  <g transform="translate(16 16)" fill="#f2a72e">
+    <circle cx="0" cy="-8" r="5"/>
+    <circle cx="7" cy="-4" r="5"/>
+    <circle cx="7" cy="4" r="5"/>
+    <circle cx="0" cy="8" r="5"/>
+    <circle cx="-7" cy="4" r="5"/>
+    <circle cx="-7" cy="-4" r="5"/>
+  </g>
+  <circle cx="16" cy="16" r="6" fill="#f6c044"/>
+  <circle cx="16" cy="16" r="2.5" fill="#9c1c1c"/>
+</svg>

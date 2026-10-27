@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 16" width="120" height="16">
+  <!-- Two paisleys facing a dot, for the space between sections. Drawn for Toran. -->
+  <path d="M0 8 H34 M86 8 H120" stroke="#e8910c" stroke-opacity="0.6" stroke-width="1"/>
+  <path d="M52 8 C52 3 46 1 42 3 C37 6 38 13 44 13 C49 13 50 9 47 8 C45 7 43 9 44 10" fill="none" stroke="#9c1c1c" stroke-opacity="0.7" stroke-width="1.4"/>
+  <path d="M68 8 C68 3 74 1 78 3 C83 6 82 13 76 13 C71 13 70 9 73 8 C75 7 77 9 76 10" fill="none" stroke="#9c1c1c" stroke-opacity="0.7" stroke-width="1.4"/>
+  <circle cx="60" cy="8" r="2.4" fill="#e8910c"/>
+</svg>

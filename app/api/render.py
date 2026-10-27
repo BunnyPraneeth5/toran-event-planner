@@ -18,7 +18,7 @@ from app.web.formatting import (
     format_short,
     format_time_range,
 )
-from app.web.links import google_calendar_url
+from app.web.links import category_icon, google_calendar_url
 
 TEMPLATES = Jinja2Templates(directory=Path(__file__).parents[1] / "web" / "templates")
 TEMPLATES.env.filters["inr"] = format_inr
@@ -27,6 +27,7 @@ TEMPLATES.env.filters["nice_date"] = format_date
 TEMPLATES.env.filters["nice_datetime"] = format_datetime
 TEMPLATES.env.filters["time_range"] = format_time_range
 TEMPLATES.env.globals["google_calendar_url"] = google_calendar_url
+TEMPLATES.env.globals["category_icon"] = category_icon
 
 
 def wants_html(request: Request) -> bool:

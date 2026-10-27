@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 40" width="96" height="40">
+  <!-- One repeat of the toran: a cord with a mango leaf and a hanging marigold. Drawn for Toran. -->
+  <path d="M0 4 Q24 10 48 4 T96 4" fill="none" stroke="#9c1c1c" stroke-width="2"/>
+  <path d="M24 7 C17 14 18 24 24 30 C30 24 31 14 24 7 Z" fill="#3f6418"/>
+  <path d="M24 9 L24 28" stroke="#a9cd7c" stroke-width="1"/>
+  <path d="M72 5 L72 18" stroke="#9c1c1c" stroke-width="1.5"/>
+  <g transform="translate(72 26)">
+    <circle r="9" fill="#e8910c"/>
+    <circle r="6.5" fill="#f2a72e"/>
+    <circle r="4" fill="#f6c044"/>
+    <circle r="1.8" fill="#9c1c1c"/>
+  </g>
+  <circle cx="48" cy="5" r="2.2" fill="#f2c230"/>
+  <circle cx="0" cy="4" r="2.2" fill="#f2c230"/>
+  <circle cx="96" cy="4" r="2.2" fill="#f2c230"/>
+</svg>

@@ -23,7 +23,7 @@
         {% for row in budget.by_category %}
         {% set share = (row.planned * 100 // total) if total else 0 %}
         <tr>
-          <th scope="row">{{ row.label }}</th>
+          <th scope="row"><svg class="icon" aria-hidden="true" focusable="false"><use href="{{ category_icon(row.category) }}"></use></svg>{{ row.label }}</th>
           <td>{{ row.planned | inr }}</td>
           <td><meter min="0" max="{{ total }}" value="{{ row.planned }}" aria-label="{{ row.label }}: {{ share }} percent of the budget">{{ share }}%</meter> {{ share }}%</td>
           <td>{{ row.locked | inr }}</td>

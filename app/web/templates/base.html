@@ -8,8 +8,9 @@
   <meta name="htmx-config" content='{"includeIndicatorStyles": false, "allowEval": false, "allowScriptTags": false, "selfRequestsOnly": true}'>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700&amp;display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700&amp;family=Rozha+One&amp;display=swap">
   <link rel="stylesheet" href="/static/css/app.css">
+  <link rel="icon" href="/static/img/favicon.svg" type="image/svg+xml">
   <script src="/static/vendor/htmx.min.js" defer></script>
   <script src="/static/js/state.js" defer></script>
   <script src="/static/js/app.js" defer></script>
@@ -25,6 +26,7 @@
       <p class="brand"><a href="/">Toran</a></p>
       <p class="tagline">An event planner</p>
     </div>
+    <div class="toran" aria-hidden="true"></div>
   </header>
   <main id="main" class="wrap{% block main_class %}{% endblock %}" tabindex="-1">
     <div id="live" class="live" role="status" aria-live="polite"></div>

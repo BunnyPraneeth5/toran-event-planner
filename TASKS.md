@@ -24,7 +24,7 @@ Work top to bottom. One task per session. Tick a task only when its proof test p
 - [x] T16b People and payers
 - [x] T16c Bookings and actual costs
 - [x] T16d Navigation, overview and small usability details
-- [ ] T16e Indian visual theme
+- [x] T16e Indian visual theme
 - [x] T17 What-if slider
 - [x] T18 Something changed UI
 - [ ] T18a Video script (checkpoint, owner: you)
@@ -338,13 +338,13 @@ Make Toran look like an Indian celebration planner without hurting speed, contra
 **Files:** `app/web/static/css/app.css`, `app/web/static/img/` (hand-made SVGs), `app/web/templates/base.html`, `app/web/templates/partials/*.html`, `tests/unit/test_theme.py`
 
 **Acceptance**
-- [ ] Palette from the occasion (marigold, turmeric, sindoor red, mehendi green, peacock blue) as CSS tokens, in light and dark mode
-- [ ] Every text and background token pair meets WCAG AA contrast (4.5:1 for body text, 3:1 for large text and focus outlines)
-- [ ] A toran (marigold and mango-leaf garland) SVG across the header; a matching favicon
-- [ ] Light motifs: rangoli or mandala corner on cards, a paisley divider between sections, and one small SVG icon per budget category (no emoji)
-- [ ] One display font for headings from Google Fonts with a Devanagari-capable family, `display=swap`; body text stays Noto Sans
-- [ ] All SVGs drawn for this project (no third-party art), decorative ones `aria-hidden`, total added weight under 30 KB
-- [ ] No inline `style` attributes, no animation when reduced motion is requested; still no horizontal scroll at 390px
+- [x] Palette from the occasion (marigold, turmeric, sindoor red, mehendi green, peacock blue) as CSS tokens, in light and dark mode
+- [x] Every text and background token pair meets WCAG AA contrast (4.5:1 for body text, 3:1 for large text and focus outlines)
+- [x] A toran (marigold and mango-leaf garland) SVG across the header; a matching favicon
+- [x] Light motifs: rangoli or mandala corner on cards, a paisley divider between sections, and one small SVG icon per budget category (no emoji)
+- [x] One display font for headings from Google Fonts with a Devanagari-capable family, `display=swap`; body text stays Noto Sans
+- [x] All SVGs drawn for this project (no third-party art), decorative ones `aria-hidden`, total added weight under 30 KB
+- [x] No inline `style` attributes, no animation when reduced motion is requested; still no horizontal scroll at 390px
 
 **Proof:** `pytest tests/unit/test_theme.py` (contrast ratio of every token pair from app.css, SVG files exist and are under the size budget, no `style=` in SVGs or templates) and screenshots at 390px and desktop in light and dark mode
 
