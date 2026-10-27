@@ -33,9 +33,9 @@ Work top to bottom. One task per session. Tick a task only when its proof test p
 - [x] T21 CI
 - [x] T22 E2E and accessibility tests
 - [x] T23 Live evals
-- [ ] T24 README
-- [ ] T25 PROBLEM_ALIGNMENT.md
-- [ ] T26 SECURITY.md
+- [x] T24 README
+- [x] T25 PROBLEM_ALIGNMENT.md
+- [x] T26 SECURITY.md
 - [ ] T27 Production release on Vercel
 - [ ] S01 STRETCH: Replacement vendor discovery (Maps grounding)
 - [ ] S02 STRETCH: Day-of run sheet
@@ -442,11 +442,11 @@ No Docker image is needed on Vercel, so the Docker build step was dropped.
 **Files:** `README.md`
 
 **Acceptance**
-- [ ] Problem, persona and what Toran does
-- [ ] Architecture diagram (Mermaid) and the core rule
-- [ ] Where Gemini is used, with file links
-- [ ] How to run locally, run tests, run evals; env vars
-- [ ] Security and accessibility summaries linking to docs
+- [x] Problem, persona and what Toran does
+- [x] Architecture diagram (Mermaid) and the core rule
+- [x] Where Gemini is used, with file links
+- [x] How to run locally, run tests, run evals; env vars
+- [x] Security and accessibility summaries linking to docs
 
 **Proof (manual):** fresh clone, follow the README, app runs and tests pass
 
@@ -454,8 +454,8 @@ No Docker image is needed on Vercel, so the Docker build step was dropped.
 **Files:** `docs/PROBLEM_ALIGNMENT.md`
 
 **Acceptance**
-- [ ] Each problem statement point mapped to a feature, a file and a test: budget, guest and timeline constraints; adapting to budget cuts and vendor cancellations; asking questions; tradeoffs
-- [ ] Explains "Gemini proposes, engines verify" with one worked example
+- [x] Each problem statement point mapped to a feature, a file and a test: budget, guest and timeline constraints; adapting to budget cuts and vendor cancellations; asking questions; tradeoffs
+- [x] Explains "Gemini proposes, engines verify" with one worked example
 
 **Proof (manual):** every linked file and test exists
 
@@ -463,10 +463,10 @@ No Docker image is needed on Vercel, so the Docker build step was dropped.
 **Files:** `docs/SECURITY.md`
 
 **Acceptance**
-- [ ] Threat model, input limits, prompt injection handling, CSP, rate limiting, secrets handling
-- [ ] No PII at rest; AI Studio data handling
-- [ ] Why CSRF and CORS do not apply
-- [ ] Dependency scanning
+- [x] Threat model, input limits, prompt injection handling, CSP, rate limiting, secrets handling
+- [x] No PII at rest; AI Studio data handling
+- [x] Why CSRF and CORS do not apply
+- [x] Dependency scanning
 
 **Proof (manual):** every control listed points to a test in `tests/api/test_security.py` or a named file
 

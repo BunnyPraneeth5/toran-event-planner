@@ -9,7 +9,7 @@
 | Frontend | Jinja2 templates + HTMX 2.0.11 (vendored) + small vanilla JS (including a `toran-json` htmx extension that sends typed, nested JSON) + hand-written CSS | No build step, tiny bundle, easy accessibility, one deploy. HTMX swaps partials for the what-if slider and adapt options. |
 | State | Stateless server. Plan lives in browser localStorage with `schema_version`, export/import as JSON | No DB to secure, no PII stored server-side, nothing lost on redeploys. |
 | Calendar | .ics file + "Add to Google Calendar" link | Free, no OAuth. |
-| Fonts | Google Fonts: Noto Sans (`display=swap`). Noto Sans Telugu and Devanagari load only with the translation stretch. | Small payload by default. |
+| Fonts | Google Fonts: Noto Sans for text and Rozha One (Devanagari-capable) for headings, both `display=swap`. Noto Sans Telugu loads only with the translation stretch. | Small payload by default. |
 | Hosting | Vercel (Hobby plan), FastAPI preset, Mumbai region (`bom1`) | Free with no card, wakes in well under a second, deploys from GitHub on every push to `main`. A request may run up to 300 seconds; our AI deadline is 25. Serverless, so several instances may run at once. |
 | Quality | ruff (incl. bandit S rules), mypy, pytest, pytest-cov, httpx, pip-audit, Playwright + axe-core | Covers code quality, security, testing, accessibility signals. |
 | CI | GitHub Actions: lint, type check, tests with coverage floor, pip-audit, e2e smoke | Visible proof for the grader. |
@@ -29,7 +29,8 @@ app/
     sanitize.py      clamp ranges, normalize weights, map unknown categories, drop out-of-range functions
     budget.py        allocate (largest remainder), what_if, overrun flags, respects locked items
     timeline.py      backward schedule, late and at-risk flags
-    ledger.py        pledged, assigned, paid, gap per person
+    ledger.py        pledged, assigned, paid, gap per person; add, change and remove people; assign payers
+    lines.py         mark lines planned, booked or paid with actual cost; tasks follow
     adapt.py         apply a Change, compute impact, apply and verify option ops, rule-based options
     calendar.py      .ics export (Google Calendar links live in web/links.py)
     runsheet.py      STRETCH: ordering, owner clashes
@@ -38,10 +39,10 @@ app/
     prompts.py       system instructions and templates; every user-sourced field fenced as data
     schemas.py       flat response models for structured output, separate from domain models
     service.py       intake, generate, adapt_options; STRETCH vendors, translate, ideas
-  api/               routers: pages, plan, budget, adapt, calendar, health
+  api/               routers: pages, plan, budget, adapt, people, lines, calendar, health
   data/              reference JSON: categories (weights, per-plate price ranges by city type and tier), lead_times, function_templates, city_tiers + loader
   web/templates/     Jinja2 pages + HTMX partials
-  web/static/        css, js, vendor (htmx, json-enc)
+  web/static/        css, js, img (hand-drawn SVGs), vendor (htmx)
 tests/unit  tests/api  tests/fixtures  tests/evals  e2e/
 docs/PROBLEM_ALIGNMENT.md  docs/SECURITY.md
 ```
@@ -90,6 +91,8 @@ All money is `int` rupees (strict, never float), formatted as lakh/crore only at
 | POST | /api/budget/whatif | no | plan + changes to rebalanced plan |
 | POST | /api/adapt/options | yes | plan + change to impact + verified options |
 | POST | /api/adapt/apply | no | plan + change + chosen option to new plan |
+| POST | /api/people | no | plan + one people or payer change to new plan |
+| POST | /api/lines | no | plan + one booking change (status, actual cost) to new plan |
 | POST | /api/calendar/ics | no | plan to .ics file |
 | GET | /healthz | no | health check, AI configured flag |
 | POST | /api/ai/vendors | yes | STRETCH: Maps grounding replacement vendors |
