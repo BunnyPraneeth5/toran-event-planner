@@ -1,7 +1,7 @@
 # PROGRESS: Toran
 
 ## Status
-- Current task: review of T16b to T16e, then push; next T22. T18a video script is yours
+- Current task: review of T22, then push; next T23. T18a video script is yours
 - Last green commit: T20 Security middleware
 - Last submission tag:
 - Repo: https://github.com/BunnyPraneeth5/toran-event-planner (public, CI on every push)
@@ -188,3 +188,6 @@ Copy the template below for each session, newest first.
 - T16e done: occasion palette (sindoor, marigold, turmeric, mehendi, peacock) in light and dark with every text pair at WCAG AA, toran garland header, marigold favicon, rangoli card corners, paisley dividers, one icon per budget category, Rozha One headings. Hand-made SVGs total about 6.5 KB.
 - Checks: ruff, mypy and 596 tests green; browser checked at 375px and desktop in light and dark. Committed locally, not pushed.
 - Every task from T01 to T21 is done except T18a (video script, yours). Waiting for review before pushing; then T22.
+- T22 done: `pytest e2e` runs the real app in-process with a schema-routed fake Gemini. One flow at 390px and desktop (intake, questions, plan on /plan, what-if, budget cut, pick option, export, reload), a keyboard-only path through intake and adapt, axe scans on intake, brief, dashboard and adapt views, and a console-error check. New e2e CI job installs Playwright's Chromium; locally E2E_BROWSER_CHANNEL=chrome uses the installed browser.
+- axe found a real issue: the scrollable tables could not be reached by keyboard on phones. They are now focusable, labelled regions.
+- Committed locally, not pushed. Waiting for review.
