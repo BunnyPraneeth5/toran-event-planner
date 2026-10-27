@@ -24,6 +24,7 @@ select = ["E", "W", "F", "I", "B", "UP", "S", "N", "SIM", "C4", "PT", "RUF"]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = ["S101", "S105", "S106", "S311"]
+"e2e/**" = ["S101"]
 
 [tool.mypy]
 python_version = "3.12"

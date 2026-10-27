@@ -31,7 +31,7 @@ Work top to bottom. One task per session. Tick a task only when its proof test p
 - [x] T19 Calendar export
 - [x] T20 Security middleware
 - [x] T21 CI
-- [ ] T22 E2E and accessibility tests
+- [x] T22 E2E and accessibility tests
 - [ ] T23 Live evals
 - [ ] T24 README
 - [ ] T25 PROBLEM_ALIGNMENT.md
@@ -418,12 +418,12 @@ No Docker image is needed on Vercel, so the Docker build step was dropped.
 **Files:** `e2e/conftest.py`, `e2e/test_smoke.py`, `e2e/axe.min.js`, `.github/workflows/ci.yml`
 
 **Acceptance**
-- [ ] App served in-process with the fake client via dependency override
-- [ ] One flow at 390px and desktop: intake, questions, plan, what-if, budget cut, pick option, export
-- [ ] Plan survives a page reload
-- [ ] axe scan on intake, dashboard and adapt views: no serious or critical violations
-- [ ] Keyboard-only path through intake and adapt
-- [ ] e2e job added to CI
+- [x] App served in-process with the fake client via dependency override
+- [x] One flow at 390px and desktop: intake, questions, plan, what-if, budget cut, pick option, export
+- [x] Plan survives a page reload
+- [x] axe scan on intake, dashboard and adapt views: no serious or critical violations
+- [x] Keyboard-only path through intake and adapt
+- [x] e2e job added to CI
 
 **Proof:** `pytest e2e` green locally and in CI
 
