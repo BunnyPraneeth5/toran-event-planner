@@ -1,7 +1,7 @@
 # PROGRESS: Toran
 
 ## Status
-- Current task: review of T22, then push; next T23. T18a video script is yours
+- Current task: review of T23, then push; next T24. T18a video script is yours
 - Last green commit: T20 Security middleware
 - Last submission tag:
 - Repo: https://github.com/BunnyPraneeth5/toran-event-planner (public, CI on every push)
@@ -190,4 +190,9 @@ Copy the template below for each session, newest first.
 - Every task from T01 to T21 is done except T18a (video script, yours). Waiting for review before pushing; then T22.
 - T22 done: `pytest e2e` runs the real app in-process with a schema-routed fake Gemini. One flow at 390px and desktop (intake, questions, plan on /plan, what-if, budget cut, pick option, export, reload), a keyboard-only path through intake and adapt, axe scans on intake, brief, dashboard and adapt views, and a console-error check. New e2e CI job installs Playwright's Chromium; locally E2E_BROWSER_CHANNEL=chrome uses the installed browser.
 - axe found a real issue: the scrollable tables could not be reached by keyboard on phones. They are now focusable, labelled regions.
+- Committed locally, not pushed. Waiting for review.
+- Pushed T22; CI green on both jobs (checks and e2e). Live site on the new deploy.
+- T23 done: `python -m tests.evals.run_evals` runs six briefs (Telugu wedding, North Indian wedding, Hinglish, 5th birthday, society Ganesh, wedding three weeks away) through intake, generate and adapt on live Gemini. Checks schema, engine invariants and that every option re-applies within the cut budget; records model, latency and error per call. Not collected by pytest, not in CI. Result: 6 of 6 passed, twice.
+- `--save` stored the live responses in tests/fixtures/ai/evals; tests/unit/test_eval_fixtures.py replays them offline (19 tests).
+- Finding: on the free tier the Flash models (gemini-3.8-flash, gemini-3.6-flash) mostly returned 503 (overloaded) or 429 (quota); the fallback chain served almost every generate and adapt call from gemini-3.5-flash-lite.
 - Committed locally, not pushed. Waiting for review.

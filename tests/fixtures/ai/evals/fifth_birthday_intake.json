@@ -1,0 +1,22 @@
+{
+  "today": "2026-10-27",
+  "text": "My son's 5th birthday party in Pune on 14 March 2027. 40 kids and 30 adults, budget 60,000 rupees, jungle theme, cake and a magician.",
+  "response": {
+    "is_event": true,
+    "reason": "The message is about planning a son's 5th birthday party.",
+    "event_type": "birthday",
+    "title": "Son's 5th birthday party",
+    "city": "Pune",
+    "guests": 70,
+    "budget_amount": 60000.0,
+    "budget_unit": "rupees",
+    "year": 2027,
+    "month": 3,
+    "day": 14,
+    "style_notes": "Jungle theme, cake and a magician",
+    "questions": [
+      "What time should the party start?",
+      "Do you have any dietary restrictions for the food?"
+    ]
+  }
+}

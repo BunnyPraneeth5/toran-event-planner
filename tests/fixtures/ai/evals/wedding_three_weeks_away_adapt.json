@@ -1,0 +1,559 @@
+{
+  "today": "2026-10-27",
+  "plan": {
+    "schema_version": 1,
+    "event": {
+      "id": "ea3665ae9e16",
+      "type": "wedding",
+      "title": "Cousin's wedding",
+      "city": "Indore",
+      "start_date": "2026-11-17",
+      "end_date": "2026-11-19",
+      "guests": 250,
+      "total_budget": 1200000,
+      "language": "en",
+      "style_notes": ""
+    },
+    "functions": [
+      {
+        "id": "a1dcb4627a70",
+        "name": "Haldi",
+        "start": "2026-11-17T10:00:00+05:30",
+        "duration_minutes": 150,
+        "guests": 75,
+        "guests_override": false,
+        "tier": "budget"
+      },
+      {
+        "id": "3f81dc352852",
+        "name": "Mehendi",
+        "start": "2026-11-17T16:00:00+05:30",
+        "duration_minutes": 240,
+        "guests": 100,
+        "guests_override": false,
+        "tier": "standard"
+      },
+      {
+        "id": "c78be9ce9ea3",
+        "name": "Sangeet",
+        "start": "2026-11-18T19:00:00+05:30",
+        "duration_minutes": 240,
+        "guests": 150,
+        "guests_override": false,
+        "tier": "standard"
+      },
+      {
+        "id": "cdac7da5ab85",
+        "name": "Wedding",
+        "start": "2026-11-19T20:00:00+05:30",
+        "duration_minutes": 300,
+        "guests": 250,
+        "guests_override": false,
+        "tier": "premium"
+      }
+    ],
+    "line_items": [
+      {
+        "id": "dcee812c57d7",
+        "function_id": "a1dcb4627a70",
+        "category": "venue",
+        "planned": 39070,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "c31396b4144a",
+        "function_id": "3f81dc352852",
+        "category": "venue",
+        "planned": 55814,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "4a3c63c0eedc",
+        "function_id": "c78be9ce9ea3",
+        "category": "venue",
+        "planned": 55814,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "3a2d35240613",
+        "function_id": "cdac7da5ab85",
+        "category": "venue",
+        "planned": 89302,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "851e723501ff",
+        "function_id": "a1dcb4627a70",
+        "category": "catering",
+        "planned": 31388,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "6421a1cef471",
+        "function_id": "3f81dc352852",
+        "category": "catering",
+        "planned": 59786,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "2b94b5fb25e6",
+        "function_id": "c78be9ce9ea3",
+        "category": "catering",
+        "planned": 89680,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "c2f8df6d00f2",
+        "function_id": "cdac7da5ab85",
+        "category": "catering",
+        "planned": 239146,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "8862d715e91f",
+        "function_id": "a1dcb4627a70",
+        "category": "decor",
+        "planned": 29302,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "6cfb7c463331",
+        "function_id": "3f81dc352852",
+        "category": "decor",
+        "planned": 41861,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "b35b565fa12a",
+        "function_id": "c78be9ce9ea3",
+        "category": "decor",
+        "planned": 41860,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "c9d85b659d09",
+        "function_id": "cdac7da5ab85",
+        "category": "decor",
+        "planned": 66977,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "561791e4c6d2",
+        "function_id": "a1dcb4627a70",
+        "category": "music_entertainment",
+        "planned": 24000,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "91c0672d2d1c",
+        "function_id": "3f81dc352852",
+        "category": "music_entertainment",
+        "planned": 24000,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "6f76b0577924",
+        "function_id": "c78be9ce9ea3",
+        "category": "music_entertainment",
+        "planned": 24000,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "e418fda00ac4",
+        "function_id": "cdac7da5ab85",
+        "category": "music_entertainment",
+        "planned": 24000,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "c5c0f18e3877",
+        "function_id": null,
+        "category": "photo_video",
+        "planned": 120000,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "e8ceebeeda92",
+        "function_id": null,
+        "category": "attire",
+        "planned": 60000,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "5283254a0554",
+        "function_id": null,
+        "category": "mehendi_makeup",
+        "planned": 24000,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "ca892da5c54f",
+        "function_id": null,
+        "category": "priest_rituals",
+        "planned": 24000,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "641c21864a92",
+        "function_id": null,
+        "category": "invitations_gifts",
+        "planned": 36000,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      }
+    ],
+    "tasks": [
+      {
+        "id": "f0244fd9d643",
+        "title": "Book DJ, band or performers: Haldi",
+        "function_id": "a1dcb4627a70",
+        "category": "music_entertainment",
+        "due_date": "2026-10-27",
+        "lead_days": 60,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "117b1791e91a",
+        "title": "Book DJ, band or performers: Mehendi",
+        "function_id": "3f81dc352852",
+        "category": "music_entertainment",
+        "due_date": "2026-10-27",
+        "lead_days": 60,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "eecfbbf21166",
+        "title": "Book DJ, band or performers: Sangeet",
+        "function_id": "c78be9ce9ea3",
+        "category": "music_entertainment",
+        "due_date": "2026-10-27",
+        "lead_days": 60,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "37d504a3f4b4",
+        "title": "Book DJ, band or performers: Wedding",
+        "function_id": "cdac7da5ab85",
+        "category": "music_entertainment",
+        "due_date": "2026-10-27",
+        "lead_days": 60,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "e0eab09d0f20",
+        "title": "Book mehendi artist and makeup",
+        "function_id": null,
+        "category": "mehendi_makeup",
+        "due_date": "2026-10-27",
+        "lead_days": 90,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "7ece6df1245e",
+        "title": "Book photographer and videographer",
+        "function_id": null,
+        "category": "photo_video",
+        "due_date": "2026-10-27",
+        "lead_days": 120,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "1155d2824c0f",
+        "title": "Book the decorator: Haldi",
+        "function_id": "a1dcb4627a70",
+        "category": "decor",
+        "due_date": "2026-10-27",
+        "lead_days": 60,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "1144d7daa47a",
+        "title": "Book the decorator: Mehendi",
+        "function_id": "3f81dc352852",
+        "category": "decor",
+        "due_date": "2026-10-27",
+        "lead_days": 60,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "81383e36a733",
+        "title": "Book the decorator: Sangeet",
+        "function_id": "c78be9ce9ea3",
+        "category": "decor",
+        "due_date": "2026-10-27",
+        "lead_days": 60,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "9d761d6ee2ad",
+        "title": "Book the decorator: Wedding",
+        "function_id": "cdac7da5ab85",
+        "category": "decor",
+        "due_date": "2026-10-27",
+        "lead_days": 60,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "c0b04f5ada24",
+        "title": "Book the venue: Haldi",
+        "function_id": "a1dcb4627a70",
+        "category": "venue",
+        "due_date": "2026-10-27",
+        "lead_days": 180,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "054af6bf93b3",
+        "title": "Book the venue: Mehendi",
+        "function_id": "3f81dc352852",
+        "category": "venue",
+        "due_date": "2026-10-27",
+        "lead_days": 180,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "6bb905cce47b",
+        "title": "Book the venue: Sangeet",
+        "function_id": "c78be9ce9ea3",
+        "category": "venue",
+        "due_date": "2026-10-27",
+        "lead_days": 180,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "7709b0057039",
+        "title": "Book the venue: Wedding",
+        "function_id": "cdac7da5ab85",
+        "category": "venue",
+        "due_date": "2026-10-27",
+        "lead_days": 180,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "8d364c5abf6b",
+        "title": "Confirm priest and puja items",
+        "function_id": null,
+        "category": "priest_rituals",
+        "due_date": "2026-10-27",
+        "lead_days": 60,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "c179b8ad8654",
+        "title": "Finalise the caterer and menu: Haldi",
+        "function_id": "a1dcb4627a70",
+        "category": "catering",
+        "due_date": "2026-10-27",
+        "lead_days": 120,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "14e9fb1fcc42",
+        "title": "Finalise the caterer and menu: Mehendi",
+        "function_id": "3f81dc352852",
+        "category": "catering",
+        "due_date": "2026-10-27",
+        "lead_days": 120,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "e9d98f44f543",
+        "title": "Finalise the caterer and menu: Sangeet",
+        "function_id": "c78be9ce9ea3",
+        "category": "catering",
+        "due_date": "2026-10-27",
+        "lead_days": 120,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "8db1daa12b8f",
+        "title": "Finalise the caterer and menu: Wedding",
+        "function_id": "cdac7da5ab85",
+        "category": "catering",
+        "due_date": "2026-10-27",
+        "lead_days": 120,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "3358e14d0cf1",
+        "title": "Order outfits and jewellery",
+        "function_id": null,
+        "category": "attire",
+        "due_date": "2026-10-27",
+        "lead_days": 150,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "733784028691",
+        "title": "Print and send invitations",
+        "function_id": null,
+        "category": "invitations_gifts",
+        "due_date": "2026-10-27",
+        "lead_days": 45,
+        "status": "todo",
+        "owner_id": null
+      }
+    ],
+    "people": [],
+    "ideas": [
+      {
+        "id": "3fa5aab0f064",
+        "function_id": "a1dcb4627a70",
+        "text": "Use marigold flowers for simple and traditional backdrop decor",
+        "cost_band": "low"
+      },
+      {
+        "id": "1526091964c3",
+        "function_id": "3f81dc352852",
+        "text": "Arrange a local folk singer or dholak circle for lively music",
+        "cost_band": "mid"
+      },
+      {
+        "id": "677ef9af4a36",
+        "function_id": "c78be9ce9ea3",
+        "text": "Set up a custom stage backdrop with fairy lights for dance performances",
+        "cost_band": "mid"
+      },
+      {
+        "id": "a6502ef035d2",
+        "function_id": "cdac7da5ab85",
+        "text": "Provide traditional safas for the groom's procession and family",
+        "cost_band": "high"
+      }
+    ],
+    "sources": {
+      "brief": "ai",
+      "plan": "ai",
+      "options": "ai"
+    }
+  },
+  "new_total": 960000,
+  "response": {
+    "options": [
+      {
+        "rationale": "Downgrade the main wedding tier to standard to achieve substantial overall savings.",
+        "ops": [
+          {
+            "op": "change_tier",
+            "function_id": "cdac7da5ab85",
+            "guests": null,
+            "tier": "standard",
+            "category": null,
+            "percent": null,
+            "line_item_id": null
+          }
+        ]
+      },
+      {
+        "rationale": "Trim catering expenses uniformly across all functions to recover the required budget.",
+        "ops": [
+          {
+            "op": "scale_category",
+            "function_id": null,
+            "guests": null,
+            "tier": null,
+            "category": "catering",
+            "percent": -60,
+            "line_item_id": null
+          }
+        ]
+      },
+      {
+        "rationale": "Reduce guest attendance for the largest functions to lower both venue and catering costs.",
+        "ops": [
+          {
+            "op": "reduce_guests",
+            "function_id": "cdac7da5ab85",
+            "guests": 180,
+            "tier": null,
+            "category": null,
+            "percent": null,
+            "line_item_id": null
+          }
+        ]
+      }
+    ]
+  }
+}

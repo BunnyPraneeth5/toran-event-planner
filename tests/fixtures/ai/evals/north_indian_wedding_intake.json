@@ -1,0 +1,22 @@
+{
+  "today": "2026-10-27",
+  "text": "Daughter's wedding in Jaipur on 6 February 2027. About 450 guests, 35 lakh budget. Haldi, mehendi, sangeet with a DJ, the pheras and a reception.",
+  "response": {
+    "is_event": true,
+    "reason": "The message is about planning a daughter's wedding.",
+    "event_type": "wedding",
+    "title": "Daughter's wedding",
+    "city": "Jaipur",
+    "guests": 450,
+    "budget_amount": 35,
+    "budget_unit": "lakh",
+    "year": 2027,
+    "month": 2,
+    "day": 6,
+    "style_notes": "Haldi, mehendi, sangeet with a DJ, the pheras and a reception.",
+    "questions": [
+      "What are your food preferences for the functions?",
+      "Do you have specific decor themes in mind for the events?"
+    ]
+  }
+}

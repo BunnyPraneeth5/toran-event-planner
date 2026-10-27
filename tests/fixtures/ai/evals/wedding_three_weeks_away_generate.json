@@ -1,0 +1,108 @@
+{
+  "today": "2026-10-27",
+  "brief": {
+    "event_type": "wedding",
+    "title": "Cousin's wedding",
+    "city": "Indore",
+    "start_date": "2026-11-17",
+    "guests": 250,
+    "total_budget": 1200000,
+    "style_notes": ""
+  },
+  "response": {
+    "functions": [
+      {
+        "name": "Haldi",
+        "day_offset": 0,
+        "start_time": "10:00",
+        "duration_minutes": 150,
+        "guest_percent": 30,
+        "tier": "budget"
+      },
+      {
+        "name": "Mehendi",
+        "day_offset": 0,
+        "start_time": "16:00",
+        "duration_minutes": 240,
+        "guest_percent": 40,
+        "tier": "standard"
+      },
+      {
+        "name": "Sangeet",
+        "day_offset": 1,
+        "start_time": "19:00",
+        "duration_minutes": 240,
+        "guest_percent": 60,
+        "tier": "standard"
+      },
+      {
+        "name": "Wedding",
+        "day_offset": 2,
+        "start_time": "20:00",
+        "duration_minutes": 300,
+        "guest_percent": 100,
+        "tier": "premium"
+      }
+    ],
+    "weights": [
+      {
+        "category": "venue",
+        "weight": 20
+      },
+      {
+        "category": "catering",
+        "weight": 35
+      },
+      {
+        "category": "decor",
+        "weight": 15
+      },
+      {
+        "category": "music_entertainment",
+        "weight": 8
+      },
+      {
+        "category": "photo_video",
+        "weight": 10
+      },
+      {
+        "category": "attire",
+        "weight": 5
+      },
+      {
+        "category": "mehendi_makeup",
+        "weight": 2
+      },
+      {
+        "category": "priest_rituals",
+        "weight": 2
+      },
+      {
+        "category": "invitations_gifts",
+        "weight": 3
+      }
+    ],
+    "ideas": [
+      {
+        "function_name": "Haldi",
+        "text": "Use marigold flowers for simple and traditional backdrop decor",
+        "cost_band": "low"
+      },
+      {
+        "function_name": "Mehendi",
+        "text": "Arrange a local folk singer or dholak circle for lively music",
+        "cost_band": "mid"
+      },
+      {
+        "function_name": "Sangeet",
+        "text": "Set up a custom stage backdrop with fairy lights for dance performances",
+        "cost_band": "mid"
+      },
+      {
+        "function_name": "Wedding",
+        "text": "Provide traditional safas for the groom's procession and family",
+        "cost_band": "high"
+      }
+    ]
+  }
+}

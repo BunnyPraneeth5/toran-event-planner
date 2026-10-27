@@ -1,0 +1,727 @@
+{
+  "today": "2026-10-27",
+  "plan": {
+    "schema_version": 1,
+    "event": {
+      "id": "c7b4cb2175b3",
+      "type": "wedding",
+      "title": "Daughter's wedding",
+      "city": "Jaipur",
+      "start_date": "2027-02-06",
+      "end_date": "2027-02-09",
+      "guests": 450,
+      "total_budget": 3500000,
+      "language": "en",
+      "style_notes": "Haldi, mehendi, sangeet with a DJ, the pheras and a reception."
+    },
+    "functions": [
+      {
+        "id": "faae3292fbc2",
+        "name": "Haldi",
+        "start": "2027-02-06T10:00:00+05:30",
+        "duration_minutes": 150,
+        "guests": 135,
+        "guests_override": false,
+        "tier": "budget"
+      },
+      {
+        "id": "c674ff8b5dd8",
+        "name": "Mehendi",
+        "start": "2027-02-06T16:00:00+05:30",
+        "duration_minutes": 240,
+        "guests": 225,
+        "guests_override": false,
+        "tier": "standard"
+      },
+      {
+        "id": "ddde4082b425",
+        "name": "Sangeet",
+        "start": "2027-02-07T19:00:00+05:30",
+        "duration_minutes": 240,
+        "guests": 360,
+        "guests_override": false,
+        "tier": "standard"
+      },
+      {
+        "id": "4353b72bcdef",
+        "name": "Wedding",
+        "start": "2027-02-08T18:00:00+05:30",
+        "duration_minutes": 300,
+        "guests": 450,
+        "guests_override": false,
+        "tier": "premium"
+      },
+      {
+        "id": "7d3073bc6e8c",
+        "name": "Reception",
+        "start": "2027-02-09T19:30:00+05:30",
+        "duration_minutes": 240,
+        "guests": 450,
+        "guests_override": false,
+        "tier": "premium"
+      }
+    ],
+    "line_items": [
+      {
+        "id": "583c1a9564e9",
+        "function_id": "faae3292fbc2",
+        "category": "venue",
+        "planned": 83051,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "b954fb41558a",
+        "function_id": "c674ff8b5dd8",
+        "category": "venue",
+        "planned": 118644,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "dbe6e3616f08",
+        "function_id": "ddde4082b425",
+        "category": "venue",
+        "planned": 118644,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "4156e4f2486b",
+        "function_id": "4353b72bcdef",
+        "category": "venue",
+        "planned": 189831,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "c0a35a39eb0c",
+        "function_id": "7d3073bc6e8c",
+        "category": "venue",
+        "planned": 189830,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "45ef09b334b1",
+        "function_id": "faae3292fbc2",
+        "category": "catering",
+        "planned": 39013,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "73d9d857055d",
+        "function_id": "c674ff8b5dd8",
+        "category": "catering",
+        "planned": 92887,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "2a464f3457f0",
+        "function_id": "ddde4082b425",
+        "category": "catering",
+        "planned": 148620,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "409eec5496fe",
+        "function_id": "4353b72bcdef",
+        "category": "catering",
+        "planned": 297240,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "65d428d003a7",
+        "function_id": "7d3073bc6e8c",
+        "category": "catering",
+        "planned": 297240,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "960faafe811b",
+        "function_id": "faae3292fbc2",
+        "category": "decor",
+        "planned": 62288,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "c60f921070a2",
+        "function_id": "c674ff8b5dd8",
+        "category": "decor",
+        "planned": 88983,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "7c5ed9142115",
+        "function_id": "ddde4082b425",
+        "category": "decor",
+        "planned": 88983,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "692a196d0964",
+        "function_id": "4353b72bcdef",
+        "category": "decor",
+        "planned": 142373,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "1b1964963f80",
+        "function_id": "7d3073bc6e8c",
+        "category": "decor",
+        "planned": 142373,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "b27dd589f352",
+        "function_id": "faae3292fbc2",
+        "category": "music_entertainment",
+        "planned": 56000,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "8bb5090c56d1",
+        "function_id": "c674ff8b5dd8",
+        "category": "music_entertainment",
+        "planned": 56000,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "0857993f0c78",
+        "function_id": "ddde4082b425",
+        "category": "music_entertainment",
+        "planned": 56000,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "22aaffc53124",
+        "function_id": "4353b72bcdef",
+        "category": "music_entertainment",
+        "planned": 56000,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "03abd9d7126a",
+        "function_id": "7d3073bc6e8c",
+        "category": "music_entertainment",
+        "planned": 56000,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "eeb05c253006",
+        "function_id": null,
+        "category": "photo_video",
+        "planned": 280000,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "7c0b5c0562ac",
+        "function_id": null,
+        "category": "attire",
+        "planned": 280000,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "59801e79e67a",
+        "function_id": null,
+        "category": "mehendi_makeup",
+        "planned": 140000,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "c030c0999ce3",
+        "function_id": null,
+        "category": "priest_rituals",
+        "planned": 70000,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "470a9e33e609",
+        "function_id": null,
+        "category": "invitations_gifts",
+        "planned": 140000,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "21ea351be3e4",
+        "function_id": null,
+        "category": "travel_stay",
+        "planned": 140000,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "3d75ed8cb2f4",
+        "function_id": null,
+        "category": "other",
+        "planned": 70000,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      }
+    ],
+    "tasks": [
+      {
+        "id": "5df1a5533d49",
+        "title": "Book photographer and videographer",
+        "function_id": null,
+        "category": "photo_video",
+        "due_date": "2026-10-27",
+        "lead_days": 120,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "28088519d432",
+        "title": "Book the venue: Haldi",
+        "function_id": "faae3292fbc2",
+        "category": "venue",
+        "due_date": "2026-10-27",
+        "lead_days": 180,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "12a4f0db8a30",
+        "title": "Book the venue: Mehendi",
+        "function_id": "c674ff8b5dd8",
+        "category": "venue",
+        "due_date": "2026-10-27",
+        "lead_days": 180,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "d6e1e5f38637",
+        "title": "Book the venue: Reception",
+        "function_id": "7d3073bc6e8c",
+        "category": "venue",
+        "due_date": "2026-10-27",
+        "lead_days": 180,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "10d6ab2e0038",
+        "title": "Book the venue: Sangeet",
+        "function_id": "ddde4082b425",
+        "category": "venue",
+        "due_date": "2026-10-27",
+        "lead_days": 180,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "2b78fd9912b0",
+        "title": "Book the venue: Wedding",
+        "function_id": "4353b72bcdef",
+        "category": "venue",
+        "due_date": "2026-10-27",
+        "lead_days": 180,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "3253c17775c0",
+        "title": "Finalise the caterer and menu: Haldi",
+        "function_id": "faae3292fbc2",
+        "category": "catering",
+        "due_date": "2026-10-27",
+        "lead_days": 120,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "3e9f842f16eb",
+        "title": "Finalise the caterer and menu: Mehendi",
+        "function_id": "c674ff8b5dd8",
+        "category": "catering",
+        "due_date": "2026-10-27",
+        "lead_days": 120,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "aaaefbd9f64a",
+        "title": "Finalise the caterer and menu: Reception",
+        "function_id": "7d3073bc6e8c",
+        "category": "catering",
+        "due_date": "2026-10-27",
+        "lead_days": 120,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "0b510928859e",
+        "title": "Finalise the caterer and menu: Sangeet",
+        "function_id": "ddde4082b425",
+        "category": "catering",
+        "due_date": "2026-10-27",
+        "lead_days": 120,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "3b0e1be76d4e",
+        "title": "Finalise the caterer and menu: Wedding",
+        "function_id": "4353b72bcdef",
+        "category": "catering",
+        "due_date": "2026-10-27",
+        "lead_days": 120,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "137404fd85ab",
+        "title": "Order outfits and jewellery",
+        "function_id": null,
+        "category": "attire",
+        "due_date": "2026-10-27",
+        "lead_days": 150,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "4f2c8c5f49a5",
+        "title": "Book mehendi artist and makeup",
+        "function_id": null,
+        "category": "mehendi_makeup",
+        "due_date": "2026-11-08",
+        "lead_days": 90,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "e4a224c9b0f7",
+        "title": "Block rooms for outstation guests",
+        "function_id": null,
+        "category": "travel_stay",
+        "due_date": "2026-12-08",
+        "lead_days": 60,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "3ed4de7b581a",
+        "title": "Book DJ, band or performers: Haldi",
+        "function_id": "faae3292fbc2",
+        "category": "music_entertainment",
+        "due_date": "2026-12-08",
+        "lead_days": 60,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "d8bef6e44371",
+        "title": "Book DJ, band or performers: Mehendi",
+        "function_id": "c674ff8b5dd8",
+        "category": "music_entertainment",
+        "due_date": "2026-12-08",
+        "lead_days": 60,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "7a0c760a7826",
+        "title": "Book the decorator: Haldi",
+        "function_id": "faae3292fbc2",
+        "category": "decor",
+        "due_date": "2026-12-08",
+        "lead_days": 60,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "4cf22e7cefe3",
+        "title": "Book the decorator: Mehendi",
+        "function_id": "c674ff8b5dd8",
+        "category": "decor",
+        "due_date": "2026-12-08",
+        "lead_days": 60,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "526bc2110a72",
+        "title": "Confirm priest and puja items",
+        "function_id": null,
+        "category": "priest_rituals",
+        "due_date": "2026-12-08",
+        "lead_days": 60,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "38eb8887e200",
+        "title": "Book DJ, band or performers: Sangeet",
+        "function_id": "ddde4082b425",
+        "category": "music_entertainment",
+        "due_date": "2026-12-09",
+        "lead_days": 60,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "5ce51a26de61",
+        "title": "Book the decorator: Sangeet",
+        "function_id": "ddde4082b425",
+        "category": "decor",
+        "due_date": "2026-12-09",
+        "lead_days": 60,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "c0bc233e1711",
+        "title": "Book DJ, band or performers: Wedding",
+        "function_id": "4353b72bcdef",
+        "category": "music_entertainment",
+        "due_date": "2026-12-10",
+        "lead_days": 60,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "f9b90a17e6d7",
+        "title": "Book the decorator: Wedding",
+        "function_id": "4353b72bcdef",
+        "category": "decor",
+        "due_date": "2026-12-10",
+        "lead_days": 60,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "e37d4be72f6e",
+        "title": "Book DJ, band or performers: Reception",
+        "function_id": "7d3073bc6e8c",
+        "category": "music_entertainment",
+        "due_date": "2026-12-11",
+        "lead_days": 60,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "c17453ac3390",
+        "title": "Book the decorator: Reception",
+        "function_id": "7d3073bc6e8c",
+        "category": "decor",
+        "due_date": "2026-12-11",
+        "lead_days": 60,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "6df229a77c0f",
+        "title": "Print and send invitations",
+        "function_id": null,
+        "category": "invitations_gifts",
+        "due_date": "2026-12-23",
+        "lead_days": 45,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "17af4a3aee40",
+        "title": "Buy small items and set aside contingency",
+        "function_id": null,
+        "category": "other",
+        "due_date": "2027-01-23",
+        "lead_days": 14,
+        "status": "todo",
+        "owner_id": null
+      }
+    ],
+    "people": [],
+    "ideas": [
+      {
+        "id": "467808952823",
+        "function_id": "faae3292fbc2",
+        "text": "Use yellow marigold decor with organic turmeric paste and a flower petal bath shower.",
+        "cost_band": "low"
+      },
+      {
+        "id": "a2a083a9e15e",
+        "function_id": "faae3292fbc2",
+        "text": "Provide colorful Rajasthani bandhani dupattas and leheriya safas for guests.",
+        "cost_band": "mid"
+      },
+      {
+        "id": "9bff41f7c620",
+        "function_id": "c674ff8b5dd8",
+        "text": "Set up traditional bangle-making and lac artwork live stalls for guests.",
+        "cost_band": "mid"
+      },
+      {
+        "id": "90d70cb5c452",
+        "function_id": "ddde4082b425",
+        "text": "Set up a dynamic stage with LED screens, digital visuals, and a popular DJ for dance performances.",
+        "cost_band": "mid"
+      },
+      {
+        "id": "7107469139c6",
+        "function_id": "4353b72bcdef",
+        "text": "Arrange a royal entry with a traditional dhol procession and majestic mandap floral backdrop.",
+        "cost_band": "high"
+      },
+      {
+        "id": "92b308539e50",
+        "function_id": "7d3073bc6e8c",
+        "text": "Host a royal courtyard dinner featuring a live fusion band and illuminated palace-style decor.",
+        "cost_band": "high"
+      }
+    ],
+    "sources": {
+      "brief": "ai",
+      "plan": "ai",
+      "options": "ai"
+    }
+  },
+  "new_total": 2800000,
+  "response": {
+    "options": [
+      {
+        "rationale": "Downgrading the wedding and reception tiers lowers overall expenses significantly.",
+        "ops": [
+          {
+            "op": "change_tier",
+            "function_id": "4353b72bcdef",
+            "guests": null,
+            "tier": "standard",
+            "category": null,
+            "percent": null,
+            "line_item_id": null
+          },
+          {
+            "op": "change_tier",
+            "function_id": "7d3073bc6e8c",
+            "guests": null,
+            "tier": "standard",
+            "category": null,
+            "percent": null,
+            "line_item_id": null
+          }
+        ]
+      },
+      {
+        "rationale": "Scaling down catering expenses across the board achieves the required savings without altering tiers.",
+        "ops": [
+          {
+            "op": "scale_category",
+            "function_id": null,
+            "guests": null,
+            "tier": null,
+            "category": "catering",
+            "percent": -80,
+            "line_item_id": null
+          }
+        ]
+      },
+      {
+        "rationale": "Dropping high cost event-wide items successfully balances the revised financial plan.",
+        "ops": [
+          {
+            "op": "drop_item",
+            "function_id": null,
+            "guests": null,
+            "tier": null,
+            "category": null,
+            "percent": null,
+            "line_item_id": "eeb05c253006"
+          },
+          {
+            "op": "drop_item",
+            "function_id": null,
+            "guests": null,
+            "tier": null,
+            "category": null,
+            "percent": null,
+            "line_item_id": "7c0b5c0562ac"
+          },
+          {
+            "op": "drop_item",
+            "function_id": null,
+            "guests": null,
+            "tier": null,
+            "category": null,
+            "percent": null,
+            "line_item_id": "59801e79e67a"
+          }
+        ]
+      }
+    ]
+  }
+}

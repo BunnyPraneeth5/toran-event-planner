@@ -1,0 +1,23 @@
+{
+  "today": "2026-10-27",
+  "text": "Ganesh Chaturthi celebration for our housing society in Mumbai, September 2027, for about 500 residents. The committee has collected 3 lakh from members. Pandal, aarti, prasad and a cultural evening.",
+  "response": {
+    "is_event": true,
+    "reason": "Planning a Ganesh Chaturthi celebration for a housing society.",
+    "event_type": "community",
+    "title": "Ganesh Chaturthi celebration",
+    "city": "Mumbai",
+    "guests": 500,
+    "budget_amount": 3,
+    "budget_unit": "lakh",
+    "year": 2027,
+    "month": 9,
+    "day": null,
+    "style_notes": "Pandal, aarti, prasad and a cultural evening",
+    "questions": [
+      "What specific day in September 2027 will the celebration start?",
+      "Do you have any specific dietary requirements for the prasad?",
+      "What type of cultural performances are you planning for the evening?"
+    ]
+  }
+}

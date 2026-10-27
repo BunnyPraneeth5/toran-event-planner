@@ -1,0 +1,525 @@
+{
+  "today": "2026-10-27",
+  "plan": {
+    "schema_version": 1,
+    "event": {
+      "id": "7548a2274376",
+      "type": "wedding",
+      "title": "Brother's wedding",
+      "city": "Hyderabad",
+      "start_date": "2027-03-12",
+      "end_date": "2027-03-13",
+      "guests": 600,
+      "total_budget": 4000000,
+      "language": "en",
+      "style_notes": "Telugu wedding with pellikoduku, haldi, muhurtham, reception, and traditional banana leaf meals."
+    },
+    "functions": [
+      {
+        "id": "f54abb3f44a9",
+        "name": "Pellikoduku",
+        "start": "2027-03-12T10:00:00+05:30",
+        "duration_minutes": 180,
+        "guests": 180,
+        "guests_override": false,
+        "tier": "budget"
+      },
+      {
+        "id": "33a2965cbefb",
+        "name": "Haldi",
+        "start": "2027-03-12T15:00:00+05:30",
+        "duration_minutes": 120,
+        "guests": 240,
+        "guests_override": false,
+        "tier": "standard"
+      },
+      {
+        "id": "6ce6c86ab9cd",
+        "name": "Muhurtham",
+        "start": "2027-03-13T09:00:00+05:30",
+        "duration_minutes": 180,
+        "guests": 600,
+        "guests_override": false,
+        "tier": "standard"
+      },
+      {
+        "id": "b46ae76e9341",
+        "name": "Reception",
+        "start": "2027-03-13T19:00:00+05:30",
+        "duration_minutes": 240,
+        "guests": 600,
+        "guests_override": false,
+        "tier": "premium"
+      }
+    ],
+    "line_items": [
+      {
+        "id": "97167d064885",
+        "function_id": "f54abb3f44a9",
+        "category": "venue",
+        "planned": 130233,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "1a7c85cf1c9e",
+        "function_id": "33a2965cbefb",
+        "category": "venue",
+        "planned": 186047,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "9c99bf07bc41",
+        "function_id": "6ce6c86ab9cd",
+        "category": "venue",
+        "planned": 186046,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "29002ad59871",
+        "function_id": "b46ae76e9341",
+        "category": "venue",
+        "planned": 297674,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "939878567d72",
+        "function_id": "f54abb3f44a9",
+        "category": "catering",
+        "planned": 91589,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "88537c873d1e",
+        "function_id": "33a2965cbefb",
+        "category": "catering",
+        "planned": 174455,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "463e89b88bbc",
+        "function_id": "6ce6c86ab9cd",
+        "category": "catering",
+        "planned": 436137,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "99d59a31b163",
+        "function_id": "b46ae76e9341",
+        "category": "catering",
+        "planned": 697819,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "6f2a02f16105",
+        "function_id": "f54abb3f44a9",
+        "category": "decor",
+        "planned": 97674,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "3f38a9b844e4",
+        "function_id": "33a2965cbefb",
+        "category": "decor",
+        "planned": 139535,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "3a7e66af8949",
+        "function_id": "6ce6c86ab9cd",
+        "category": "decor",
+        "planned": 139535,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "b9bd3e8c2fc0",
+        "function_id": "b46ae76e9341",
+        "category": "decor",
+        "planned": 223256,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "4219b5e5e7ab",
+        "function_id": "f54abb3f44a9",
+        "category": "music_entertainment",
+        "planned": 50000,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "441f077ab2b4",
+        "function_id": "33a2965cbefb",
+        "category": "music_entertainment",
+        "planned": 50000,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "db1d52aa59b0",
+        "function_id": "6ce6c86ab9cd",
+        "category": "music_entertainment",
+        "planned": 50000,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "b297bad9fb9f",
+        "function_id": "b46ae76e9341",
+        "category": "music_entertainment",
+        "planned": 50000,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "d84aee3ad926",
+        "function_id": null,
+        "category": "photo_video",
+        "planned": 400000,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "943089dedc69",
+        "function_id": null,
+        "category": "attire",
+        "planned": 200000,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "f55b09bc6c39",
+        "function_id": null,
+        "category": "priest_rituals",
+        "planned": 200000,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "20db5aa230f8",
+        "function_id": null,
+        "category": "invitations_gifts",
+        "planned": 200000,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      }
+    ],
+    "tasks": [
+      {
+        "id": "dda8f92f36ab",
+        "title": "Book the venue: Haldi",
+        "function_id": "33a2965cbefb",
+        "category": "venue",
+        "due_date": "2026-10-27",
+        "lead_days": 180,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "708dc01faf4a",
+        "title": "Book the venue: Muhurtham",
+        "function_id": "6ce6c86ab9cd",
+        "category": "venue",
+        "due_date": "2026-10-27",
+        "lead_days": 180,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "519549dc2d8b",
+        "title": "Book the venue: Pellikoduku",
+        "function_id": "f54abb3f44a9",
+        "category": "venue",
+        "due_date": "2026-10-27",
+        "lead_days": 180,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "5c314f646460",
+        "title": "Book the venue: Reception",
+        "function_id": "b46ae76e9341",
+        "category": "venue",
+        "due_date": "2026-10-27",
+        "lead_days": 180,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "6530a7d74af4",
+        "title": "Order outfits and jewellery",
+        "function_id": null,
+        "category": "attire",
+        "due_date": "2026-10-27",
+        "lead_days": 150,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "3bd0d53e0af5",
+        "title": "Book photographer and videographer",
+        "function_id": null,
+        "category": "photo_video",
+        "due_date": "2026-11-12",
+        "lead_days": 120,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "0ce95a862c7f",
+        "title": "Finalise the caterer and menu: Haldi",
+        "function_id": "33a2965cbefb",
+        "category": "catering",
+        "due_date": "2026-11-12",
+        "lead_days": 120,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "7c2a6e6ae31d",
+        "title": "Finalise the caterer and menu: Pellikoduku",
+        "function_id": "f54abb3f44a9",
+        "category": "catering",
+        "due_date": "2026-11-12",
+        "lead_days": 120,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "bdd8434af920",
+        "title": "Finalise the caterer and menu: Muhurtham",
+        "function_id": "6ce6c86ab9cd",
+        "category": "catering",
+        "due_date": "2026-11-13",
+        "lead_days": 120,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "580699ee3458",
+        "title": "Finalise the caterer and menu: Reception",
+        "function_id": "b46ae76e9341",
+        "category": "catering",
+        "due_date": "2026-11-13",
+        "lead_days": 120,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "62330d459052",
+        "title": "Book DJ, band or performers: Haldi",
+        "function_id": "33a2965cbefb",
+        "category": "music_entertainment",
+        "due_date": "2027-01-11",
+        "lead_days": 60,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "26038e626ec1",
+        "title": "Book DJ, band or performers: Pellikoduku",
+        "function_id": "f54abb3f44a9",
+        "category": "music_entertainment",
+        "due_date": "2027-01-11",
+        "lead_days": 60,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "a85cd68bdb25",
+        "title": "Book the decorator: Haldi",
+        "function_id": "33a2965cbefb",
+        "category": "decor",
+        "due_date": "2027-01-11",
+        "lead_days": 60,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "0bca1d3ea0e6",
+        "title": "Book the decorator: Pellikoduku",
+        "function_id": "f54abb3f44a9",
+        "category": "decor",
+        "due_date": "2027-01-11",
+        "lead_days": 60,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "053794de34b2",
+        "title": "Confirm priest and puja items",
+        "function_id": null,
+        "category": "priest_rituals",
+        "due_date": "2027-01-11",
+        "lead_days": 60,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "e55e89a18671",
+        "title": "Book DJ, band or performers: Muhurtham",
+        "function_id": "6ce6c86ab9cd",
+        "category": "music_entertainment",
+        "due_date": "2027-01-12",
+        "lead_days": 60,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "a92843132e0c",
+        "title": "Book DJ, band or performers: Reception",
+        "function_id": "b46ae76e9341",
+        "category": "music_entertainment",
+        "due_date": "2027-01-12",
+        "lead_days": 60,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "c956316b1665",
+        "title": "Book the decorator: Muhurtham",
+        "function_id": "6ce6c86ab9cd",
+        "category": "decor",
+        "due_date": "2027-01-12",
+        "lead_days": 60,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "237665e92852",
+        "title": "Book the decorator: Reception",
+        "function_id": "b46ae76e9341",
+        "category": "decor",
+        "due_date": "2027-01-12",
+        "lead_days": 60,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "96bb1dc5c761",
+        "title": "Print and send invitations",
+        "function_id": null,
+        "category": "invitations_gifts",
+        "due_date": "2027-01-26",
+        "lead_days": 45,
+        "status": "todo",
+        "owner_id": null
+      }
+    ],
+    "people": [],
+    "ideas": [
+      {
+        "id": "1b633a7ff51d",
+        "function_id": "f54abb3f44a9",
+        "text": "Use yellow marigold flowers for traditional turmeric ritual seating.",
+        "cost_band": "low"
+      },
+      {
+        "id": "1d11bf4330e3",
+        "function_id": "33a2965cbefb",
+        "text": "Arrange organic turmeric paste in banana leaf cups for guests.",
+        "cost_band": "low"
+      },
+      {
+        "id": "df11236055d6",
+        "function_id": "6ce6c86ab9cd",
+        "text": "Serve traditional authentic meals on fresh banana leaves.",
+        "cost_band": "mid"
+      },
+      {
+        "id": "2effe8e114dd",
+        "function_id": "b46ae76e9341",
+        "text": "Set up a grand floral stage backdrop with traditional Telugu motifs.",
+        "cost_band": "high"
+      }
+    ],
+    "sources": {
+      "brief": "ai",
+      "plan": "ai",
+      "options": "ai"
+    }
+  },
+  "new_total": 3200000,
+  "response": {
+    "options": [
+      {
+        "rationale": "Lower the reception tier to standard to achieve the necessary savings.",
+        "ops": [
+          {
+            "op": "change_tier",
+            "function_id": "b46ae76e9341",
+            "guests": null,
+            "tier": "standard",
+            "category": null,
+            "percent": null,
+            "line_item_id": null
+          }
+        ]
+      },
+      {
+        "rationale": "Scale down all catering expenses across the board to meet the budget.",
+        "ops": [
+          {
+            "op": "scale_category",
+            "function_id": null,
+            "guests": null,
+            "tier": null,
+            "category": "catering",
+            "percent": -60,
+            "line_item_id": null
+          }
+        ]
+      }
+    ]
+  }
+}

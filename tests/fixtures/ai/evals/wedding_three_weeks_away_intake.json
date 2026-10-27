@@ -1,0 +1,23 @@
+{
+  "today": "2026-10-27",
+  "text": "My cousin's wedding is three weeks from today in Indore, about 250 guests, 12 lakh budget. Nothing is booked yet, please help.",
+  "response": {
+    "is_event": true,
+    "reason": "The message is about planning a cousin's wedding.",
+    "event_type": "wedding",
+    "title": "Cousin's wedding",
+    "city": "Indore",
+    "guests": 250,
+    "budget_amount": 12,
+    "budget_unit": "lakh",
+    "year": null,
+    "month": null,
+    "day": null,
+    "style_notes": null,
+    "questions": [
+      "Which functions would you like to include?",
+      "What are your food preferences for the catering?",
+      "Do you have a preferred venue style or theme?"
+    ]
+  }
+}

@@ -32,7 +32,7 @@ Work top to bottom. One task per session. Tick a task only when its proof test p
 - [x] T20 Security middleware
 - [x] T21 CI
 - [x] T22 E2E and accessibility tests
-- [ ] T23 Live evals
+- [x] T23 Live evals
 - [ ] T24 README
 - [ ] T25 PROBLEM_ALIGNMENT.md
 - [ ] T26 SECURITY.md
@@ -431,10 +431,10 @@ No Docker image is needed on Vercel, so the Docker build step was dropped.
 **Files:** `tests/evals/briefs.json`, `tests/evals/run_evals.py`
 
 **Acceptance**
-- [ ] Six briefs: Telugu wedding, North Indian wedding, Hinglish input, 5th birthday, society Ganesh event, wedding three weeks away
-- [ ] Against live Gemini: schema valid, engine invariants hold, latency per call recorded
-- [ ] Separate command, excluded from CI and from `pytest` default collection
-- [ ] Useful outputs saved as fixtures for unit tests
+- [x] Six briefs: Telugu wedding, North Indian wedding, Hinglish input, 5th birthday, society Ganesh event, wedding three weeks away
+- [x] Against live Gemini: schema valid, engine invariants hold, latency per call recorded
+- [x] Separate command, excluded from CI and from `pytest` default collection
+- [x] Useful outputs saved as fixtures for unit tests
 
 **Proof:** `python -m tests.evals.run_evals` reports every brief passing
 

@@ -1,0 +1,220 @@
+{
+  "today": "2026-10-27",
+  "plan": {
+    "schema_version": 1,
+    "event": {
+      "id": "99daf2e6fb28",
+      "type": "birthday",
+      "title": "Son's 5th birthday party",
+      "city": "Pune",
+      "start_date": "2027-03-14",
+      "end_date": "2027-03-14",
+      "guests": 70,
+      "total_budget": 60000,
+      "language": "en",
+      "style_notes": "Jungle theme, cake and a magician"
+    },
+    "functions": [
+      {
+        "id": "18a70b320933",
+        "name": "Son's 5th Birthday Party",
+        "start": "2027-03-14T16:00:00+05:30",
+        "duration_minutes": 180,
+        "guests": 70,
+        "guests_override": false,
+        "tier": "standard"
+      }
+    ],
+    "line_items": [
+      {
+        "id": "cadfd669a3e5",
+        "function_id": "18a70b320933",
+        "category": "venue",
+        "planned": 12000,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "149dac5036a9",
+        "function_id": "18a70b320933",
+        "category": "catering",
+        "planned": 21000,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "18252b78a35c",
+        "function_id": "18a70b320933",
+        "category": "decor",
+        "planned": 12000,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "ee657862e48f",
+        "function_id": "18a70b320933",
+        "category": "music_entertainment",
+        "planned": 6000,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "bba44729276b",
+        "function_id": null,
+        "category": "invitations_gifts",
+        "planned": 3000,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "9552d8793d18",
+        "function_id": null,
+        "category": "cake",
+        "planned": 6000,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      }
+    ],
+    "tasks": [
+      {
+        "id": "41ef5b6201a3",
+        "title": "Book the venue: Son's 5th Birthday Party",
+        "function_id": "18a70b320933",
+        "category": "venue",
+        "due_date": "2026-10-27",
+        "lead_days": 180,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "e79a3bfefafc",
+        "title": "Finalise the caterer and menu: Son's 5th Birthday Party",
+        "function_id": "18a70b320933",
+        "category": "catering",
+        "due_date": "2026-11-14",
+        "lead_days": 120,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "b814336da7ce",
+        "title": "Book DJ, band or performers: Son's 5th Birthday Party",
+        "function_id": "18a70b320933",
+        "category": "music_entertainment",
+        "due_date": "2027-01-13",
+        "lead_days": 60,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "24fad95ff1d1",
+        "title": "Book the decorator: Son's 5th Birthday Party",
+        "function_id": "18a70b320933",
+        "category": "decor",
+        "due_date": "2027-01-13",
+        "lead_days": 60,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "9513c2b75a39",
+        "title": "Print and send invitations",
+        "function_id": null,
+        "category": "invitations_gifts",
+        "due_date": "2027-01-28",
+        "lead_days": 45,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "53b98af2e819",
+        "title": "Order the cake",
+        "function_id": null,
+        "category": "cake",
+        "due_date": "2027-03-07",
+        "lead_days": 7,
+        "status": "todo",
+        "owner_id": null
+      }
+    ],
+    "people": [],
+    "ideas": [
+      {
+        "id": "1923ab4fe9bc",
+        "function_id": "18a70b320933",
+        "text": "Set up a jungle themed photo backdrop with animal cutouts for kids.",
+        "cost_band": "mid"
+      },
+      {
+        "id": "12cf901846de",
+        "function_id": "18a70b320933",
+        "text": "Hire a professional magician to perform a 45-minute interactive magic show.",
+        "cost_band": "mid"
+      }
+    ],
+    "sources": {
+      "brief": "ai",
+      "plan": "ai",
+      "options": "ai"
+    }
+  },
+  "new_total": 48000,
+  "response": {
+    "options": [
+      {
+        "rationale": "Downgrading the main function tier achieves the necessary savings instantly.",
+        "ops": [
+          {
+            "op": "change_tier",
+            "function_id": "18a70b320933",
+            "guests": null,
+            "tier": "budget",
+            "category": null,
+            "percent": null,
+            "line_item_id": null
+          }
+        ]
+      },
+      {
+        "rationale": "Scaling down the catering category efficiently resolves the budget deficit.",
+        "ops": [
+          {
+            "op": "scale_category",
+            "function_id": null,
+            "guests": null,
+            "tier": null,
+            "category": "catering",
+            "percent": -60,
+            "line_item_id": null
+          }
+        ]
+      },
+      {
+        "rationale": "Dropping specific non-essential items across categories bridges the financial gap without altering tier.",
+        "ops": [
+          {
+            "op": "drop_item",
+            "function_id": null,
+            "guests": null,
+            "tier": null,
+            "category": null,
+            "percent": null,
+            "line_item_id": "cadfd669a3e5"
+          }
+        ]
+      }
+    ]
+  }
+}

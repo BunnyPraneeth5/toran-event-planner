@@ -1,0 +1,42 @@
+{
+  "_about": "Six real-style briefs for the live Gemini evals (python -m tests.evals.run_evals). `expect` is what intake must read from the text; `fill` completes anything intake left for the user to answer; `start_in_days` is relative to the day the evals run.",
+  "briefs": [
+    {
+      "name": "telugu_wedding",
+      "text": "Telugu wedding for my younger brother in Hyderabad, March 2027, around 600 guests, budget 40 lakhs. We want pellikoduku, haldi, the muhurtham and a reception, with traditional banana leaf meals.",
+      "expect": {"event_type": "wedding", "city": "Hyderabad", "guests": 600, "total_budget": 4000000},
+      "fill": {"start_date": "2027-03-12"}
+    },
+    {
+      "name": "north_indian_wedding",
+      "text": "Daughter's wedding in Jaipur on 6 February 2027. About 450 guests, 35 lakh budget. Haldi, mehendi, sangeet with a DJ, the pheras and a reception.",
+      "expect": {"event_type": "wedding", "city": "Jaipur", "guests": 450, "total_budget": 3500000, "start_date": "2027-02-06"},
+      "fill": {}
+    },
+    {
+      "name": "hinglish_input",
+      "text": "Bhai ki shaadi hai Delhi mein, April 2027 mein, lagbhag 300 log aayenge, budget 18 lakh ke aas paas hai. Sangeet aur reception dono karna hai.",
+      "expect": {"event_type": "wedding", "city": "Delhi", "guests": 300, "total_budget": 1800000},
+      "fill": {"start_date": "2027-04-17"}
+    },
+    {
+      "name": "fifth_birthday",
+      "text": "My son's 5th birthday party in Pune on 14 March 2027. 40 kids and 30 adults, budget 60,000 rupees, jungle theme, cake and a magician.",
+      "expect": {"event_type": "birthday", "city": "Pune", "total_budget": 60000, "start_date": "2027-03-14"},
+      "fill": {"guests": 70}
+    },
+    {
+      "name": "society_ganesh",
+      "text": "Ganesh Chaturthi celebration for our housing society in Mumbai, September 2027, for about 500 residents. The committee has collected 3 lakh from members. Pandal, aarti, prasad and a cultural evening.",
+      "expect": {"event_type": "community", "city": "Mumbai", "guests": 500, "total_budget": 300000},
+      "fill": {"start_date": "2027-09-04"}
+    },
+    {
+      "name": "wedding_three_weeks_away",
+      "text": "My cousin's wedding is three weeks from today in Indore, about 250 guests, 12 lakh budget. Nothing is booked yet, please help.",
+      "expect": {"event_type": "wedding", "city": "Indore", "guests": 250, "total_budget": 1200000},
+      "fill": {"start_in_days": 21},
+      "expect_flagged_tasks": true
+    }
+  ]
+}

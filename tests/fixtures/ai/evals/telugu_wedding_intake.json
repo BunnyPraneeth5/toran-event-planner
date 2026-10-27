@@ -1,0 +1,23 @@
+{
+  "today": "2026-10-27",
+  "text": "Telugu wedding for my younger brother in Hyderabad, March 2027, around 600 guests, budget 40 lakhs. We want pellikoduku, haldi, the muhurtham and a reception, with traditional banana leaf meals.",
+  "response": {
+    "is_event": true,
+    "reason": "The message is about planning a wedding.",
+    "event_type": "wedding",
+    "title": "Brother's wedding",
+    "city": "Hyderabad",
+    "guests": 600,
+    "budget_amount": 40,
+    "budget_unit": "lakhs",
+    "year": 2027,
+    "month": 3,
+    "day": null,
+    "style_notes": "Telugu wedding with pellikoduku, haldi, muhurtham, reception, and traditional banana leaf meals.",
+    "questions": [
+      "Which specific dates in March 2027 are you considering for each function?",
+      "Do you have a preferred venue type or area in Hyderabad?",
+      "Would you like photography and decoration services included in this budget?"
+    ]
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "today": "2026-10-27",
+  "brief": {
+    "event_type": "community",
+    "title": "Ganesh Chaturthi celebration",
+    "city": "Mumbai",
+    "start_date": "2027-09-04",
+    "guests": 500,
+    "total_budget": 300000,
+    "style_notes": "Pandal, aarti, prasad and a cultural evening"
+  },
+  "response": {
+    "functions": [
+      {
+        "name": "Puja and aarti",
+        "day_offset": 0,
+        "start_time": "09:00",
+        "duration_minutes": 120,
+        "guest_percent": 60,
+        "tier": "budget"
+      },
+      {
+        "name": "Cultural evening",
+        "day_offset": 0,
+        "start_time": "18:00",
+        "duration_minutes": 180,
+        "guest_percent": 100,
+        "tier": "standard"
+      }
+    ],
+    "weights": [
+      {
+        "category": "venue",
+        "weight": 25.0
+      },
+      {
+        "category": "catering",
+        "weight": 30.0
+      },
+      {
+        "category": "decor",
+        "weight": 20.0
+      },
+      {
+        "category": "music_entertainment",
+        "weight": 15.0
+      },
+      {
+        "category": "priest_rituals",
+        "weight": 10.0
+      }
+    ],
+    "ideas": [
+      {
+        "function_name": "Puja and aarti",
+        "text": "Set up a traditional floral decorated pandal with traditional brass lamps.",
+        "cost_band": "mid"
+      },
+      {
+        "function_name": "Cultural evening",
+        "text": "Arrange a local folk music troupe for live devotional performances.",
+        "cost_band": "mid"
+      }
+    ]
+  }
+}

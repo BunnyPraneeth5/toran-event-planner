@@ -1,0 +1,404 @@
+{
+  "today": "2026-10-27",
+  "plan": {
+    "schema_version": 1,
+    "event": {
+      "id": "4a4bbca6c6ca",
+      "type": "wedding",
+      "title": "Brother's Wedding",
+      "city": "Delhi",
+      "start_date": "2027-04-17",
+      "end_date": "2027-04-19",
+      "guests": 300,
+      "total_budget": 1800000,
+      "language": "en",
+      "style_notes": "Sangeet aur reception dono karna hai"
+    },
+    "functions": [
+      {
+        "id": "1e4acbf60817",
+        "name": "Sangeet",
+        "start": "2027-04-17T19:00:00+05:30",
+        "duration_minutes": 240,
+        "guests": 240,
+        "guests_override": false,
+        "tier": "standard"
+      },
+      {
+        "id": "f557d0b6fe20",
+        "name": "Wedding",
+        "start": "2027-04-18T19:00:00+05:30",
+        "duration_minutes": 300,
+        "guests": 300,
+        "guests_override": false,
+        "tier": "premium"
+      },
+      {
+        "id": "a504b2734786",
+        "name": "Reception",
+        "start": "2027-04-19T20:00:00+05:30",
+        "duration_minutes": 240,
+        "guests": 300,
+        "guests_override": false,
+        "tier": "standard"
+      }
+    ],
+    "line_items": [
+      {
+        "id": "116646c09ab5",
+        "function_id": "1e4acbf60817",
+        "category": "venue",
+        "planned": 100000,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "b72e6a4c0354",
+        "function_id": "f557d0b6fe20",
+        "category": "venue",
+        "planned": 160000,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "1ee5a112a7ca",
+        "function_id": "a504b2734786",
+        "category": "venue",
+        "planned": 100000,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "760eac407a52",
+        "function_id": "1e4acbf60817",
+        "category": "catering",
+        "planned": 127059,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "8698e86c1f55",
+        "function_id": "f557d0b6fe20",
+        "category": "catering",
+        "planned": 254118,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "725ebc096c2d",
+        "function_id": "a504b2734786",
+        "category": "catering",
+        "planned": 158823,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "453d50d24372",
+        "function_id": "1e4acbf60817",
+        "category": "decor",
+        "planned": 75000,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "6ce53e844b7a",
+        "function_id": "f557d0b6fe20",
+        "category": "decor",
+        "planned": 120000,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "292813f7269e",
+        "function_id": "a504b2734786",
+        "category": "decor",
+        "planned": 75000,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "2a8ccd80c62e",
+        "function_id": "1e4acbf60817",
+        "category": "music_entertainment",
+        "planned": 60000,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "e772cadadaed",
+        "function_id": "f557d0b6fe20",
+        "category": "music_entertainment",
+        "planned": 60000,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "1e68912ff2a1",
+        "function_id": "a504b2734786",
+        "category": "music_entertainment",
+        "planned": 60000,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "6d817ecf792f",
+        "function_id": null,
+        "category": "photo_video",
+        "planned": 180000,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "7c946ec16606",
+        "function_id": null,
+        "category": "attire",
+        "planned": 180000,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "bdeee7b454ca",
+        "function_id": null,
+        "category": "other",
+        "planned": 90000,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      }
+    ],
+    "tasks": [
+      {
+        "id": "cd899a27980b",
+        "title": "Book the venue: Reception",
+        "function_id": "a504b2734786",
+        "category": "venue",
+        "due_date": "2026-10-27",
+        "lead_days": 180,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "1a15360af418",
+        "title": "Book the venue: Sangeet",
+        "function_id": "1e4acbf60817",
+        "category": "venue",
+        "due_date": "2026-10-27",
+        "lead_days": 180,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "4f86b43278b0",
+        "title": "Book the venue: Wedding",
+        "function_id": "f557d0b6fe20",
+        "category": "venue",
+        "due_date": "2026-10-27",
+        "lead_days": 180,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "31557505d9de",
+        "title": "Order outfits and jewellery",
+        "function_id": null,
+        "category": "attire",
+        "due_date": "2026-11-18",
+        "lead_days": 150,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "505d5e630515",
+        "title": "Book photographer and videographer",
+        "function_id": null,
+        "category": "photo_video",
+        "due_date": "2026-12-18",
+        "lead_days": 120,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "ec938350e1a3",
+        "title": "Finalise the caterer and menu: Sangeet",
+        "function_id": "1e4acbf60817",
+        "category": "catering",
+        "due_date": "2026-12-18",
+        "lead_days": 120,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "4b7a23ffb4e6",
+        "title": "Finalise the caterer and menu: Wedding",
+        "function_id": "f557d0b6fe20",
+        "category": "catering",
+        "due_date": "2026-12-19",
+        "lead_days": 120,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "951457d37f70",
+        "title": "Finalise the caterer and menu: Reception",
+        "function_id": "a504b2734786",
+        "category": "catering",
+        "due_date": "2026-12-20",
+        "lead_days": 120,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "45954e26ec67",
+        "title": "Book DJ, band or performers: Sangeet",
+        "function_id": "1e4acbf60817",
+        "category": "music_entertainment",
+        "due_date": "2027-02-16",
+        "lead_days": 60,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "cc04e201145a",
+        "title": "Book the decorator: Sangeet",
+        "function_id": "1e4acbf60817",
+        "category": "decor",
+        "due_date": "2027-02-16",
+        "lead_days": 60,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "3f155cdde5cd",
+        "title": "Book DJ, band or performers: Wedding",
+        "function_id": "f557d0b6fe20",
+        "category": "music_entertainment",
+        "due_date": "2027-02-17",
+        "lead_days": 60,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "e408e2a6b3eb",
+        "title": "Book the decorator: Wedding",
+        "function_id": "f557d0b6fe20",
+        "category": "decor",
+        "due_date": "2027-02-17",
+        "lead_days": 60,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "0826ad898868",
+        "title": "Book DJ, band or performers: Reception",
+        "function_id": "a504b2734786",
+        "category": "music_entertainment",
+        "due_date": "2027-02-18",
+        "lead_days": 60,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "12a3ba6de89f",
+        "title": "Book the decorator: Reception",
+        "function_id": "a504b2734786",
+        "category": "decor",
+        "due_date": "2027-02-18",
+        "lead_days": 60,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "2c63658d5662",
+        "title": "Buy small items and set aside contingency",
+        "function_id": null,
+        "category": "other",
+        "due_date": "2027-04-03",
+        "lead_days": 14,
+        "status": "todo",
+        "owner_id": null
+      }
+    ],
+    "people": [],
+    "ideas": [
+      {
+        "id": "9408de4d9c84",
+        "function_id": "1e4acbf60817",
+        "text": "Arrange a professional choreographer for family dance performances.",
+        "cost_band": "mid"
+      },
+      {
+        "id": "a73c6ed9d293",
+        "function_id": "a504b2734786",
+        "text": "Set up a live counters food station with local Delhi chaat specialities.",
+        "cost_band": "mid"
+      }
+    ],
+    "sources": {
+      "brief": "ai",
+      "plan": "ai",
+      "options": "ai"
+    }
+  },
+  "new_total": 1440000,
+  "response": {
+    "options": [
+      {
+        "rationale": "Trimming the venue category across the board absorbs the entire deficit without touching guest counts.",
+        "ops": [
+          {
+            "op": "scale_category",
+            "function_id": null,
+            "guests": null,
+            "tier": null,
+            "category": "venue",
+            "percent": -100,
+            "line_item_id": null
+          }
+        ]
+      },
+      {
+        "rationale": "Downgrading the main wedding tier lowers overall event costs immediately.",
+        "ops": [
+          {
+            "op": "change_tier",
+            "function_id": "f557d0b6fe20",
+            "guests": null,
+            "tier": "standard",
+            "category": null,
+            "percent": null,
+            "line_item_id": null
+          }
+        ]
+      }
+    ]
+  }
+}

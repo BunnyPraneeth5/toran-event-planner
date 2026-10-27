@@ -1,0 +1,275 @@
+{
+  "today": "2026-10-27",
+  "plan": {
+    "schema_version": 1,
+    "event": {
+      "id": "638d3a51e18e",
+      "type": "community",
+      "title": "Ganesh Chaturthi celebration",
+      "city": "Mumbai",
+      "start_date": "2027-09-04",
+      "end_date": "2027-09-04",
+      "guests": 500,
+      "total_budget": 300000,
+      "language": "en",
+      "style_notes": "Pandal, aarti, prasad and a cultural evening"
+    },
+    "functions": [
+      {
+        "id": "efd43ac7b6d0",
+        "name": "Puja and aarti",
+        "start": "2027-09-04T09:00:00+05:30",
+        "duration_minutes": 120,
+        "guests": 300,
+        "guests_override": false,
+        "tier": "budget"
+      },
+      {
+        "id": "00fa5e5cdcc0",
+        "name": "Cultural evening",
+        "start": "2027-09-04T18:00:00+05:30",
+        "duration_minutes": 180,
+        "guests": 500,
+        "guests_override": false,
+        "tier": "standard"
+      }
+    ],
+    "line_items": [
+      {
+        "id": "4a4d03f28b7e",
+        "function_id": "efd43ac7b6d0",
+        "category": "venue",
+        "planned": 30882,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "93d11d3d0799",
+        "function_id": "00fa5e5cdcc0",
+        "category": "venue",
+        "planned": 44118,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "cc83125b35b1",
+        "function_id": "efd43ac7b6d0",
+        "category": "catering",
+        "planned": 26620,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "9689af0ae88c",
+        "function_id": "00fa5e5cdcc0",
+        "category": "catering",
+        "planned": 63380,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "cd6e7d3962b0",
+        "function_id": "efd43ac7b6d0",
+        "category": "decor",
+        "planned": 24706,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "aba74b0715d4",
+        "function_id": "00fa5e5cdcc0",
+        "category": "decor",
+        "planned": 35294,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "c522c1990383",
+        "function_id": "efd43ac7b6d0",
+        "category": "music_entertainment",
+        "planned": 22500,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "8dec2b78ea6c",
+        "function_id": "00fa5e5cdcc0",
+        "category": "music_entertainment",
+        "planned": 22500,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      },
+      {
+        "id": "bf3cf8d7a49b",
+        "function_id": null,
+        "category": "priest_rituals",
+        "planned": 30000,
+        "actual": null,
+        "payers": [],
+        "status": "planned",
+        "locked": false
+      }
+    ],
+    "tasks": [
+      {
+        "id": "e93fd4742394",
+        "title": "Book the venue: Cultural evening",
+        "function_id": "00fa5e5cdcc0",
+        "category": "venue",
+        "due_date": "2027-03-08",
+        "lead_days": 180,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "b0ea663bf17e",
+        "title": "Book the venue: Puja and aarti",
+        "function_id": "efd43ac7b6d0",
+        "category": "venue",
+        "due_date": "2027-03-08",
+        "lead_days": 180,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "7860ae4130a2",
+        "title": "Finalise the caterer and menu: Cultural evening",
+        "function_id": "00fa5e5cdcc0",
+        "category": "catering",
+        "due_date": "2027-05-07",
+        "lead_days": 120,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "8ee350fa8426",
+        "title": "Finalise the caterer and menu: Puja and aarti",
+        "function_id": "efd43ac7b6d0",
+        "category": "catering",
+        "due_date": "2027-05-07",
+        "lead_days": 120,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "237aa102fc72",
+        "title": "Book DJ, band or performers: Cultural evening",
+        "function_id": "00fa5e5cdcc0",
+        "category": "music_entertainment",
+        "due_date": "2027-07-06",
+        "lead_days": 60,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "8357e4737931",
+        "title": "Book DJ, band or performers: Puja and aarti",
+        "function_id": "efd43ac7b6d0",
+        "category": "music_entertainment",
+        "due_date": "2027-07-06",
+        "lead_days": 60,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "d46702b6092d",
+        "title": "Book the decorator: Cultural evening",
+        "function_id": "00fa5e5cdcc0",
+        "category": "decor",
+        "due_date": "2027-07-06",
+        "lead_days": 60,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "e87f941ad89e",
+        "title": "Book the decorator: Puja and aarti",
+        "function_id": "efd43ac7b6d0",
+        "category": "decor",
+        "due_date": "2027-07-06",
+        "lead_days": 60,
+        "status": "todo",
+        "owner_id": null
+      },
+      {
+        "id": "6a19333103ad",
+        "title": "Confirm priest and puja items",
+        "function_id": null,
+        "category": "priest_rituals",
+        "due_date": "2027-07-06",
+        "lead_days": 60,
+        "status": "todo",
+        "owner_id": null
+      }
+    ],
+    "people": [],
+    "ideas": [
+      {
+        "id": "97f3f6b36dab",
+        "function_id": "efd43ac7b6d0",
+        "text": "Set up a traditional floral decorated pandal with traditional brass lamps.",
+        "cost_band": "mid"
+      },
+      {
+        "id": "821d9d6af396",
+        "function_id": "00fa5e5cdcc0",
+        "text": "Arrange a local folk music troupe for live devotional performances.",
+        "cost_band": "mid"
+      }
+    ],
+    "sources": {
+      "brief": "ai",
+      "plan": "ai",
+      "options": "ai"
+    }
+  },
+  "new_total": 240000,
+  "response": {
+    "options": [
+      {
+        "rationale": "Scale down catering expenses across the entire event to meet the target savings.",
+        "ops": [
+          {
+            "op": "scale_category",
+            "function_id": null,
+            "guests": null,
+            "tier": null,
+            "category": "catering",
+            "percent": -65,
+            "line_item_id": null
+          }
+        ]
+      },
+      {
+        "rationale": "Reduce the overall guest count for the cultural evening to lower catering and venue costs simultaneously.",
+        "ops": [
+          {
+            "op": "reduce_guests",
+            "function_id": "00fa5e5cdcc0",
+            "guests": 300,
+            "tier": null,
+            "category": null,
+            "percent": null,
+            "line_item_id": null
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "today": "2026-10-27",
+  "text": "Bhai ki shaadi hai Delhi mein, April 2027 mein, lagbhag 300 log aayenge, budget 18 lakh ke aas paas hai. Sangeet aur reception dono karna hai.",
+  "response": {
+    "is_event": true,
+    "reason": "The message is about planning a brother's wedding.",
+    "event_type": "wedding",
+    "title": "Brother's Wedding",
+    "city": "Delhi",
+    "guests": 300,
+    "budget_amount": 18,
+    "budget_unit": "lakh",
+    "year": 2027,
+    "month": 4,
+    "day": null,
+    "style_notes": "Sangeet aur reception dono karna hai",
+    "questions": [
+      "What are your food preferences for the functions?",
+      "Do you have a specific venue theme or style in mind?"
+    ]
+  }
+}
