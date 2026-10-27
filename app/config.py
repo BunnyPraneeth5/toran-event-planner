@@ -27,6 +27,9 @@ class Settings(BaseSettings):
     ai_daily_call_limit: int = Field(default=500, ge=0, le=100_000)
     vercel_env: str | None = Field(default=None, max_length=40)
     """Set by Vercel itself (production, preview or development); never set by hand."""
+    vercel_git_commit_sha: str | None = None
+    """Set by Vercel on every deployment; /healthz shows it so a release can be matched.
+    Not validated here, so an unexpected value can never stop the app from starting."""
 
     @property
     def ai_configured(self) -> bool:

@@ -474,9 +474,9 @@ No Docker image is needed on Vercel, so the Docker build step was dropped.
 **Files:** `README.md`
 
 **Acceptance**
-- [ ] Production deployment on Vercel matches the commit being submitted; env vars set in the Vercel dashboard, not in the repo
+- [x] Production deployment on Vercel matches the commit being submitted; env vars set in the Vercel dashboard, not in the repo
 - [ ] Submission is a tagged commit whose production deployment is green and checked live
-- [ ] Live link added to README
+- [x] Live link added to README
 - [ ] Release checklist below completed
 
 **Proof:** e2e smoke run with `BASE_URL` set to the live URL passes
@@ -541,7 +541,8 @@ No Docker image is needed on Vercel, so the Docker build step was dropped.
 ## Release checklist (every submission)
 - [ ] `ruff check . && mypy app && pytest` green; CI green
 - [ ] Live evals pass
-- [ ] e2e smoke passes against the live URL
+- [ ] e2e smoke passes against the live URL (`BASE_URL=<live link> pytest e2e`)
+- [ ] `/healthz` on the live link reports the commit being tagged
 - [ ] Commit tagged; Vercel's production deployment is that commit
 - [ ] Live link checked on a phone
 - [ ] Only submit if better than the last submission

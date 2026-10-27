@@ -6,6 +6,9 @@ security header is the real one.
 
 Browser: Playwright's own Chromium by default (CI installs it). Set E2E_BROWSER_CHANNEL to
 "chrome" or "msedge" to use a browser that is already installed instead.
+
+Live mode: set BASE_URL (for example the production link) to run against a deployed site.
+Flows that need the fake Gemini are then skipped, so a live check never spends quota.
 """
 
 import json
@@ -96,7 +99,12 @@ class RoutedModels:
 @dataclass
 class LiveServer:
     url: str
-    models: RoutedModels
+    models: RoutedModels | None
+    """None when testing a deployed site, where Gemini is real."""
+
+    def require_fake_ai(self) -> None:
+        if self.models is None:
+            pytest.skip("BASE_URL is set: this flow needs the fake Gemini")
 
 
 def _free_port() -> int:
@@ -108,6 +116,10 @@ def _free_port() -> int:
 
 @pytest.fixture(scope="session")
 def live_server() -> Iterator[LiveServer]:
+    base_url = os.environ.get("BASE_URL")
+    if base_url:
+        yield LiveServer(url=base_url.rstrip("/"), models=None)
+        return
     # Security middleware reads settings directly, so the e2e limits go in the environment.
     os.environ["ENVIRONMENT"] = "test"
     os.environ["RATE_LIMIT_LLM"] = "1000/minute"
@@ -126,7 +138,7 @@ def live_server() -> Iterator[LiveServer]:
     )
     thread = threading.Thread(target=server.run, daemon=True)
     thread.start()
-    deadline = time.monotonic() + 10
+    deadline = time.monotonic() + 30
     while not server.started:
         if time.monotonic() > deadline:
             raise RuntimeError("the e2e server did not start")

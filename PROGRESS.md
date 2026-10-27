@@ -1,7 +1,7 @@
 # PROGRESS: Toran
 
 ## Status
-- Current task: review of T23, then push; next T24. T18a video script is yours
+- Current task: review of T24 to T27, then push, check the deployed commit, tag the release; T18a video script is yours
 - Last green commit: T20 Security middleware
 - Last submission tag:
 - Repo: https://github.com/BunnyPraneeth5/toran-event-planner (public, CI on every push)
@@ -196,3 +196,8 @@ Copy the template below for each session, newest first.
 - `--save` stored the live responses in tests/fixtures/ai/evals; tests/unit/test_eval_fixtures.py replays them offline (19 tests).
 - Finding: on the free tier the Flash models (gemini-3.8-flash, gemini-3.6-flash) mostly returned 503 (overloaded) or 429 (quota); the fallback chain served almost every generate and adapt call from gemini-3.5-flash-lite.
 - Committed locally, not pushed. Waiting for review.
+- Pushed T23; CI green on both jobs.
+- T24 to T26 done in one commit (as agreed): README (problem, persona, features, Mermaid diagram, where Gemini is used with file links, run, test, evals, env vars, security and accessibility summaries), docs/PROBLEM_ALIGNMENT.md (each challenge point mapped to a feature, file and test, plus a worked budget-cut example with real engine figures), docs/SECURITY.md (threat model and every control with its test). tests/unit/test_docs.py keeps every linked file, named test and named function real. ARCHITECTURE.md brought up to date (people and lines routes, fonts, img folder).
+- README proof: a fresh clone in a short path, following the README with no key, installs, passes lint, types and all tests, and serves the home page and the sample. A very long clone path on Windows fails in pip (Playwright's nested files hit the 260-character limit); the README now says so.
+- T27 prepared: `/healthz` reports the deployed commit (from Vercel's VERCEL_GIT_COMMIT_SHA, ignored if malformed), e2e live mode (BASE_URL skips the fake-Gemini flows), a new engine-only sample flow at phone and desktop, live link and release steps in the README. `BASE_URL=<live link> pytest e2e` passed against production (2 passed, 4 skipped by design).
+- Left for after review: push, confirm /healthz shows the pushed commit, rerun the live e2e, tag v1.0.0 and push the tag, check on a real phone.

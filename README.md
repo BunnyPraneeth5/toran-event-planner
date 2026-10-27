@@ -3,6 +3,9 @@
 An event planner for Indian weddings, birthdays and community events. Built for Google
 PromptWars Virtual, Challenge 5 (Celebration & Event Planner).
 
+**Live:** https://toran-event-planner.vercel.app (try the one-click sample wedding, no
+sign-up)
+
 ## The problem
 
 An Indian wedding is not one event. It is four to six functions (haldi, mehendi, sangeet,
@@ -118,6 +121,9 @@ uvicorn app.main:app --reload
 
 Open http://127.0.0.1:8000. API docs are at `/docs` outside production.
 
+On Windows, clone into a short path (such as `C:\code\toran`) or enable long paths:
+Playwright's package has deeply nested files that can exceed the 260-character limit.
+
 ### Environment variables
 
 All of them are listed with defaults in [.env.example](.env.example). Secrets live only in
@@ -173,6 +179,31 @@ pytest --cov                           # with coverage (CI enforces an 80% floor
 
 CI ([.github/workflows/ci.yml](.github/workflows/ci.yml)) runs lint, types, tests with the
 coverage floor, a dependency audit (pip-audit) and the end-to-end suite on every push.
+
+## Deployment and releases
+
+Hosted on Vercel (FastAPI preset, Mumbai region). Every push to `main` deploys to
+production. `GEMINI_API_KEY` and `ENVIRONMENT=production` are set in the Vercel dashboard,
+never in the repository. `/healthz` reports the deployed commit, so production can be
+matched to a tag.
+
+A release is a tagged commit whose production deployment is green and checked live:
+
+1. `ruff check . && mypy app && pytest` and `pytest e2e` pass locally; CI is green.
+2. `python -m tests.evals.run_evals` passes on live Gemini.
+3. Push `main`, wait for Vercel, and check that the `commit` in
+   https://toran-event-planner.vercel.app/healthz matches `git rev-parse --short HEAD`.
+4. Run the end-to-end checks against production. With `BASE_URL` set, the flows that need
+   the fake Gemini are skipped, so this spends no AI quota:
+
+   ```bash
+   BASE_URL=https://toran-event-planner.vercel.app pytest e2e
+   ```
+
+   PowerShell: `$env:BASE_URL = "https://toran-event-planner.vercel.app"; pytest e2e`
+5. Open the live link on a phone and run through the sample.
+6. Tag the commit and push the tag: `git tag -a v1.0.0 -m "Challenge 5 submission"` and
+   `git push origin v1.0.0`.
 
 ## Security
 
